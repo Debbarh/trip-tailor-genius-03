@@ -111,13 +111,25 @@ const Index = () => {
 
 // Composant séparé pour le contenu d'accueil
 const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire') => void }) => {
-  const handlePlanTripClick = () => {
-    console.log('Plan Trip button clicked');
+  const handlePlanTripClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('Plan Trip button clicked - redirecting to plan mode');
     onModeSelect('plan');
   };
 
-  const handleBeInspiredClick = () => {
-    console.log('Be Inspired button clicked');
+  const handleBeInspiredClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('Be Inspired button clicked - redirecting to inspire mode');
+    onModeSelect('inspire');
+  };
+
+  const handlePlanCardClick = () => {
+    console.log('Plan Trip card clicked');
+    onModeSelect('plan');
+  };
+
+  const handleInspireCardClick = () => {
+    console.log('Be Inspired card clicked');
     onModeSelect('inspire');
   };
 
@@ -207,7 +219,10 @@ const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire'
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           {/* Plan Your Trip Mode */}
-          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-100 cursor-pointer">
+          <Card 
+            className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-100 cursor-pointer"
+            onClick={handlePlanCardClick}
+          >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <CardHeader className="text-center p-10 relative">
               <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg">
@@ -249,7 +264,10 @@ const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire'
           </Card>
 
           {/* Be Inspired Mode */}
-          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-orange-50 to-rose-100 cursor-pointer">
+          <Card 
+            className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-orange-50 to-rose-100 cursor-pointer"
+            onClick={handleInspireCardClick}
+          >
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <CardHeader className="text-center p-10 relative">
               <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-orange-500 to-rose-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg">
