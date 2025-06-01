@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,8 @@ import { MapIcon, PlaneIcon, StarIcon, HeartIcon, CameraIcon } from "lucide-reac
 import PlanTripForm from "@/components/PlanTripForm";
 import BeInspiredForm from "@/components/BeInspiredForm";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
+import AppLayout from "@/components/layout/AppLayout";
+import TransitionWrapper from "@/components/layout/TransitionWrapper";
 
 type Mode = 'select' | 'plan' | 'inspire' | 'itinerary';
 
@@ -46,20 +47,70 @@ const Index = () => {
     setTripData(null);
   };
 
-  if (mode === 'itinerary' && tripData) {
-    return <ItineraryDisplay data={tripData} onBack={handleBackToHome} />;
-  }
+  const handleBackToMode = () => {
+    if (mode === 'itinerary') {
+      setMode(tripData?.mode === 'plan' ? 'plan' : 'inspire');
+    } else {
+      setMode('select');
+    }
+  };
 
-  if (mode === 'plan') {
-    return <PlanTripForm onComplete={handleFormComplete} onBack={handleBackToHome} />;
-  }
+  const getSteps = () => {
+    if (mode === 'plan' || mode === 'inspire') {
+      return ['Sélection', 'Formulaire', 'Itinéraire'];
+    }
+    return [];
+  };
 
-  if (mode === 'inspire') {
-    return <BeInspiredForm onComplete={handleFormComplete} onBack={handleBackToHome} />;
-  }
+  const renderContent = () => {
+    switch (mode) {
+      case 'itinerary':
+        return tripData ? (
+          <TransitionWrapper isVisible={true} direction="left">
+            <ItineraryDisplay data={tripData} onBack={handleBackToMode} />
+          </TransitionWrapper>
+        ) : null;
+
+      case 'plan':
+        return (
+          <TransitionWrapper isVisible={true} direction="right">
+            <PlanTripForm onComplete={handleFormComplete} onBack={handleBackToHome} />
+          </TransitionWrapper>
+        );
+
+      case 'inspire':
+        return (
+          <TransitionWrapper isVisible={true} direction="right">
+            <BeInspiredForm onComplete={handleFormComplete} onBack={handleBackToHome} />
+          </TransitionWrapper>
+        );
+
+      default:
+        return (
+          <TransitionWrapper isVisible={true} direction="fade">
+            <HomeContent onModeSelect={handleModeSelect} />
+          </TransitionWrapper>
+        );
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-orange-50 to-rose-50 relative overflow-hidden">
+    <AppLayout
+      currentStep={mode}
+      onBack={mode !== 'select' ? handleBackToMode : undefined}
+      onHome={mode !== 'select' ? handleBackToHome : undefined}
+      showProgress={mode === 'plan' || mode === 'inspire'}
+      steps={getSteps()}
+    >
+      {renderContent()}
+    </AppLayout>
+  );
+};
+
+// Composant séparé pour le contenu d'accueil
+const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire') => void }) => {
+  return (
+    <div className="relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
@@ -177,7 +228,7 @@ const Index = () => {
                 </div>
               </div>
               <Button 
-                onClick={() => handleModeSelect('plan')}
+                onClick={() => onModeSelect('plan')}
                 className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-4 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 ✨ Créer mon voyage
@@ -219,7 +270,7 @@ const Index = () => {
                 </div>
               </div>
               <Button 
-                onClick={() => handleModeSelect('inspire')}
+                onClick={() => onModeSelect('inspire')}
                 className="w-full bg-gradient-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 text-white py-4 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 🌟 Surprenez-moi
