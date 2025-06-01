@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +34,7 @@ const Index = () => {
   const [tripData, setTripData] = useState<TripData | null>(null);
 
   const handleModeSelect = (selectedMode: 'plan' | 'inspire') => {
+    console.log('Mode selected:', selectedMode);
     setMode(selectedMode);
     setTripData({ mode: selectedMode });
   };
@@ -109,6 +111,16 @@ const Index = () => {
 
 // Composant séparé pour le contenu d'accueil
 const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire') => void }) => {
+  const handlePlanTripClick = () => {
+    console.log('Plan Trip button clicked');
+    onModeSelect('plan');
+  };
+
+  const handleBeInspiredClick = () => {
+    console.log('Be Inspired button clicked');
+    onModeSelect('inspire');
+  };
+
   return (
     <div className="relative overflow-hidden">
       {/* Background Pattern */}
@@ -195,7 +207,7 @@ const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire'
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           {/* Plan Your Trip Mode */}
-          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-100">
+          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-100 cursor-pointer">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <CardHeader className="text-center p-10 relative">
               <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg">
@@ -228,7 +240,7 @@ const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire'
                 </div>
               </div>
               <Button 
-                onClick={() => onModeSelect('plan')}
+                onClick={handlePlanTripClick}
                 className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-4 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 ✨ Créer mon voyage
@@ -237,7 +249,7 @@ const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire'
           </Card>
 
           {/* Be Inspired Mode */}
-          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-orange-50 to-rose-100">
+          <Card className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border-0 shadow-xl bg-gradient-to-br from-orange-50 to-rose-100 cursor-pointer">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <CardHeader className="text-center p-10 relative">
               <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-orange-500 to-rose-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-lg">
@@ -270,7 +282,7 @@ const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire'
                 </div>
               </div>
               <Button 
-                onClick={() => onModeSelect('inspire')}
+                onClick={handleBeInspiredClick}
                 className="w-full bg-gradient-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 text-white py-4 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 🌟 Surprenez-moi
