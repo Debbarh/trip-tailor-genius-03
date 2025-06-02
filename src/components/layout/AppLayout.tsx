@@ -1,8 +1,7 @@
 
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Home } from "lucide-react";
-import NavigationBreadcrumb from "./NavigationBreadcrumb";
+import { ArrowLeft, Home, Search, Phone, User } from "lucide-react";
 import ProgressIndicator from "./ProgressIndicator";
 
 interface AppLayoutProps {
@@ -12,6 +11,8 @@ interface AppLayoutProps {
   onHome?: () => void;
   showProgress?: boolean;
   steps?: string[];
+  progressCount?: number;
+  totalSteps?: number;
 }
 
 const AppLayout = ({ 
@@ -20,78 +21,103 @@ const AppLayout = ({
   onBack, 
   onHome,
   showProgress = false,
-  steps = []
+  steps = [],
+  progressCount = 0,
+  totalSteps = 5
 }: AppLayoutProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-orange-50 to-rose-50">
-      {/* Header persistant */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white">
+      {/* Header Navigation */}
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Navigation gauche */}
-            <div className="flex items-center space-x-4">
-              {onBack && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onBack}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Retour
-                </Button>
-              )}
-              {onHome && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onHome}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <Home className="w-4 h-4" />
-                  Accueil
-                </Button>
-              )}
-            </div>
-
-            {/* Logo TASARINI central */}
-            <div className="flex-1 text-center">
-              <div className="flex items-center justify-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">T</span>
+            {/* Logo TASARINI */}
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col items-center">
+                <div className="w-8 h-8 relative">
+                  <div className="w-6 h-6 border-2 border-black rounded-full absolute top-0 left-1"></div>
+                  <div className="w-4 h-4 border-2 border-black rounded-full absolute top-1 left-2"></div>
+                  <div className="w-1 h-3 bg-black absolute top-6 left-3.5"></div>
+                  <div className="w-5 h-3 border-2 border-black border-t-0 rounded-b-lg absolute top-8 left-1.5"></div>
                 </div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                  TASARINI
-                </h1>
               </div>
-              <p className="text-xs text-gray-500 mt-1">Votre voyage sur mesure</p>
+              <span className="text-xl font-bold text-black">TASARINI</span>
             </div>
 
-            {/* Actions droite */}
-            <div className="w-32 flex justify-end">
-              {showProgress && (
-                <div className="text-sm text-gray-500">
-                  {currentStep}
-                </div>
-              )}
+            {/* Navigation Menu */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <Button 
+                variant="ghost" 
+                className="text-gray-700 hover:text-cyan-600 font-medium"
+                onClick={onHome}
+              >
+                Plan Your Trip
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-gray-700 hover:text-cyan-600 font-medium"
+              >
+                Be Inspired
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-gray-700 hover:text-cyan-600 font-medium"
+              >
+                Tours
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-gray-700 hover:text-cyan-600 font-medium"
+              >
+                Page d'accueil
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="text-gray-700 hover:text-cyan-600 font-medium"
+              >
+                Contactez-nous
+              </Button>
+            </nav>
+
+            {/* Right Actions */}
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm" className="text-gray-600">
+                <Search className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="sm" className="text-gray-600">
+                <Phone className="w-4 h-4 mr-2" />
+                +1 555-555-5556
+              </Button>
+              <Button variant="ghost" size="sm" className="text-gray-600">
+                Se connecter
+              </Button>
+              <Button className="bg-cyan-600 hover:bg-cyan-700 text-white px-6">
+                Contactez-nous
+              </Button>
             </div>
           </div>
 
-          {/* Breadcrumb */}
-          <div className="pb-4">
-            <NavigationBreadcrumb currentStep={currentStep} />
-          </div>
-
-          {/* Progress Indicator */}
-          {showProgress && steps.length > 0 && (
+          {/* Progress Section */}
+          {showProgress && (
             <div className="pb-4">
-              <ProgressIndicator currentStep={currentStep} steps={steps} />
+              <div className="flex items-center justify-between mb-4">
+                <h1 className="text-2xl font-bold text-gray-900">{currentStep}</h1>
+                <div className="text-sm text-gray-500">
+                  {progressCount} of {totalSteps} Completed
+                </div>
+              </div>
+              <ProgressIndicator 
+                currentStep={currentStep} 
+                steps={steps}
+                progressCount={progressCount}
+                totalSteps={totalSteps}
+              />
             </div>
           )}
         </div>
       </header>
 
-      {/* Contenu principal */}
+      {/* Main Content */}
       <main className="relative">
         {children}
       </main>
