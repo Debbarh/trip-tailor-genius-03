@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MapIcon, SparklesIcon, PlusIcon } from "lucide-react";
+import { MapIcon, SparklesIcon } from "lucide-react";
 import PlanTripForm from "@/components/PlanTripForm";
 import BeInspiredForm from "@/components/BeInspiredForm";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
@@ -102,108 +102,49 @@ const Index = () => {
   );
 };
 
-// Interface d'accueil simplifiée et moderne
+// Interface d'accueil ultra-simplifiée
 const HomeContent = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire') => void }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto px-4 py-24">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
-              Planifiez votre voyage
-              <br />
-              <span className="text-cyan-600">parfait</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-              Découvrez des destinations uniques avec notre IA qui transforme vos envies en aventures inoubliables
-            </p>
-
-            {/* Main CTA Cards */}
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {/* Plan Your Trip Card */}
-              <div 
-                onClick={() => onModeSelect('plan')}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-cyan-500 group"
-              >
-                <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-cyan-600 transition-colors">
-                  <MapIcon className="w-8 h-8 text-cyan-600 group-hover:text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Plan Your Trip</h3>
-                <p className="text-gray-600 mb-6">
-                  Vous savez où vous voulez aller ? Créez votre itinéraire personnalisé étape par étape.
-                </p>
-                <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3">
-                  Commencer à planifier
-                  <PlusIcon className="w-5 h-5 ml-2" />
-                </Button>
-              </div>
-
-              {/* Be Inspired Card */}
-              <div 
-                onClick={() => onModeSelect('inspire')}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-purple-500 group"
-              >
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-600 transition-colors">
-                  <SparklesIcon className="w-8 h-8 text-purple-600 group-hover:text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Be Inspired</h3>
-                <p className="text-gray-600 mb-6">
-                  Laissez-vous surprendre ! Notre IA trouve la destination parfaite selon vos envies.
-                </p>
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3">
-                  Trouvez ma destination
-                  <SparklesIcon className="w-5 h-5 ml-2" />
-                </Button>
-              </div>
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="max-w-md mx-auto px-6 text-center">
+        {/* Logo */}
+        <div className="mb-12">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 relative">
+              <div className="w-12 h-12 border-4 border-black rounded-full absolute top-0 left-2"></div>
+              <div className="w-8 h-8 border-4 border-black rounded-full absolute top-2 left-4"></div>
+              <div className="w-2 h-6 bg-black absolute top-12 left-7"></div>
+              <div className="w-10 h-6 border-4 border-black border-t-0 rounded-b-xl absolute top-16 left-3"></div>
             </div>
           </div>
+          <h1 className="text-3xl font-bold text-black">TASARINI</h1>
         </div>
-      </div>
 
-      {/* Features Section */}
-      <div className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Pourquoi choisir TASARINI ?
-            </h2>
-            <p className="text-xl text-gray-600">
-              Une approche révolutionnaire pour créer vos voyages sur mesure
-            </p>
-          </div>
+        {/* Question simple */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-light text-gray-800 mb-2">
+            Comment voulez-vous voyager ?
+          </h2>
+        </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <SparklesIcon className="w-8 h-8 text-cyan-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">IA Personnalisée</h3>
-              <p className="text-gray-600">
-                Notre intelligence artificielle apprend de vos préférences pour créer des expériences uniques
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <MapIcon className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Itinéraires Optimisés</h3>
-              <p className="text-gray-600">
-                Des parcours pensés pour maximiser votre temps et minimiser les contraintes
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <PlusIcon className="w-8 h-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Simple & Rapide</h3>
-              <p className="text-gray-600">
-                Des itinéraires parfaits générés en quelques minutes, modifiables à volonté
-              </p>
-            </div>
-          </div>
+        {/* Deux boutons simples */}
+        <div className="space-y-4">
+          <Button 
+            onClick={() => onModeSelect('plan')}
+            className="w-full h-14 bg-black hover:bg-gray-800 text-white text-lg font-medium rounded-lg"
+          >
+            <MapIcon className="w-5 h-5 mr-3" />
+            Je sais où aller
+          </Button>
+          
+          <Button 
+            onClick={() => onModeSelect('inspire')}
+            variant="outline"
+            className="w-full h-14 border-2 border-black text-black hover:bg-black hover:text-white text-lg font-medium rounded-lg"
+          >
+            <SparklesIcon className="w-5 h-5 mr-3" />
+            Inspirez-moi
+          </Button>
         </div>
       </div>
     </div>

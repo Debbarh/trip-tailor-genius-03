@@ -1,7 +1,7 @@
 
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Home, Search, Phone, User } from "lucide-react";
+import { ArrowLeft, Home } from "lucide-react";
 import ProgressIndicator from "./ProgressIndicator";
 
 interface AppLayoutProps {
@@ -27,98 +27,59 @@ const AppLayout = ({
 }: AppLayoutProps) => {
   return (
     <div className="min-h-screen bg-white">
-      {/* Header Navigation */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo TASARINI */}
-            <div className="flex items-center gap-3">
-              <div className="flex flex-col items-center">
-                <div className="w-8 h-8 relative">
-                  <div className="w-6 h-6 border-2 border-black rounded-full absolute top-0 left-1"></div>
-                  <div className="w-4 h-4 border-2 border-black rounded-full absolute top-1 left-2"></div>
-                  <div className="w-1 h-3 bg-black absolute top-6 left-3.5"></div>
-                  <div className="w-5 h-3 border-2 border-black border-t-0 rounded-b-lg absolute top-8 left-1.5"></div>
+      {/* Header minimal */}
+      {showProgress && (
+        <header className="bg-white border-b border-gray-200">
+          <div className="max-w-4xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between mb-6">
+              {/* Bouton retour simple */}
+              {onBack && (
+                <Button 
+                  variant="ghost" 
+                  onClick={onBack}
+                  className="text-gray-600 hover:text-black"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Retour
+                </Button>
+              )}
+              
+              {/* Logo minimal */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 relative">
+                  <div className="w-4 h-4 border-2 border-black rounded-full absolute top-0 left-1"></div>
+                  <div className="w-3 h-3 border-2 border-black rounded-full absolute top-0.5 left-1.5"></div>
+                  <div className="w-0.5 h-2 bg-black absolute top-4 left-2.5"></div>
+                  <div className="w-3 h-2 border-2 border-black border-t-0 rounded-b-lg absolute top-5 left-1.5"></div>
                 </div>
+                <span className="text-lg font-bold text-black">TASARINI</span>
               </div>
-              <span className="text-xl font-bold text-black">TASARINI</span>
+
+              {/* Bouton home */}
+              {onHome && (
+                <Button 
+                  variant="ghost" 
+                  onClick={onHome}
+                  className="text-gray-600 hover:text-black"
+                >
+                  <Home className="w-4 h-4" />
+                </Button>
+              )}
             </div>
 
-            {/* Navigation Menu */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <Button 
-                variant="ghost" 
-                className="text-gray-700 hover:text-cyan-600 font-medium"
-                onClick={onHome}
-              >
-                Plan Your Trip
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-gray-700 hover:text-cyan-600 font-medium"
-              >
-                Be Inspired
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-gray-700 hover:text-cyan-600 font-medium"
-              >
-                Tours
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-gray-700 hover:text-cyan-600 font-medium"
-              >
-                Page d'accueil
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-gray-700 hover:text-cyan-600 font-medium"
-              >
-                Contactez-nous
-              </Button>
-            </nav>
-
-            {/* Right Actions */}
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="text-gray-600">
-                <Search className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-600">
-                <Phone className="w-4 h-4 mr-2" />
-                +1 555-555-5556
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-600">
-                Se connecter
-              </Button>
-              <Button className="bg-cyan-600 hover:bg-cyan-700 text-white px-6">
-                Contactez-nous
-              </Button>
-            </div>
+            {/* Progress simple */}
+            <ProgressIndicator 
+              currentStep={currentStep} 
+              steps={steps}
+              progressCount={progressCount}
+              totalSteps={totalSteps}
+            />
           </div>
+        </header>
+      )}
 
-          {/* Progress Section */}
-          {showProgress && (
-            <div className="pb-4">
-              <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">{currentStep}</h1>
-                <div className="text-sm text-gray-500">
-                  {progressCount} of {totalSteps} Completed
-                </div>
-              </div>
-              <ProgressIndicator 
-                currentStep={currentStep} 
-                steps={steps}
-                progressCount={progressCount}
-                totalSteps={totalSteps}
-              />
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="relative">
+      {/* Contenu principal */}
+      <main>
         {children}
       </main>
     </div>

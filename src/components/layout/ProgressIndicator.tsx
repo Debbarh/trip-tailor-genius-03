@@ -18,30 +18,18 @@ const ProgressIndicator = ({
 
   return (
     <div className="w-full">
-      {/* Step Pills */}
-      <div className="flex space-x-2 mb-4 overflow-x-auto">
-        {steps.map((step, index) => (
-          <div
-            key={step}
-            className={cn(
-              "flex items-center px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300",
-              index < progressCount
-                ? "bg-cyan-600 text-white"
-                : index === progressCount
-                ? "bg-cyan-600 text-white"
-                : "bg-gray-200 text-gray-500"
-            )}
-          >
-            <span className="mr-2">✓</span>
-            {step}
-          </div>
-        ))}
+      {/* Titre simple */}
+      <div className="mb-6">
+        <h1 className="text-xl font-medium text-gray-900">{currentStep}</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Étape {progressCount} sur {totalSteps}
+        </p>
       </div>
       
-      {/* Progress Bar */}
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      {/* Barre de progression minimaliste */}
+      <div className="w-full bg-gray-200 rounded-full h-1">
         <div
-          className="bg-cyan-600 h-2 rounded-full transition-all duration-500 ease-out"
+          className="bg-black h-1 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
