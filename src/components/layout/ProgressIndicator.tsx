@@ -18,20 +18,24 @@ const ProgressIndicator = ({
 
   return (
     <div className="w-full">
-      {/* Titre simple */}
-      <div className="mb-6">
-        <h1 className="text-xl font-medium text-gray-900">{currentStep}</h1>
-        <p className="text-sm text-gray-500 mt-1">
+      {/* Titre simple et élégant */}
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-light text-gray-800 mb-2">{currentStep}</h1>
+        <p className="text-sm text-gray-500">
           Étape {progressCount} sur {totalSteps}
         </p>
       </div>
       
-      {/* Barre de progression minimaliste */}
-      <div className="w-full bg-gray-200 rounded-full h-1">
-        <div
-          className="bg-black h-1 rounded-full transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        />
+      {/* Indicateurs minimalistes comme la page d'accueil */}
+      <div className="flex justify-center space-x-2 mb-4">
+        {Array.from({ length: totalSteps }, (_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full transition-colors ${
+              index < progressCount ? 'bg-black' : 'bg-gray-300'
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
