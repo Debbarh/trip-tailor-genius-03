@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MapIcon, SparklesIcon } from "lucide-react";
-import PlanTripForm from "@/components/PlanTripForm";
-import BeInspiredForm from "@/components/BeInspiredForm";
+import PlanTripSteps from "@/components/forms/PlanTripSteps";
+import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import AppLayout from "@/components/layout/AppLayout";
 
@@ -74,12 +74,12 @@ const Index = () => {
 
       case 'plan':
         return (
-          <PlanTripForm onComplete={handleFormComplete} onBack={handleBackToHome} />
+          <PlanTripSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
         );
 
       case 'inspire':
         return (
-          <BeInspiredForm onComplete={handleFormComplete} onBack={handleBackToHome} />
+          <BeInspiredSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
         );
 
       default:
