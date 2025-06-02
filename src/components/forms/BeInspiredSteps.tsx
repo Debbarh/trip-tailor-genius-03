@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BeInspiredStepsProps {
   onComplete: (data: any) => void;
@@ -14,10 +15,10 @@ interface BeInspiredStepsProps {
 const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    activities: [],
+    interests: [],
     travelWith: '',
     budget: '',
-    accommodation: ''
+    preferences: ''
   });
 
   const handleNext = () => {
@@ -41,21 +42,13 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
       case 1:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">What are your interests?</h2>
+            <h2 className="text-xl font-medium">Vos intérêts</h2>
             
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { name: 'Culture', icon: '🏛️' },
-                { name: 'Food', icon: '🍽️' },
-                { name: 'Nature', icon: '🌿' },
-                { name: 'Art', icon: '🎨' },
-                { name: 'Adventure', icon: '🏔️' },
-                { name: 'Relaxation', icon: '🏖️' }
-              ].map((interest) => (
-                <div key={interest.name} className="flex items-center space-x-2 p-3 border rounded hover:bg-gray-50">
-                  <Checkbox id={interest.name} />
-                  <span className="text-lg mr-2">{interest.icon}</span>
-                  <label htmlFor={interest.name} className="text-sm">{interest.name}</label>
+            <div className="space-y-2">
+              {['Culture', 'Gastronomie', 'Nature', 'Aventure', 'Détente', 'Art'].map((interest) => (
+                <div key={interest} className="flex items-center space-x-2">
+                  <Checkbox id={interest} />
+                  <Label htmlFor={interest}>{interest}</Label>
                 </div>
               ))}
             </div>
@@ -65,56 +58,62 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
       case 2:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">With whom?</h2>
+            <h2 className="text-xl font-medium">Avec qui?</h2>
             
-            <div className="space-y-4">
-              <Input placeholder="Family travelers" />
-              
-              <RadioGroup className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="family-young" id="family-young" />
-                  <label htmlFor="family-young" className="text-sm">Family with Young Children</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="multi-generational" id="multi-generational" />
-                  <label htmlFor="multi-generational" className="text-sm">Multi-generational Family</label>
-                </div>
-              </RadioGroup>
-            </div>
+            <RadioGroup className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="solo" id="solo" />
+                <Label htmlFor="solo">Solo</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="couple" id="couple" />
+                <Label htmlFor="couple">En couple</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="famille" id="famille" />
+                <Label htmlFor="famille">En famille</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="amis" id="amis" />
+                <Label htmlFor="amis">Entre amis</Label>
+              </div>
+            </RadioGroup>
           </div>
         );
 
       case 3:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">What is your budget?</h2>
+            <h2 className="text-xl font-medium">Budget</h2>
             
-            <div className="space-y-4">
-              <RadioGroup className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="low" id="low" />
-                  <label htmlFor="low" className="text-sm">Low</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="normal" id="normal" />
-                  <label htmlFor="normal" className="text-sm">Normal</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="high" id="high" />
-                  <label htmlFor="high" className="text-sm">High</label>
-                </div>
-              </RadioGroup>
+            <RadioGroup className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="economique" id="economique" />
+                <Label htmlFor="economique">Économique</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="moyen" id="moyen" />
+                <Label htmlFor="moyen">Moyen</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="confort" id="confort" />
+                <Label htmlFor="confort">Confort</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="luxe" id="luxe" />
+                <Label htmlFor="luxe">Luxe</Label>
+              </div>
+            </RadioGroup>
 
-              <div className="pt-4">
-                <Label className="text-sm text-gray-600 mb-3 block">Cuisine preferences</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {['Local cuisine', 'French cuisine', 'Italian cuisine', 'Asian cuisine'].map((cuisine) => (
-                    <div key={cuisine} className="flex items-center space-x-2">
-                      <Checkbox id={cuisine} />
-                      <label htmlFor={cuisine} className="text-sm">{cuisine}</label>
-                    </div>
-                  ))}
-                </div>
+            <div className="pt-4">
+              <Label className="mb-3 block">Préférences culinaires</Label>
+              <div className="space-y-2">
+                {['Cuisine locale', 'Cuisine française', 'Cuisine italienne', 'Cuisine asiatique'].map((cuisine) => (
+                  <div key={cuisine} className="flex items-center space-x-2">
+                    <Checkbox id={cuisine} />
+                    <Label htmlFor={cuisine}>{cuisine}</Label>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -123,18 +122,20 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
       case 4:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">Where do you want to stay?</h2>
+            <h2 className="text-xl font-medium">Préférences</h2>
             
             <div className="space-y-4">
-              <Input placeholder="Hotel preference" />
+              <div>
+                <Label>Type d'hébergement préféré</Label>
+                <Input placeholder="ex: Hôtel, Appartement..." />
+              </div>
               
-              <div className="grid grid-cols-2 gap-3">
-                {['Proximity to Attractions', 'Security', 'Atmosphere', 'Accessibility'].map((preference) => (
-                  <div key={preference} className="flex items-center space-x-2">
-                    <Checkbox id={preference} />
-                    <label htmlFor={preference} className="text-sm">{preference}</label>
-                  </div>
-                ))}
+              <div>
+                <Label>Décrivez votre voyage idéal</Label>
+                <Textarea 
+                  placeholder="Dites-nous ce qui vous fait rêver..."
+                  rows={4}
+                />
               </div>
             </div>
           </div>
@@ -146,22 +147,31 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-md mx-auto p-6 bg-white">
+      <div className="mb-6">
+        <div className="text-sm text-gray-500 mb-2">Étape {currentStep} sur 4</div>
+        <div className="w-full bg-gray-200 h-1">
+          <div 
+            className="bg-black h-1 transition-all"
+            style={{ width: `${(currentStep / 4) * 100}%` }}
+          />
+        </div>
+      </div>
+
       {renderStep()}
       
-      <div className="flex justify-between mt-8 pt-6 border-t">
+      <div className="flex justify-between mt-8">
         <Button 
-          variant="ghost" 
+          variant="outline" 
           onClick={handlePrevious}
-          className="text-gray-600"
         >
-          {currentStep === 1 ? 'Back' : 'Previous'}
+          {currentStep === 1 ? 'Retour' : 'Précédent'}
         </Button>
         <Button 
           onClick={handleNext}
-          className="bg-black hover:bg-gray-800 text-white"
+          className="bg-black text-white hover:bg-gray-800"
         >
-          {currentStep === 4 ? 'Get Inspired' : 'Next'}
+          {currentStep === 4 ? 'Obtenir des suggestions' : 'Suivant'}
         </Button>
       </div>
     </div>

@@ -43,29 +43,29 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       case 1:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">Where would you like to go?</h2>
+            <h2 className="text-xl font-medium">Destination</h2>
             
             <div className="space-y-4">
               <div>
-                <Label className="text-sm text-gray-600">Country</Label>
+                <Label>Pays</Label>
                 <Select>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Select country" />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un pays" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="france">France</SelectItem>
-                    <SelectItem value="italy">Italy</SelectItem>
-                    <SelectItem value="spain">Spain</SelectItem>
-                    <SelectItem value="japan">Japan</SelectItem>
+                    <SelectItem value="italie">Italie</SelectItem>
+                    <SelectItem value="espagne">Espagne</SelectItem>
+                    <SelectItem value="maroc">Maroc</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="text-sm text-gray-600">City</Label>
+                <Label>Ville</Label>
                 <Select>
-                  <SelectTrigger className="mt-1">
-                    <SelectValue placeholder="Select city" />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir une ville" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="paris">Paris</SelectItem>
@@ -76,12 +76,8 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
               </div>
 
               <div>
-                <Label className="text-sm text-gray-600">Travel dates</Label>
-                <Input 
-                  type="text" 
-                  placeholder="06/02/2025 - 06/02/2025"
-                  className="mt-1"
-                />
+                <Label>Dates</Label>
+                <Input placeholder="01/01/2025 - 07/01/2025" />
               </div>
             </div>
           </div>
@@ -90,74 +86,79 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       case 2:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">With whom?</h2>
+            <h2 className="text-xl font-medium">Avec qui?</h2>
             
-            <div className="space-y-4">
-              <Input placeholder="Solo traveler" />
-              
-              <RadioGroup className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="young-adult" id="young-adult" />
-                  <label htmlFor="young-adult" className="text-sm">Young Adult Solo</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="adult-solo" id="adult-solo" />
-                  <label htmlFor="adult-solo" className="text-sm">Adult Solo</label>
-                </div>
-              </RadioGroup>
-            </div>
+            <RadioGroup className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="solo" id="solo" />
+                <Label htmlFor="solo">Solo</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="couple" id="couple" />
+                <Label htmlFor="couple">En couple</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="famille" id="famille" />
+                <Label htmlFor="famille">En famille</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="amis" id="amis" />
+                <Label htmlFor="amis">Entre amis</Label>
+              </div>
+            </RadioGroup>
           </div>
         );
 
       case 3:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">What is your budget?</h2>
+            <h2 className="text-xl font-medium">Budget</h2>
             
-            <div className="space-y-4">
-              <RadioGroup className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="low" id="low" />
-                  <label htmlFor="low" className="text-sm">Low</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="normal" id="normal" />
-                  <label htmlFor="normal" className="text-sm">Normal</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="high" id="high" />
-                  <label htmlFor="high" className="text-sm">High</label>
-                </div>
-              </RadioGroup>
-
-              <div className="pt-4">
-                <Label className="text-sm text-gray-600 mb-3 block">Cuisine preferences</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {['Local cuisine', 'French cuisine', 'Italian cuisine', 'Asian cuisine'].map((cuisine) => (
-                    <div key={cuisine} className="flex items-center space-x-2">
-                      <Checkbox id={cuisine} />
-                      <label htmlFor={cuisine} className="text-sm">{cuisine}</label>
-                    </div>
-                  ))}
-                </div>
+            <RadioGroup className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="economique" id="economique" />
+                <Label htmlFor="economique">Économique</Label>
               </div>
-            </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="moyen" id="moyen" />
+                <Label htmlFor="moyen">Moyen</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="confort" id="confort" />
+                <Label htmlFor="confort">Confort</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="luxe" id="luxe" />
+                <Label htmlFor="luxe">Luxe</Label>
+              </div>
+            </RadioGroup>
           </div>
         );
 
       case 4:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">Where do you want to stay?</h2>
+            <h2 className="text-xl font-medium">Hébergement</h2>
             
             <div className="space-y-4">
-              <Input placeholder="Hotel type preference" />
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Type d'hébergement" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hotel">Hôtel</SelectItem>
+                  <SelectItem value="appartement">Appartement</SelectItem>
+                  <SelectItem value="maison">Maison</SelectItem>
+                  <SelectItem value="auberge">Auberge</SelectItem>
+                </SelectContent>
+              </Select>
               
-              <div className="grid grid-cols-2 gap-3">
-                {['Proximity to Attractions', 'Security', 'Atmosphere', 'Accessibility'].map((preference) => (
-                  <div key={preference} className="flex items-center space-x-2">
-                    <Checkbox id={preference} />
-                    <label htmlFor={preference} className="text-sm">{preference}</label>
+              <div className="space-y-2">
+                <Label>Préférences</Label>
+                {['Centre-ville', 'Vue mer', 'Parking', 'Wifi'].map((pref) => (
+                  <div key={pref} className="flex items-center space-x-2">
+                    <Checkbox id={pref} />
+                    <Label htmlFor={pref}>{pref}</Label>
                   </div>
                 ))}
               </div>
@@ -168,21 +169,13 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       case 5:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-medium text-black">What are your interests?</h2>
+            <h2 className="text-xl font-medium">Activités</h2>
             
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { name: 'Culture', icon: '🏛️' },
-                { name: 'Food', icon: '🍽️' },
-                { name: 'Nature', icon: '🌿' },
-                { name: 'Art', icon: '🎨' },
-                { name: 'History', icon: '📚' },
-                { name: 'Shopping', icon: '🛍️' }
-              ].map((interest) => (
-                <div key={interest.name} className="flex items-center space-x-2 p-3 border rounded hover:bg-gray-50">
-                  <Checkbox id={interest.name} />
-                  <span className="text-lg mr-2">{interest.icon}</span>
-                  <label htmlFor={interest.name} className="text-sm">{interest.name}</label>
+            <div className="space-y-2">
+              {['Culture', 'Gastronomie', 'Nature', 'Sport', 'Shopping', 'Détente'].map((activity) => (
+                <div key={activity} className="flex items-center space-x-2">
+                  <Checkbox id={activity} />
+                  <Label htmlFor={activity}>{activity}</Label>
                 </div>
               ))}
             </div>
@@ -195,22 +188,31 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
+    <div className="max-w-md mx-auto p-6 bg-white">
+      <div className="mb-6">
+        <div className="text-sm text-gray-500 mb-2">Étape {currentStep} sur 5</div>
+        <div className="w-full bg-gray-200 h-1">
+          <div 
+            className="bg-black h-1 transition-all"
+            style={{ width: `${(currentStep / 5) * 100}%` }}
+          />
+        </div>
+      </div>
+
       {renderStep()}
       
-      <div className="flex justify-between mt-8 pt-6 border-t">
+      <div className="flex justify-between mt-8">
         <Button 
-          variant="ghost" 
+          variant="outline" 
           onClick={handlePrevious}
-          className="text-gray-600"
         >
-          {currentStep === 1 ? 'Back' : 'Previous'}
+          {currentStep === 1 ? 'Retour' : 'Précédent'}
         </Button>
         <Button 
           onClick={handleNext}
-          className="bg-black hover:bg-gray-800 text-white"
+          className="bg-black text-white hover:bg-gray-800"
         >
-          {currentStep === 5 ? 'Create Itinerary' : 'Next'}
+          {currentStep === 5 ? 'Créer l\'itinéraire' : 'Suivant'}
         </Button>
       </div>
     </div>
