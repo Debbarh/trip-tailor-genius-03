@@ -25,7 +25,7 @@ const AppLayout = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-orange-50 to-rose-50">
       {/* Header persistant */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Navigation gauche */}
@@ -35,7 +35,7 @@ const AppLayout = ({
                   variant="ghost"
                   size="sm"
                   onClick={onBack}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Retour
@@ -46,7 +46,7 @@ const AppLayout = ({
                   variant="ghost"
                   size="sm"
                   onClick={onHome}
-                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+                  className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   <Home className="w-4 h-4" />
                   Accueil
@@ -54,11 +54,17 @@ const AppLayout = ({
               )}
             </div>
 
-            {/* Logo/Titre central */}
+            {/* Logo TASARINI central */}
             <div className="flex-1 text-center">
-              <h1 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Votre Voyage de Rêve
-              </h1>
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">T</span>
+                </div>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                  TASARINI
+                </h1>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Votre voyage sur mesure</p>
             </div>
 
             {/* Actions droite */}

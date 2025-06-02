@@ -19,7 +19,7 @@ const ProgressIndicator = ({ currentStep, steps }: ProgressIndicatorProps) => {
             className={cn(
               "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300",
               index <= currentIndex
-                ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
+                ? "bg-gradient-to-r from-emerald-500 to-blue-600 text-white shadow-lg"
                 : "bg-gray-200 text-gray-500"
             )}
           >
@@ -30,7 +30,7 @@ const ProgressIndicator = ({ currentStep, steps }: ProgressIndicatorProps) => {
       
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
-          className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500 ease-out"
+          className="bg-gradient-to-r from-emerald-500 to-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
