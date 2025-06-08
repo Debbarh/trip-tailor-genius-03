@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Globe } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import BrandLogo from "@/components/layout/BrandLogo";
 
 interface PlanTripHeaderProps {
   onBack: () => void;
@@ -19,12 +20,7 @@ const PlanTripHeader = ({ onBack }: PlanTripHeaderProps) => {
           Retour
         </Button>
         
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-            <Globe className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold text-white">TASARINI</span>
-        </div>
+        <BrandLogo textSize="text-2xl" />
 
         <div className="w-24" />
       </nav>

@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe } from "lucide-react";
+import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart } from "lucide-react";
 import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
+import BrandLogo from "@/components/layout/BrandLogo";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
 
@@ -118,14 +118,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
       {/* Header */}
       <header className="relative z-10 px-6 py-6">
         <nav className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <Globe className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-purple-800 bg-clip-text text-transparent">
-              TASARINI
-            </span>
-          </div>
+          <BrandLogo />
           
           <div className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">Destinations</a>
