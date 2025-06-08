@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Users, DollarSign, Bed } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles, Users, DollarSign, Bed, Check } from "lucide-react";
 
 interface BeInspiredStepsProps {
   onComplete: (data: any) => void;
@@ -18,10 +18,10 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
   });
 
   const steps = [
-    { id: 'activities', title: 'Activités', icon: Sparkles },
-    { id: 'travelWith', title: 'Avec qui', icon: Users },
-    { id: 'budget', title: 'Budget', icon: DollarSign },
-    { id: 'accommodation', title: 'Logement', icon: Bed }
+    { id: 'activities', title: 'Activités', subtitle: 'Qu\'est-ce qui vous inspire ?', icon: Sparkles },
+    { id: 'travelWith', title: 'Avec qui', subtitle: 'Votre style de voyage', icon: Users },
+    { id: 'budget', title: 'Budget', subtitle: 'Votre gamme de prix', icon: DollarSign },
+    { id: 'accommodation', title: 'Logement', subtitle: 'Votre hébergement préféré', icon: Bed }
   ];
 
   const handleNext = () => {
@@ -42,10 +42,18 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
 
   const isStepValid = () => {
     const step = steps[currentStep];
-    return formData[step.id as keyof typeof formData] !== '' && 
-           formData[step.id as keyof typeof formData] !== undefined &&
-           (Array.isArray(formData[step.id as keyof typeof formData]) ? 
-            (formData[step.id as keyof typeof formData] as any[]).length > 0 : true);
+    switch (step.id) {
+      case 'activities':
+        return formData.activities.length > 0;
+      case 'travelWith':
+        return formData.travelWith !== '';
+      case 'budget':
+        return formData.budget !== '';
+      case 'accommodation':
+        return formData.accommodation !== '';
+      default:
+        return false;
+    }
   };
 
   const renderStepContent = () => {
@@ -54,26 +62,25 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
     switch (step.id) {
       case 'activities':
         const activityOptions = [
-          { id: 'culture', label: 'Culture & Histoire' },
-          { id: 'nature', label: 'Nature & Paysages' },
-          { id: 'food', label: 'Gastronomie' },
-          { id: 'nightlife', label: 'Vie nocturne' },
-          { id: 'sport', label: 'Sports & Aventure' },
-          { id: 'relax', label: 'Détente & Spa' },
-          { id: 'adventure', label: 'Aventure extrême' },
-          { id: 'art', label: 'Art & Design' }
+          { id: 'culture', label: 'Culture & Histoire', emoji: '🏛️' },
+          { id: 'nature', label: 'Nature & Paysages', emoji: '🌿' },
+          { id: 'food', label: 'Gastronomie', emoji: '🍽️' },
+          { id: 'nightlife', label: 'Vie nocturne', emoji: '🌃' },
+          { id: 'sport', label: 'Sports & Aventure', emoji: '🏔️' },
+          { id: 'relax', label: 'Détente & Spa', emoji: '🧘‍♀️' },
+          { id: 'adventure', label: 'Aventure extrême', emoji: '🪂' },
+          { id: 'art', label: 'Art & Design', emoji: '🎨' }
         ];
 
         return (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-800 mb-2">
-                Qu'est-ce qui vous inspire ?
-              </h2>
-              <p className="text-gray-500">Sélectionnez vos activités préférées</p>
+              <p className="text-lg text-gray-600">
+                Sélectionnez vos activités préférées (plusieurs choix possibles)
+              </p>
             </div>
             
-            <div className="max-w-sm mx-auto space-y-3">
+            <div className="grid grid-cols-2 gap-4">
               {activityOptions.map((option) => (
                 <button
                   key={option.id}
@@ -85,13 +92,14 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
                       : [...currentActivities, option.id];
                     setFormData({...formData, activities: newActivities});
                   }}
-                  className={`w-full h-12 rounded-lg border-2 text-center transition-all ${
+                  className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 ${
                     formData.activities?.includes(option.id)
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                      ? 'border-purple-500 bg-purple-50 text-purple-700'
+                      : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
                 >
-                  {option.label}
+                  <div className="text-3xl mb-3">{option.emoji}</div>
+                  <div className="font-semibold">{option.label}</div>
                 </button>
               ))}
             </div>
@@ -100,34 +108,30 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
 
       case 'travelWith':
         const travelOptions = [
-          { id: 'solo', label: 'Seul(e)' },
-          { id: 'couple', label: 'En couple' },
-          { id: 'family', label: 'En famille' },
-          { id: 'friends', label: 'Entre amis' },
-          { id: 'group', label: 'En groupe' }
+          { id: 'solo', label: 'Seul(e)', emoji: '🧳' },
+          { id: 'couple', label: 'En couple', emoji: '💕' },
+          { id: 'family', label: 'En famille', emoji: '👨‍👩‍👧‍👦' },
+          { id: 'friends', label: 'Entre amis', emoji: '👥' },
+          { id: 'group', label: 'En groupe', emoji: '👨‍👩‍👧‍👦' }
         ];
 
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-800 mb-2">
-                Avec qui voyagez-vous ?
-              </h2>
-              <p className="text-gray-500">Sélectionnez votre type de voyage</p>
-            </div>
-            
-            <div className="max-w-sm mx-auto space-y-3">
+          <div className="space-y-8">
+            <div className="space-y-4">
               {travelOptions.map((option) => (
                 <button
                   key={option.id}
                   onClick={() => setFormData({...formData, travelWith: option.id})}
-                  className={`w-full h-12 rounded-lg border-2 text-center transition-all ${
+                  className={`w-full p-6 rounded-2xl border-2 text-left transition-all duration-300 hover:scale-105 ${
                     formData.travelWith === option.id
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                      ? 'border-purple-500 bg-purple-50 text-purple-700'
+                      : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
                 >
-                  {option.label}
+                  <div className="flex items-center space-x-4">
+                    <span className="text-2xl">{option.emoji}</span>
+                    <span className="font-semibold text-lg">{option.label}</span>
+                  </div>
                 </button>
               ))}
             </div>
@@ -136,74 +140,62 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
 
       case 'budget':
         const budgetOptions = [
-          { id: 'low', label: 'Économique', desc: '< 500€' },
-          { id: 'medium', label: 'Modéré', desc: '500€ - 1500€' },
-          { id: 'high', label: 'Confortable', desc: '1500€ - 3000€' },
-          { id: 'luxury', label: 'Luxe', desc: '> 3000€' }
+          { id: 'low', label: 'Économique', desc: '< 500€', emoji: '💰' },
+          { id: 'medium', label: 'Modéré', desc: '500€ - 1500€', emoji: '💳' },
+          { id: 'high', label: 'Confortable', desc: '1500€ - 3000€', emoji: '💎' },
+          { id: 'luxury', label: 'Luxe', desc: '> 3000€', emoji: '👑' }
         ];
 
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-800 mb-2">
-                Quel est votre budget ?
-              </h2>
-              <p className="text-gray-500">Pour une personne, transport inclus</p>
-            </div>
-            
-            <div className="max-w-sm mx-auto space-y-3">
-              {budgetOptions.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => setFormData({...formData, budget: option.id})}
-                  className={`w-full h-14 rounded-lg border-2 text-center transition-all ${
-                    formData.budget === option.id
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="font-medium">{option.label}</div>
-                  <div className="text-sm opacity-75">{option.desc}</div>
-                </button>
-              ))}
-            </div>
+            {budgetOptions.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => setFormData({...formData, budget: option.id})}
+                className={`w-full p-6 rounded-2xl border-2 text-left transition-all duration-300 hover:scale-105 ${
+                  formData.budget === option.id
+                    ? 'border-purple-500 bg-purple-50 text-purple-700'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                }`}
+              >
+                <div className="flex items-center space-x-4">
+                  <span className="text-2xl">{option.emoji}</span>
+                  <div>
+                    <div className="font-semibold text-lg">{option.label}</div>
+                    <div className="text-sm opacity-75">{option.desc}</div>
+                  </div>
+                </div>
+              </button>
+            ))}
           </div>
         );
 
       case 'accommodation':
         const accommodationOptions = [
-          { id: 'hotel', label: 'Hôtel' },
-          { id: 'apartment', label: 'Appartement' },
-          { id: 'hostel', label: 'Auberge de jeunesse' },
-          { id: 'villa', label: 'Villa/Maison' },
-          { id: 'camping', label: 'Camping' },
-          { id: 'unusual', label: 'Logement insolite' }
+          { id: 'hotel', label: 'Hôtel', emoji: '🏨' },
+          { id: 'apartment', label: 'Appartement', emoji: '🏠' },
+          { id: 'hostel', label: 'Auberge de jeunesse', emoji: '🏡' },
+          { id: 'villa', label: 'Villa/Maison', emoji: '🏘️' },
+          { id: 'camping', label: 'Camping', emoji: '⛺' },
+          { id: 'unusual', label: 'Logement insolite', emoji: '🏕️' }
         ];
 
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-light text-gray-800 mb-2">
-                Type de logement ?
-              </h2>
-              <p className="text-gray-500">Où souhaitez-vous séjourner</p>
-            </div>
-            
-            <div className="max-w-sm mx-auto space-y-3">
-              {accommodationOptions.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => setFormData({...formData, accommodation: option.id})}
-                  className={`w-full h-12 rounded-lg border-2 text-center transition-all ${
-                    formData.accommodation === option.id
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            {accommodationOptions.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => setFormData({...formData, accommodation: option.id})}
+                className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 ${
+                  formData.accommodation === option.id
+                    ? 'border-purple-500 bg-purple-50 text-purple-700'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                }`}
+              >
+                <div className="text-3xl mb-3">{option.emoji}</div>
+                <div className="font-semibold">{option.label}</div>
+              </button>
+            ))}
           </div>
         );
 
@@ -213,48 +205,98 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
-      <div className="max-w-md mx-auto px-6 py-8">
-        {/* Progress simple */}
-        <div className="mb-8">
-          <div className="flex justify-center space-x-2 mb-4">
-            {steps.map((_, index) => (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Button 
+              variant="ghost" 
+              onClick={onBack}
+              className="text-gray-600 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour
+            </Button>
+            
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-xl font-bold text-gray-900">TASARINI</span>
+            </div>
+
+            <div className="w-20" /> {/* Spacer */}
+          </div>
+        </div>
+      </header>
+
+      {/* Progress Indicator */}
+      <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50">
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="flex justify-center space-x-4 mb-6">
+            {steps.map((step, index) => (
               <div
-                key={index}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index <= currentStep ? 'bg-black' : 'bg-gray-300'
+                key={step.id}
+                className={`flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 ${
+                  index < currentStep
+                    ? 'bg-green-500 text-white'
+                    : index === currentStep
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-gray-200 text-gray-500'
                 }`}
-              />
+              >
+                {index < currentStep ? (
+                  <Check className="w-6 h-6" />
+                ) : (
+                  <step.icon className="w-6 h-6" />
+                )}
+              </div>
             ))}
           </div>
-          <p className="text-center text-sm text-gray-500">
-            {currentStep + 1} sur {steps.length}
-          </p>
+          
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {steps[currentStep].title}
+            </h1>
+            <p className="text-lg text-gray-600">
+              {steps[currentStep].subtitle}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-200/50 p-8 md:p-12">
+          {renderStepContent()}
         </div>
 
-        {/* Contenu de l'étape */}
-        {renderStepContent()}
+        {/* Navigation */}
+        <div className="flex justify-between items-center mt-12">
+          <Button
+            onClick={handleBack}
+            variant="ghost"
+            className="text-gray-600 hover:text-gray-900 px-6 py-3"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Précédent
+          </Button>
+          
+          <div className="text-sm text-gray-500">
+            Étape {currentStep + 1} sur {steps.length}
+          </div>
 
-        {/* Boutons */}
-        <div className="mt-12 space-y-4">
           <Button
             onClick={handleNext}
             disabled={!isStepValid()}
-            className="w-full h-14 bg-black hover:bg-gray-800 text-white text-lg font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {currentStep === steps.length - 1 ? 'Trouvez mon inspiration' : 'Suivant'}
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
-          
-          <Button
-            onClick={handleBack}
-            variant="ghost"
-            className="w-full h-12 text-gray-600 hover:text-black"
-          >
-            Retour
-          </Button>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
