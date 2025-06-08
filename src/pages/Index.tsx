@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart } from "lucide-react";
+import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe } from "lucide-react";
 import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
