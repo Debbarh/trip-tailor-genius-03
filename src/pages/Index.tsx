@@ -1,11 +1,13 @@
-
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe } from "lucide-react";
 import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import BrandLogo from "@/components/layout/BrandLogo";
+import LanguageSelector from "@/components/ui/LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
 
@@ -63,6 +65,7 @@ const Index = () => {
 };
 
 const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire') => void }) => {
+  const { t } = useLanguage();
   const [currentDestination, setCurrentDestination] = useState(0);
 
   const destinations = [
@@ -122,12 +125,20 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
           <BrandLogo />
           
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">Destinations</a>
-            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">Inspiration</a>
-            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">À propos</a>
-            <Button variant="ghost" className="text-gray-700 hover:text-purple-600 font-medium">
-              Se connecter
-            </Button>
+            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.destinations')}</a>
+            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.inspiration')}</a>
+            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
+            <Link to="/login">
+              <Button variant="ghost" className="text-gray-700 hover:text-purple-600 font-medium">
+                {t('nav.login')}
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium">
+                {t('nav.signup')}
+              </Button>
+            </Link>
+            <LanguageSelector />
           </div>
         </nav>
       </header>
@@ -146,22 +157,22 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
           {/* Hero Title */}
           <div className="mb-16">
             <h1 className="text-6xl md:text-8xl font-light text-gray-900 mb-8 leading-tight">
-              L'aventure
+              {t('hero.adventure')}
               <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-medium animate-fade-in">
-                vous attend
+                {t('hero.awaits')}
               </span>
             </h1>
             <p className="text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-8">
-              Découvrez des destinations extraordinaires et créez des souvenirs inoubliables avec notre IA de voyage intelligente
+              {t('hero.description')}
             </p>
             <div className="flex items-center justify-center gap-6 text-sm text-gray-600">
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4 text-red-500" />
-                <span>+50,000 voyageurs inspirés</span>
+                <span>{t('hero.travelers')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-blue-500" />
-                <span>180+ destinations</span>
+                <span>{t('hero.destinations')}</span>
               </div>
             </div>
           </div>
@@ -173,7 +184,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
               className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-purple-500/25 border-0"
             >
               <Plane className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
-              Planifier mon voyage
+              {t('hero.plan')}
               <ArrowRight className="w-6 h-6 ml-4 group-hover:translate-x-2 transition-transform duration-300" />
             </Button>
             
@@ -182,7 +193,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
               className="group bg-white/90 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-purple-700 px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-pink-500/25 border border-white/30"
             >
               <SparklesIcon className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
-              M'inspirer
+              {t('hero.inspire')}
               <ArrowRight className="w-6 h-6 ml-4 group-hover:translate-x-2 transition-transform duration-300" />
             </Button>
           </div>
