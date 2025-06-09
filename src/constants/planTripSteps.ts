@@ -1,5 +1,6 @@
 
 import { MapPin, Users, DollarSign, Bed, Activity } from "lucide-react";
+import { CountryService } from "@/services/countryService";
 
 export const stepConfigs = [
   { 
@@ -39,14 +40,13 @@ export const stepConfigs = [
   }
 ];
 
-export const countries = [
-  { code: 'MA', name: 'Maroc', cities: ['Marrakech', 'Casablanca', 'Fès', 'Rabat'], emoji: '🇲🇦' },
-  { code: 'FR', name: 'France', cities: ['Paris', 'Lyon', 'Marseille', 'Nice'], emoji: '🇫🇷' },
-  { code: 'ES', name: 'Espagne', cities: ['Madrid', 'Barcelone', 'Séville', 'Valence'], emoji: '🇪🇸' },
-  { code: 'IT', name: 'Italie', cities: ['Rome', 'Milan', 'Florence', 'Venise'], emoji: '🇮🇹' },
-  { code: 'GR', name: 'Grèce', cities: ['Athènes', 'Thessalonique', 'Santorin', 'Mykonos'], emoji: '🇬🇷' },
-  { code: 'TR', name: 'Turquie', cities: ['Istanbul', 'Ankara', 'Antalya', 'Cappadoce'], emoji: '🇹🇷' }
-];
+// Utilisation de la nouvelle base de données pour les pays
+export const countries = CountryService.getAllCountries().map(country => ({
+  code: country.code,
+  name: country.name,
+  cities: country.cities || [],
+  emoji: country.flagCode
+}));
 
 export const travelSegments = [
   { id: 'solo', name: 'Solo', desc: 'Liberté totale et découvertes personnelles', emoji: '🎒' },
