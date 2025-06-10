@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import BrandLogo from "@/components/layout/BrandLogo";
 import LanguageSelector from "@/components/ui/LanguageSelector";
+import ToursSection from "@/components/tours/ToursSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
@@ -133,7 +133,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
             <Link to="/itinerary" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
               Itinéraire
             </Link>
-            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.destinations')}</a>
+            <a href="#tours" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">Tours</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.inspiration')}</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
             <Link to="/login">
@@ -241,6 +241,11 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
         </div>
       </main>
 
+      {/* Tours Section */}
+      <div id="tours">
+        <ToursSection />
+      </div>
+
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-full blur-3xl animate-pulse"></div>
@@ -266,3 +271,5 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
 };
 
 export default Index;
+
+</edits_to_apply>
