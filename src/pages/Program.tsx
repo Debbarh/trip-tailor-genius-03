@@ -1,10 +1,36 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Calendar, Clock, MapPin, Users, Eye } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import BrandLogo from "@/components/layout/BrandLogo";
+import { useState } from "react";
+import ItineraryDisplay from "@/components/ItineraryDisplay";
 
 const Program = () => {
+  const [showItinerary, setShowItinerary] = useState(false);
+  const navigate = useNavigate();
+
+  // Données d'exemple pour l'itinéraire
+  const sampleTripData = {
+    mode: 'inspire' as const,
+    activities: ['culture', 'adventure', 'relaxation'],
+    companions: 'couple',
+    budget: 'premium',
+    accommodation: 'hotel'
+  };
+
+  const handleViewExample = () => {
+    setShowItinerary(true);
+  };
+
+  const handleBackToPrograms = () => {
+    setShowItinerary(false);
+  };
+
+  if (showItinerary) {
+    return <ItineraryDisplay data={sampleTripData} onBack={handleBackToPrograms} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       {/* Header */}
@@ -62,9 +88,19 @@ const Program = () => {
                 2-8 personnes
               </div>
             </div>
-            <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              Découvrir
-            </Button>
+            <div className="space-y-3">
+              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                Découvrir
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={handleViewExample}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Voir un exemple
+              </Button>
+            </div>
           </div>
 
           {/* Program 2 */}
@@ -90,9 +126,19 @@ const Program = () => {
                 4-12 personnes
               </div>
             </div>
-            <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-              Découvrir
-            </Button>
+            <div className="space-y-3">
+              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                Découvrir
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={handleViewExample}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Voir un exemple
+              </Button>
+            </div>
           </div>
 
           {/* Program 3 */}
@@ -118,9 +164,19 @@ const Program = () => {
                 6-15 personnes
               </div>
             </div>
-            <Button className="w-full bg-gradient-to-r from-pink-600 to-orange-600 hover:from-pink-700 hover:to-orange-700">
-              Découvrir
-            </Button>
+            <div className="space-y-3">
+              <Button className="w-full bg-gradient-to-r from-pink-600 to-orange-600 hover:from-pink-700 hover:to-orange-700">
+                Découvrir
+              </Button>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={handleViewExample}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Voir un exemple
+              </Button>
+            </div>
           </div>
         </div>
 
