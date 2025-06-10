@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe, Settings } from "lucide-react";
@@ -93,12 +94,12 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
     }
   ];
 
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentDestination((prev) => (prev + 1) % destinations.length);
     }, 4000);
     return () => clearInterval(interval);
-  });
+  }, [destinations.length]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -263,5 +264,3 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
 };
 
 export default Index;
-
-</initial_code>
