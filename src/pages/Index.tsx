@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import BrandLogo from "@/components/layout/BrandLogo";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import ToursSection from "@/components/tours/ToursSection";
 import { useLanguage } from "@/contexts/LanguageContext";
+import UserHeader from "@/components/ui/UserHeader";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
 
@@ -137,16 +137,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
             <a href="#tours" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">Tours</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.inspiration')}</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
-            <Link to="/login">
-              <Button variant="ghost" className="text-gray-700 hover:text-purple-600 font-medium">
-                {t('nav.login')}
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium">
-                {t('nav.signup')}
-              </Button>
-            </Link>
+            <UserHeader />
             <LanguageSelector />
           </div>
         </nav>
@@ -272,3 +263,5 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
 };
 
 export default Index;
+
+</initial_code>
