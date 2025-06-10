@@ -1,12 +1,7 @@
 
 import React from 'react';
 
-interface LogoProps {
-  size?: number;
-  className?: string;
-}
-
-const Logo = ({ size = 40, className = "" }: LogoProps) => {
+const Logo = ({ size = 40, className = "" }) => {
   return (
     <svg
       width={size}
@@ -24,7 +19,6 @@ const Logo = ({ size = 40, className = "" }: LogoProps) => {
         </linearGradient>
       </defs>
       
-      {/* Cercle principal */}
       <circle
         cx="20"
         cy="14"
@@ -34,7 +28,6 @@ const Logo = ({ size = 40, className = "" }: LogoProps) => {
         fill="none"
       />
       
-      {/* Cercle intérieur */}
       <circle
         cx="20"
         cy="14"
@@ -42,7 +35,6 @@ const Logo = ({ size = 40, className = "" }: LogoProps) => {
         fill="url(#logoGradient)"
       />
       
-      {/* Forme de pin/localisation */}
       <path
         d="M15 24 L20 35 L25 24 L30 26 L20 24 L10 26 Z"
         fill="url(#logoGradient)"
@@ -51,7 +43,6 @@ const Logo = ({ size = 40, className = "" }: LogoProps) => {
         strokeLinejoin="round"
       />
       
-      {/* Connexion entre le cercle et la forme */}
       <line
         x1="20"
         y1="24"
