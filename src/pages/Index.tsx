@@ -128,6 +128,9 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
             <Link to="/countries" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
               Pays
             </Link>
+            <Link to="/itinerary" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
+              Itinéraire
+            </Link>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.destinations')}</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.inspiration')}</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
