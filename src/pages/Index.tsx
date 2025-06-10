@@ -1,70 +1,20 @@
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe } from "lucide-react";
-import PlanTripSteps from "@/components/forms/PlanTripSteps";
-import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
-import ItineraryDisplay from "@/components/ItineraryDisplay";
+import { ArrowRight, Plane, Camera, Heart, Globe, SparklesIcon } from "lucide-react";
 import BrandLogo from "@/components/layout/BrandLogo";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
-
-interface TripData {
-  mode: 'plan' | 'inspire';
-  [key: string]: any;
-}
-
 const Index = () => {
-  const [mode, setMode] = useState<Mode>('home');
-  const [tripData, setTripData] = useState<TripData | null>(null);
-
-  const handleModeSelect = (selectedMode: 'plan' | 'inspire') => {
-    setMode(selectedMode);
-    setTripData({ mode: selectedMode });
-  };
-
-  const handleFormComplete = (data: TripData) => {
-    setTripData(data);
-    setMode('itinerary');
-  };
-
-  const handleBackToHome = () => {
-    setMode('home');
-    setTripData(null);
-  };
-
-  const renderContent = () => {
-    switch (mode) {
-      case 'itinerary':
-        return tripData ? (
-          <ItineraryDisplay data={tripData} onBack={handleBackToHome} />
-        ) : null;
-
-      case 'plan':
-        return (
-          <PlanTripSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
-        );
-
-      case 'inspire':
-        return (
-          <BeInspiredSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
-        );
-
-      default:
-        return <HomeScreen onModeSelect={handleModeSelect} />;
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      {renderContent()}
+      <HomeScreen />
     </div>
   );
 };
 
-const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire') => void }) => {
+const HomeScreen = () => {
   const { t } = useLanguage();
   const [currentDestination, setCurrentDestination] = useState(0);
 
@@ -98,6 +48,14 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
     return () => clearInterval(interval);
   });
 
+  const handlePlanTrip = () => {
+    console.log('Planifier un voyage');
+  };
+
+  const handleInspire = () => {
+    console.log('Inspirer');
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Background Hero Images Carousel */}
@@ -125,22 +83,18 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
           <BrandLogo />
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/countries" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
+            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
               Pays
-            </Link>
+            </a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.destinations')}</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.inspiration')}</a>
             <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
-            <Link to="/login">
-              <Button variant="ghost" className="text-gray-700 hover:text-purple-600 font-medium">
-                {t('nav.login')}
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium">
-                {t('nav.signup')}
-              </Button>
-            </Link>
+            <Button variant="ghost" className="text-gray-700 hover:text-purple-600 font-medium">
+              {t('nav.login')}
+            </Button>
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium">
+              {t('nav.signup')}
+            </Button>
             <LanguageSelector />
           </div>
         </nav>
@@ -183,7 +137,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-8 justify-center items-center mb-24">
             <Button 
-              onClick={() => onModeSelect('plan')}
+              onClick={handlePlanTrip}
               className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-purple-500/25 border-0"
             >
               <Plane className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
@@ -192,7 +146,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
             </Button>
             
             <Button 
-              onClick={() => onModeSelect('inspire')}
+              onClick={handleInspire}
               className="group bg-white/90 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-purple-700 px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-pink-500/25 border border-white/30"
             >
               <SparklesIcon className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
