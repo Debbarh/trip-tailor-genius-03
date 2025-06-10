@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Search, MapPin, Users, Plus, Edit, Trash } from 'lucide-react';
+import { Search, MapPin, Users, Plus, Edit, Trash, Settings } from 'lucide-react';
 import { CountryService } from '@/services/countryService';
 import { Country } from '@/data/countries';
 import BrandLogo from '@/components/layout/BrandLogo';
@@ -215,8 +214,9 @@ const Countries = () => {
             <Link to="/" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
               Accueil
             </Link>
-            <Link to="/countries" className="text-purple-600 font-medium">
-              Pays
+            <Link to="/admin" className="text-gray-700 hover:text-purple-600 transition-colors font-medium flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              Admin
             </Link>
             <LanguageSelector />
           </div>
