@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { HeartIcon, PlusIcon, ClockIcon } from "lucide-react";
-import { DayItinerary } from "@/types/itinerary";
+import { DayItinerary, Activity } from "@/types/itinerary";
 import { 
   DndContext, 
   closestCenter,
@@ -20,6 +20,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import DraggableActivity from './DraggableActivity';
+import { useToast } from "@/hooks/use-toast";
 
 interface DayCardProps {
   day: DayItinerary;
@@ -30,6 +31,7 @@ interface DayCardProps {
 
 const DayCard = ({ day, dayIndex, isFavorite, onToggleFavorite }: DayCardProps) => {
   const [activities, setActivities] = useState(day.activities);
+  const { toast } = useToast();
   
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -49,6 +51,27 @@ const DayCard = ({ day, dayIndex, isFavorite, onToggleFavorite }: DayCardProps) 
         return arrayMove(items, oldIndex, newIndex);
       });
     }
+  };
+
+  const handleEditActivity = (activityIndex: number, updatedActivity: Activity) => {
+    setActivities(prev => 
+      prev.map((activity, index) => 
+        index === activityIndex ? updatedActivity : activity
+      )
+    );
+    toast({
+      title: "Activité modifiée",
+      description: "L'activité a été mise à jour avec succès.",
+    });
+  };
+
+  const handleDeleteActivity = (activityIndex: number) => {
+    setActivities(prev => prev.filter((_, index) => index !== activityIndex));
+    toast({
+      title: "Activité supprimée",
+      description: "L'activité a été supprimée de votre programme.",
+      variant: "destructive",
+    });
   };
 
   // Calculer le temps total et le budget total
@@ -143,6 +166,8 @@ const DayCard = ({ day, dayIndex, isFavorite, onToggleFavorite }: DayCardProps) 
                     key={`${dayIndex}-${idx}`}
                     id={`${dayIndex}-${idx}`}
                     activity={activity}
+                    onEdit={(updatedActivity) => handleEditActivity(idx, updatedActivity)}
+                    onDelete={() => handleDeleteActivity(idx)}
                   />
                 ))}
               </div>
