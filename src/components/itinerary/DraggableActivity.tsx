@@ -1,3 +1,4 @@
+
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Activity } from "@/types/itinerary";
@@ -10,12 +11,13 @@ import BookingWidget from "@/components/booking/BookingWidget";
 import BookingOptionsCard from "@/components/booking/BookingOptionsCard";
 
 interface DraggableActivityProps {
+  id: string;
   activity: Activity;
-  onUpdate: (updatedActivity: Activity) => void;
+  onEdit: (updatedActivity: Activity) => void;
   onDelete: () => void;
 }
 
-const DraggableActivity = ({ activity, onUpdate, onDelete }: DraggableActivityProps) => {
+const DraggableActivity = ({ id, activity, onEdit, onDelete }: DraggableActivityProps) => {
   const {
     attributes,
     listeners,
@@ -23,7 +25,7 @@ const DraggableActivity = ({ activity, onUpdate, onDelete }: DraggableActivityPr
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: activity.activity });
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -34,7 +36,7 @@ const DraggableActivity = ({ activity, onUpdate, onDelete }: DraggableActivityPr
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleUpdate = (updatedActivity: Activity) => {
-    onUpdate(updatedActivity);
+    onEdit(updatedActivity);
     setIsEditDialogOpen(false);
   };
 
@@ -98,7 +100,7 @@ const DraggableActivity = ({ activity, onUpdate, onDelete }: DraggableActivityPr
         activityName={activity.activity}
       />
       
-      {/* Nouveau: Widget de réservation */}
+      {/* Widget de réservation */}
       {activity.affiliate && (
         <BookingWidget 
           activity={activity}
@@ -108,7 +110,7 @@ const DraggableActivity = ({ activity, onUpdate, onDelete }: DraggableActivityPr
         />
       )}
       
-      {/* Nouveau: Options de réservation supplémentaires */}
+      {/* Options de réservation supplémentaires */}
       {activity.bookingOptions && (
         <div className="mt-4 space-y-4">
           {activity.bookingOptions.transport && (
