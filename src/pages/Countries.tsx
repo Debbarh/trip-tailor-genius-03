@@ -4,44 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Search, MapPin, Users, Plus, Edit, Trash } from 'lucide-react';
+import { Search, MapPin, Users } from 'lucide-react';
 import { CountryService } from '@/services/countryService';
 import { Country } from '@/data/countries';
 import BrandLogo from '@/components/layout/BrandLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useForm } from 'react-hook-form';
-import { useToast } from '@/hooks/use-toast';
-
-interface CountryFormData {
-  name: string;
-  code: string;
-  flagCode: string;
-  cities: string;
-}
 
 const Countries = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingCountry, setEditingCountry] = useState<Country | null>(null);
   const { t } = useLanguage();
-  const { toast } = useToast();
-
-  const form = useForm<CountryFormData>({
-    defaultValues: {
-      name: '',
-      code: '',
-      flagCode: '',
-      cities: ''
-    }
-  });
 
   useEffect(() => {
     const allCountries = CountryService.getAllCountries();
@@ -57,150 +32,6 @@ const Countries = () => {
       setFilteredCountries(countries);
     }
   }, [searchTerm, countries]);
-
-  const refreshCountries = () => {
-    const allCountries = CountryService.getAllCountries();
-    setCountries(allCountries);
-    setFilteredCountries(allCountries);
-  };
-
-  const handleAddCountry = (data: CountryFormData) => {
-    const cities = data.cities.split(',').map(city => city.trim()).filter(city => city);
-    const newCountry = CountryService.addCountry({
-      name: data.name,
-      code: data.code,
-      flagCode: data.flagCode,
-      cities
-    });
-    
-    refreshCountries();
-    setIsAddDialogOpen(false);
-    form.reset();
-    toast({
-      title: "Pays ajouté",
-      description: `${newCountry.name} a été ajouté avec succès.`,
-    });
-  };
-
-  const handleEditCountry = (data: CountryFormData) => {
-    if (!editingCountry) return;
-    
-    const cities = data.cities.split(',').map(city => city.trim()).filter(city => city);
-    const updatedCountry = CountryService.updateCountry(editingCountry.id, {
-      name: data.name,
-      code: data.code,
-      flagCode: data.flagCode,
-      cities
-    });
-
-    if (updatedCountry) {
-      refreshCountries();
-      setIsEditDialogOpen(false);
-      setEditingCountry(null);
-      form.reset();
-      toast({
-        title: "Pays modifié",
-        description: `${updatedCountry.name} a été modifié avec succès.`,
-      });
-    }
-  };
-
-  const handleDeleteCountry = (country: Country) => {
-    const success = CountryService.deleteCountry(country.id);
-    if (success) {
-      refreshCountries();
-      toast({
-        title: "Pays supprimé",
-        description: `${country.name} a été supprimé avec succès.`,
-      });
-    }
-  };
-
-  const openEditDialog = (country: Country) => {
-    setEditingCountry(country);
-    form.reset({
-      name: country.name,
-      code: country.code,
-      flagCode: country.flagCode,
-      cities: country.cities?.join(', ') || ''
-    });
-    setIsEditDialogOpen(true);
-  };
-
-  const CountryForm = ({ onSubmit, submitLabel }: { onSubmit: (data: CountryFormData) => void, submitLabel: string }) => (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          rules={{ required: "Le nom est requis" }}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nom du pays</FormLabel>
-              <FormControl>
-                <Input placeholder="France" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="code"
-          rules={{ 
-            required: "Le code est requis",
-            pattern: {
-              value: /^[A-Z]{2}$/,
-              message: "Le code doit contenir 2 lettres majuscules"
-            }
-          }}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Code pays (2 lettres)</FormLabel>
-              <FormControl>
-                <Input placeholder="FR" maxLength={2} {...field} onChange={(e) => field.onChange(e.target.value.toUpperCase())} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="flagCode"
-          rules={{ required: "Le drapeau est requis" }}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Emoji drapeau</FormLabel>
-              <FormControl>
-                <Input placeholder="🇫🇷" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="cities"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Villes (séparées par des virgules)</FormLabel>
-              <FormControl>
-                <Input placeholder="Paris, Lyon, Marseille" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <Button type="submit" className="w-full">
-          {submitLabel}
-        </Button>
-      </form>
-    </Form>
-  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
@@ -225,38 +56,19 @@ const Countries = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-4xl font-light text-gray-900 mb-2">
-                Gestion des
-                <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-medium">
-                  Pays
-                </span>
-              </h1>
-              <p className="text-xl text-gray-700">
-                {countries.length} pays dans la base de données
-              </p>
-            </div>
-            
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Ajouter un pays
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Ajouter un nouveau pays</DialogTitle>
-                </DialogHeader>
-                <CountryForm onSubmit={handleAddCountry} submitLabel="Ajouter" />
-              </DialogContent>
-            </Dialog>
-          </div>
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-light text-gray-900 mb-4">
+            Explorez nos
+            <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent font-medium">
+              Destinations
+            </span>
+          </h1>
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
+            Découvrez {countries.length} pays merveilleux pour votre prochaine aventure
+          </p>
 
           {/* Search */}
-          <div className="relative max-w-md mb-6">
+          <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               type="text"
@@ -268,81 +80,46 @@ const Countries = () => {
           </div>
         </div>
 
-        {/* Countries Table */}
-        <Card className="bg-white/80 backdrop-blur-sm border-white/30">
-          <CardHeader>
-            <CardTitle>Liste des pays</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Drapeau</TableHead>
-                  <TableHead>Nom</TableHead>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Villes</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredCountries.map((country) => (
-                  <TableRow key={country.id}>
-                    <TableCell>
-                      <span className="text-2xl">{country.flagCode}</span>
-                    </TableCell>
-                    <TableCell className="font-medium">{country.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">{country.code}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{country.cities?.length || 0} villes</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => openEditDialog(country)}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteCountry(country)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <Trash className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+        {/* Countries Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredCountries.map((country) => (
+            <Card key={country.id} className="group hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm border-white/30">
+              <CardHeader className="text-center pb-4">
+                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                  {country.flagCode}
+                </div>
+                <CardTitle className="text-xl font-bold text-gray-900">
+                  {country.name}
+                </CardTitle>
+                <Badge variant="secondary" className="text-sm">
+                  {country.code}
+                </Badge>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="flex items-center justify-center gap-4 text-sm text-gray-600 mb-4">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-4 h-4" />
+                    <span>{country.cities.length} villes</span>
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full group-hover:bg-purple-600 group-hover:text-white transition-colors"
+                >
+                  Découvrir
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-            {filteredCountries.length === 0 && searchTerm && (
-              <div className="text-center py-8">
-                <p className="text-xl text-gray-600">
-                  Aucun pays trouvé pour "{searchTerm}"
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Edit Dialog */}
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Modifier le pays</DialogTitle>
-            </DialogHeader>
-            <CountryForm onSubmit={handleEditCountry} submitLabel="Modifier" />
-          </DialogContent>
-        </Dialog>
+        {filteredCountries.length === 0 && searchTerm && (
+          <div className="text-center py-12">
+            <p className="text-xl text-gray-600">
+              Aucun pays trouvé pour "{searchTerm}"
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );
