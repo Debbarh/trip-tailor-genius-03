@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Plane, Camera, Heart, Globe, SparklesIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 import BrandLogo from "@/components/layout/BrandLogo";
 import LanguageSelector from "@/components/ui/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -102,11 +103,11 @@ const HomeScreen = () => {
             <a href="#" className="text-slate-700 hover:text-indigo-600 transition-colors font-medium px-3 py-2 rounded-lg hover:bg-white/10">
               {t('nav.about')}
             </a>
-            <Button variant="ghost" className="text-slate-700 hover:text-indigo-600 font-medium hover:bg-white/10">
-              {t('nav.login')}
+            <Button variant="ghost" className="text-slate-700 hover:text-indigo-600 font-medium hover:bg-white/10" asChild>
+              <Link to="/login">{t('nav.login')}</Link>
             </Button>
-            <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300">
-              {t('nav.signup')}
+            <Button className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300" asChild>
+              <Link to="/signup">{t('nav.signup')}</Link>
             </Button>
             <LanguageSelector />
           </div>
