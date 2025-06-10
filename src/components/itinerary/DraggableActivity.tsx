@@ -13,11 +13,12 @@ import BookingOptionsCard from "@/components/booking/BookingOptionsCard";
 interface DraggableActivityProps {
   id: string;
   activity: Activity;
-  onEdit: (updatedActivity: Activity) => void;
+  activityIndex: number;
+  onEdit: (updatedActivity: Activity, activityIndex: number) => void;
   onDelete: () => void;
 }
 
-const DraggableActivity = ({ id, activity, onEdit, onDelete }: DraggableActivityProps) => {
+const DraggableActivity = ({ id, activity, activityIndex, onEdit, onDelete }: DraggableActivityProps) => {
   const {
     attributes,
     listeners,
@@ -36,7 +37,7 @@ const DraggableActivity = ({ id, activity, onEdit, onDelete }: DraggableActivity
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleUpdate = (updatedActivity: Activity) => {
-    onEdit(updatedActivity);
+    onEdit(updatedActivity, activityIndex);
     setIsEditDialogOpen(false);
   };
 

@@ -54,7 +54,7 @@ const DayCard = ({ day, dayIndex, isFavorite, onToggleFavorite }: DayCardProps) 
     }
   };
 
-  const handleEditActivity = (activityIndex: number, updatedActivity: Activity) => {
+  const handleEditActivity = (updatedActivity: Activity, activityIndex: number) => {
     setActivities(prev => 
       prev.map((activity, index) => 
         index === activityIndex ? updatedActivity : activity
@@ -113,7 +113,8 @@ const DayCard = ({ day, dayIndex, isFavorite, onToggleFavorite }: DayCardProps) 
                     key={`${dayIndex}-${idx}`}
                     id={`${dayIndex}-${idx}`}
                     activity={activity}
-                    onEdit={(updatedActivity) => handleEditActivity(idx, updatedActivity)}
+                    activityIndex={idx}
+                    onEdit={handleEditActivity}
                     onDelete={() => handleDeleteActivity(idx)}
                   />
                 ))}
