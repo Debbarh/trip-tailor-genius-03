@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import ItineraryOverview from "@/components/itinerary/ItineraryOverview";
 import DayCard from "@/components/itinerary/DayCard";
 import AccommodationsTab from "@/components/itinerary/AccommodationsTab";
 import ExperiencesTab from "@/components/itinerary/ExperiencesTab";
+import PracticalInfoTab from "@/components/itinerary/PracticalInfoTab";
 
 const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -32,7 +32,7 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
 
           <CardContent className="p-0">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-gradient-to-r from-purple-50 via-blue-50 to-pink-50 border-b border-purple-100">
+              <TabsList className="grid w-full grid-cols-5 bg-gradient-to-r from-purple-50 via-blue-50 to-pink-50 border-b border-purple-100">
                 <TabsTrigger 
                   value="overview" 
                   className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-100 data-[state=active]:to-purple-200 data-[state=active]:text-purple-800 font-medium"
@@ -44,6 +44,12 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
                   className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-100 data-[state=active]:to-blue-200 data-[state=active]:text-blue-800 font-medium"
                 >
                   📅 Programme
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="practical" 
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-100 data-[state=active]:to-green-200 data-[state=active]:text-green-800 font-medium"
+                >
+                  💡 Infos Pratiques
                 </TabsTrigger>
                 <TabsTrigger 
                   value="accommodations" 
@@ -82,6 +88,16 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
                     />
                   ))}
                 </div>
+              </TabsContent>
+
+              <TabsContent value="practical" className="p-8 bg-gradient-to-br from-green-50/30 via-blue-50/30 to-purple-50/30">
+                <div className="text-center mb-8">
+                  <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    💡 Informations Pratiques & Recommandations
+                  </h3>
+                  <p className="text-green-700/80">Tout ce qu'il faut savoir pour réussir votre voyage</p>
+                </div>
+                <PracticalInfoTab />
               </TabsContent>
 
               <TabsContent value="accommodations" className="p-8 bg-gradient-to-br from-purple-50/30 via-pink-50/30 to-blue-50/30">
