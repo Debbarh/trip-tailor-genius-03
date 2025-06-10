@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { info, map-pin, utensils, star } from "lucide-react";
+import { Info, MapPin, Utensils, Star } from "lucide-react";
 
 const PracticalInfoTab = () => {
   // Données d'exemple qui correspondraient à votre modèle Django
@@ -49,7 +49,7 @@ const PracticalInfoTab = () => {
       <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-2xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            <star className="w-6 h-6 text-purple-600" />
+            <Star className="w-6 h-6 text-purple-600" />
             Pourquoi choisir Marrakech ?
           </CardTitle>
         </CardHeader>
@@ -74,7 +74,7 @@ const PracticalInfoTab = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <info className="w-5 h-5 text-blue-600" />
+              <Info className="w-5 h-5 text-blue-600" />
               Informations Essentielles
             </CardTitle>
           </CardHeader>
@@ -104,7 +104,7 @@ const PracticalInfoTab = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <map-pin className="w-5 h-5 text-red-600" />
+              <MapPin className="w-5 h-5 text-red-600" />
               Lieux Incontournables
             </CardTitle>
           </CardHeader>
@@ -125,7 +125,7 @@ const PracticalInfoTab = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
-            <utensils className="w-6 h-6 text-green-600" />
+            <Utensils className="w-6 h-6 text-green-600" />
             Meilleurs Plats à Découvrir
           </CardTitle>
         </CardHeader>
