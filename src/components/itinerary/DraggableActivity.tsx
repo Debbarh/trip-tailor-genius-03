@@ -2,7 +2,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Activity } from "@/types/itinerary";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import EditActivityDialog from "@/components/itinerary/EditActivityDialog";
@@ -46,18 +46,28 @@ const DraggableActivity = ({ id, activity, activityIndex, onEdit, onDelete }: Dr
     setIsDeleteDialogOpen(false);
   };
 
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDeleteDialogOpen(true);
+  };
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       className={`bg-white/90 backdrop-blur-sm rounded-xl p-4 border-l-4 border-l-purple-500 hover:bg-white transition-all duration-300 ${
         isDragging ? 'opacity-50 shadow-2xl scale-105' : 'shadow-lg hover:shadow-xl'
       }`}
     >
       <div className="flex items-start justify-between">
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1">
           <h4 className="text-lg font-semibold text-gray-800">{activity.time} - {activity.activity}</h4>
           <p className="text-sm text-gray-600">{activity.description}</p>
           <div className="flex items-center space-x-2">
@@ -67,11 +77,21 @@ const DraggableActivity = ({ id, activity, activityIndex, onEdit, onDelete }: Dr
           </div>
         </div>
 
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-2">
+          {/* Zone de drag séparée */}
+          <div 
+            {...attributes} 
+            {...listeners}
+            className="cursor-grab hover:cursor-grabbing p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <GripVertical className="w-4 h-4 text-gray-400" />
+          </div>
+          
+          {/* Boutons d'action séparés */}
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => setIsEditDialogOpen(true)}
+            onClick={handleEditClick}
             className="hover:bg-purple-100 text-purple-600"
           >
             <Edit className="w-4 h-4" />
@@ -79,7 +99,7 @@ const DraggableActivity = ({ id, activity, activityIndex, onEdit, onDelete }: Dr
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => setIsDeleteDialogOpen(true)}
+            onClick={handleDeleteClick}
             className="hover:bg-red-100 text-red-600"
           >
             <Trash2 className="w-4 h-4" />
