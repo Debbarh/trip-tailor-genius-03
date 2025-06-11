@@ -1,12 +1,17 @@
 
-import { Globe, Camera, Calendar, Plus, X, ArrowRight } from "lucide-react";
+import { Globe, Camera, Calendar, Plus, X, ArrowRight, Search } from "lucide-react";
 import { StepProps } from "@/types/planTrip";
-import { countries } from "@/constants/planTripSteps";
+import { countriesData, regions } from "@/data/countries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 
 const DestinationStep = ({ formData, setFormData }: StepProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState("Tous");
+
   const addCountry = (countryName: string) => {
     const existingCountries = formData.destination.countries || [];
     if (existingCountries.find(c => c.countryName === countryName)) return;
@@ -109,6 +114,13 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
     });
   };
 
+  // Filtrer les pays selon la recherche et la région
+  const filteredCountries = countriesData.filter(country => {
+    const matchesSearch = country.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRegion = selectedRegion === "Tous" || country.region === selectedRegion;
+    return matchesSearch && matchesRegion;
+  });
+
   const selectedCountries = formData.destination.countries || [];
 
   return (
@@ -119,39 +131,69 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
         </div>
         <h3 className="text-3xl font-bold text-gray-900 mb-3">Planifiez votre voyage multi-destinations</h3>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Sélectionnez plusieurs pays, villes et définissez les dates pour chaque étape de votre voyage
+          Découvrez le monde entier ! Sélectionnez plusieurs pays, villes et définissez les dates pour chaque étape de votre voyage
         </p>
+      </div>
+
+      {/* Filtres de recherche */}
+      <div className="space-y-4 bg-gray-50 p-6 rounded-2xl">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">Trouvez vos destinations</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              type="text"
+              placeholder="Rechercher un pays..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+            <SelectTrigger>
+              <SelectValue placeholder="Choisir une région" />
+            </SelectTrigger>
+            <SelectContent>
+              {regions.map((region) => (
+                <SelectItem key={region} value={region}>
+                  {region}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Sélection des pays */}
       <div className="space-y-6">
         <h4 className="text-2xl font-bold text-gray-900 text-center">
-          Choisissez vos destinations
+          Choisissez vos destinations ({filteredCountries.length} pays disponibles)
         </h4>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {countries.map((country) => {
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-2xl">
+          {filteredCountries.map((country) => {
             const isSelected = selectedCountries.find(c => c.countryName === country.name);
             
             return (
               <button
                 key={country.code}
                 onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
-                className={`group p-6 rounded-3xl border-3 text-center transition-all duration-500 hover:scale-105 hover:shadow-2xl relative ${
+                className={`group p-4 rounded-2xl border-2 text-center transition-all duration-300 hover:scale-105 hover:shadow-lg relative ${
                   isSelected
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-xl'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
                     : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50/50'
                 }`}
               >
                 {isSelected && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs">
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs">
                     ✓
                   </div>
                 )}
-                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {country.emoji}
+                <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                  {country.flagCode}
                 </div>
-                <div className="font-bold text-lg">{country.name}</div>
+                <div className="font-medium text-sm">{country.name}</div>
+                <div className="text-xs text-gray-500 mt-1">{country.region}</div>
               </button>
             );
           })}
@@ -166,14 +208,15 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
           </h4>
           
           {selectedCountries.map((selectedCountry) => {
-            const countryData = countries.find(c => c.name === selectedCountry.countryName);
+            const countryData = countriesData.find(c => c.name === selectedCountry.countryName);
             
             return (
               <Card key={selectedCountry.countryName} className="p-6 border-2 border-blue-200 bg-blue-50/30">
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h5 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-                      {countryData?.emoji} {selectedCountry.countryName}
+                      {countryData?.flagCode} {selectedCountry.countryName}
+                      <span className="text-sm font-normal text-gray-600">({countryData?.region})</span>
                     </h5>
                     <Button
                       variant="ghost"
@@ -188,8 +231,8 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
                   {/* Sélection des villes */}
                   <div className="space-y-4">
                     <p className="font-medium text-gray-700">Sélectionnez vos villes :</p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {countryData?.cities.map((city) => {
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-48 overflow-y-auto">
+                      {countryData?.cities?.map((city) => {
                         const isCitySelected = selectedCountry.cities.find(c => c.cityName === city);
                         
                         return (
@@ -222,7 +265,7 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
                         Définissez vos dates :
                       </p>
                       
-                      {selectedCountry.cities.map((city, index) => (
+                      {selectedCountry.cities.map((city) => (
                         <div key={city.cityName} className="bg-white p-4 rounded-xl border border-gray-200">
                           <div className="flex items-center gap-4 mb-3">
                             <span className="font-medium text-gray-900">{city.cityName}</span>
@@ -289,7 +332,7 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
           <CardContent className="p-6">
             <h5 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <ArrowRight className="w-5 h-5 text-green-600" />
-              Résumé de votre voyage
+              Résumé de votre voyage ({selectedCountries.length} pays)
             </h5>
             
             <div className="space-y-3">
