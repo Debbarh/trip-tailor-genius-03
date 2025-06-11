@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,18 +9,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Search, MapPin, Users, Plus, Edit, Trash, Settings } from 'lucide-react';
 import { CountryService } from '@/services/countryService';
-import { Country } from '@/data/countries';
+import { Country, regions } from '@/data/countries';
 import BrandLogo from '@/components/layout/BrandLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CountryFormData {
   name: string;
   code: string;
   flagCode: string;
+  region: string;
   cities: string;
 }
 
@@ -38,6 +41,7 @@ const Countries = () => {
       name: '',
       code: '',
       flagCode: '',
+      region: '',
       cities: ''
     }
   });
@@ -69,6 +73,7 @@ const Countries = () => {
       name: data.name,
       code: data.code,
       flagCode: data.flagCode,
+      region: data.region,
       cities
     });
     
@@ -89,6 +94,7 @@ const Countries = () => {
       name: data.name,
       code: data.code,
       flagCode: data.flagCode,
+      region: data.region,
       cities
     });
 
@@ -121,6 +127,7 @@ const Countries = () => {
       name: country.name,
       code: country.code,
       flagCode: country.flagCode,
+      region: country.region,
       cities: country.cities?.join(', ') || ''
     });
     setIsEditDialogOpen(true);
@@ -175,6 +182,32 @@ const Countries = () => {
               <FormControl>
                 <Input placeholder="🇫🇷" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="region"
+          rules={{ required: "La région est requise" }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Région</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner une région" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {regions.filter(region => region !== 'Tous').map((region) => (
+                    <SelectItem key={region} value={region}>
+                      {region}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -280,6 +313,7 @@ const Countries = () => {
                   <TableHead>Drapeau</TableHead>
                   <TableHead>Nom</TableHead>
                   <TableHead>Code</TableHead>
+                  <TableHead>Région</TableHead>
                   <TableHead>Villes</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -293,6 +327,9 @@ const Countries = () => {
                     <TableCell className="font-medium">{country.name}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">{country.code}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{country.region}</Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
