@@ -13,7 +13,7 @@ import PlanTripHeader from "./components/PlanTripHeader";
 const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<PlanTripFormData>({
-    destination: { country: '', city: '', dates: '' },
+    destination: { countries: [] },
     travelWith: { segment: '', subSegment: '' },
     budgetAndFood: { budget: '', cuisine: [] },
     accommodation: { type: '', preferences: [] },
@@ -40,7 +40,11 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
     const step = stepConfigs[currentStep];
     switch (step.id) {
       case 'destination':
-        return formData.destination.country && formData.destination.city;
+        return formData.destination.countries.length > 0 && 
+               formData.destination.countries.every(country => 
+                 country.cities.length > 0 && 
+                 country.cities.every(city => city.startDate && city.endDate)
+               );
       case 'travelWith':
         return formData.travelWith.segment;
       case 'budgetAndFood':

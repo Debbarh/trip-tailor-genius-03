@@ -1,8 +1,17 @@
 
+export interface CityWithDates {
+  cityName: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface CountryWithCities {
+  countryName: string;
+  cities: CityWithDates[];
+}
+
 export interface Destination {
-  country: string;
-  city: string;
-  dates: string;
+  countries: CountryWithCities[];
 }
 
 export interface TravelWith {
