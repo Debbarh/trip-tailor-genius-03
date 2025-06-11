@@ -1,4 +1,3 @@
-
 import { Globe, Camera, Calendar, Plus, X, ArrowRight, Search } from "lucide-react";
 import { StepProps } from "@/types/planTrip";
 import { countriesData, regions } from "@/data/countries";
@@ -114,12 +113,14 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
     });
   };
 
-  // Filtrer les pays selon la recherche et la région
-  const filteredCountries = countriesData.filter(country => {
-    const matchesSearch = country.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRegion = selectedRegion === "Tous" || country.region === selectedRegion;
-    return matchesSearch && matchesRegion;
-  });
+  // Filtrer les pays : si pas de recherche, afficher seulement le Maroc
+  const filteredCountries = searchTerm.trim() === "" 
+    ? countriesData.filter(country => country.name === "Maroc")
+    : countriesData.filter(country => {
+        const matchesSearch = country.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesRegion = selectedRegion === "Tous" || country.region === selectedRegion;
+        return matchesSearch && matchesRegion;
+      });
 
   const selectedCountries = formData.destination.countries || [];
 
@@ -167,7 +168,10 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
       {/* Sélection des pays */}
       <div className="space-y-6">
         <h4 className="text-2xl font-bold text-gray-900 text-center">
-          Choisissez vos destinations ({filteredCountries.length} pays disponibles)
+          {searchTerm.trim() === "" 
+            ? "Commencez votre voyage par le Maroc"
+            : `Choisissez vos destinations (${filteredCountries.length} pays trouvés)`
+          }
         </h4>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-2xl">
