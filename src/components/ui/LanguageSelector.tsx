@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Globe, ChevronDown } from 'lucide-react';
@@ -30,7 +30,7 @@ const LanguageSelector = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-48 max-h-80 overflow-y-auto bg-white/95 backdrop-blur-sm border border-gray-200 shadow-lg"
+        className="w-48 max-h-96 overflow-y-auto bg-white border border-gray-200 shadow-xl z-50"
       >
         {availableLanguages.map((lang) => (
           <DropdownMenuItem
