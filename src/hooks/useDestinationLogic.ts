@@ -1,5 +1,5 @@
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { PlanTripFormData, CountryWithCities } from '../types/planTrip';
 
 interface UseDestinationLogicProps {
@@ -37,11 +37,14 @@ export const useDestinationLogic = ({
       destination: { countries: updated } 
     });
     
-    setActiveCountryIndex((prevIndex) => {
-      if (updated.length === 0) return 0;
-      return Math.min(prevIndex, updated.length - 1);
-    });
-  }, [selectedCountries, formData, setFormData, setActiveCountryIndex]);
+    // Ajuster l'index actif si nécessaire
+    if (updated.length === 0) {
+      setActiveCountryIndex(0);
+    } else {
+      const newIndex = Math.min(activeCountryIndex, updated.length - 1);
+      setActiveCountryIndex(newIndex);
+    }
+  }, [selectedCountries, formData, setFormData, activeCountryIndex, setActiveCountryIndex]);
 
   const addCity = useCallback((cityName: string) => {
     if (!cityName.trim()) return;
