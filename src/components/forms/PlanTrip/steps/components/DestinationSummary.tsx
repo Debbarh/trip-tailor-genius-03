@@ -1,92 +1,89 @@
 
 import React from 'react';
-import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
-
-interface Country {
-  countryName: string;
-  cities: Array<{
-    cityName: string;
-    startDate: string;
-    endDate: string;
-  }>;
-}
+import { MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CountryWithCities } from '../../../../../types/planTrip';
 
 interface DestinationSummaryProps {
-  selectedCountries: Country[];
+  selectedCountries: CountryWithCities[];
   activeCountryIndex: number;
   navigateToCountry: (index: number) => void;
-  isCountryComplete: (country: Country) => boolean;
+  isCountryComplete: (country: CountryWithCities) => boolean;
 }
 
 const DestinationSummary = React.memo<DestinationSummaryProps>(({ 
   selectedCountries, 
   activeCountryIndex, 
-  navigateToCountry, 
+  navigateToCountry,
   isCountryComplete 
 }) => {
-  if (selectedCountries.length === 0) return null;
-
-  const handlePrevious = () => {
-    navigateToCountry(Math.max(0, activeCountryIndex - 1));
-  };
-
-  const handleNext = () => {
-    navigateToCountry(Math.min(selectedCountries.length - 1, activeCountryIndex + 1));
-  };
+  if (selectedCountries.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="sticky top-4 bg-white/95 backdrop-blur-sm border-2 border-blue-200 rounded-3xl p-6 shadow-2xl z-10 transform transition-all duration-300">
+    <div className="sticky top-0 z-10 bg-white border-2 border-blue-200 rounded-3xl p-6 shadow-xl backdrop-blur-sm bg-white/95">
       <div className="flex items-center justify-between mb-4">
-        <h4 className="flex items-center gap-3 font-bold text-xl text-gray-900">
+        <h4 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
             <MapPin className="w-4 h-4 text-white" />
           </div>
           Votre voyage ({selectedCountries.length} pays)
         </h4>
+        
+        {/* Navigation entre pays */}
         {selectedCountries.length > 1 && (
-          <div className="flex items-center gap-3 bg-gray-50 rounded-2xl p-2">
+          <div className="flex items-center gap-3">
             <button
-              onClick={handlePrevious}
+              onClick={() => navigateToCountry(Math.max(0, activeCountryIndex - 1))}
               disabled={activeCountryIndex === 0}
-              className="p-2 bg-white border-2 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:border-blue-300 hover:shadow-md transition-all duration-200"
+              className="p-2 rounded-xl border-2 border-gray-200 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-sm font-semibold text-gray-700 px-4 py-2 bg-white rounded-xl border border-gray-200">
+            
+            <span className="text-lg font-semibold text-gray-700 px-4 py-2 bg-blue-50 rounded-xl border border-blue-200">
               {activeCountryIndex + 1} / {selectedCountries.length}
             </span>
+            
             <button
-              onClick={handleNext}
+              onClick={() => navigateToCountry(Math.min(selectedCountries.length - 1, activeCountryIndex + 1))}
               disabled={activeCountryIndex === selectedCountries.length - 1}
-              className="p-2 bg-white border-2 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:border-blue-300 hover:shadow-md transition-all duration-200"
+              className="p-2 rounded-xl border-2 border-gray-200 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         )}
       </div>
+      
+      {/* Liste des pays avec navigation rapide */}
       <div className="flex flex-wrap gap-3">
-        {selectedCountries.map((country, idx) => (
-          <button
-            key={`${country.countryName}-${idx}`}
-            onClick={() => navigateToCountry(idx)}
-            className={`px-4 py-3 border-2 rounded-2xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
-              idx === activeCountryIndex
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 border-transparent text-white shadow-xl'
-                : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow-lg'
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              {country.countryName}
-              <span className="text-xs opacity-75">
-                ({country.cities.length})
-              </span>
-              {isCountryComplete(country) && (
-                <span className="text-green-400">✓</span>
+        {selectedCountries.map((country, index) => {
+          const isComplete = isCountryComplete(country);
+          const isActive = index === activeCountryIndex;
+          
+          return (
+            <button
+              key={country.countryName}
+              onClick={() => navigateToCountry(index)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
+                isActive 
+                  ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-lg' 
+                  : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow-md'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-lg">{country.countryName}</span>
+                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {country.cities.length} ville{country.cities.length > 1 ? 's' : ''}
+                </span>
+              </div>
+              {isComplete && (
+                <span className="text-green-500 text-lg font-bold">✓</span>
               )}
-            </span>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

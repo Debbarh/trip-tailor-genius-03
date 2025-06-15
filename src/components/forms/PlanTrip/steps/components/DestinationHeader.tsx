@@ -4,18 +4,17 @@ import { Globe } from 'lucide-react';
 
 const DestinationHeader = React.memo(() => {
   return (
-    <div className="text-center space-y-6">
-      <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300">
+    <div className="text-center">
+      <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
         <Globe className="w-10 h-10 text-white" />
       </div>
-      <div>
-        <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-          Planifiez votre voyage multi-destinations
-        </h3>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          Sélectionnez vos pays, configurez vos villes et définissez vos dates pour créer votre voyage de rêve
-        </p>
-      </div>
+      <h3 className="text-4xl font-bold text-gray-900 mb-4">
+        Planifiez votre voyage multi-destinations
+      </h3>
+      <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        Sélectionnez vos pays, configurez vos villes et définissez vos dates de voyage pour créer 
+        l'itinéraire parfait qui correspond à vos envies d'aventure.
+      </p>
     </div>
   );
 });

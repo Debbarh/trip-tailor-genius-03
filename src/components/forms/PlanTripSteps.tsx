@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -6,6 +5,9 @@ import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { stepConfigs } from "@/constants/planTripSteps";
 import DestinationStep from "./steps/DestinationStep";
 import TravelWithStep from "./steps/TravelWithStep";
+import BudgetAndFoodStep from "../PlanTrip/steps/BudgetAndFoodStep";
+import AccommodationStep from "../PlanTrip/steps/AccommodationStep";
+import ActivitiesStep from "../PlanTrip/steps/ActivitiesStep";
 import DefaultStep from "./steps/DefaultStep";
 import ProgressIndicator from "./components/ProgressIndicator";
 import PlanTripHeader from "./components/PlanTripHeader";
@@ -66,6 +68,12 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
         return <DestinationStep formData={formData} setFormData={setFormData} />;
       case 'travelWith':
         return <TravelWithStep formData={formData} setFormData={setFormData} />;
+      case 'budgetAndFood':
+        return <BudgetAndFoodStep formData={formData} setFormData={setFormData} />;
+      case 'accommodation':
+        return <AccommodationStep formData={formData} setFormData={setFormData} />;
+      case 'activities':
+        return <ActivitiesStep formData={formData} setFormData={setFormData} />;
       default:
         return <DefaultStep />;
     }
