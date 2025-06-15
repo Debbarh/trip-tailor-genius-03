@@ -16,7 +16,7 @@ interface Language {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const availableLanguages: Language[] = [
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+  { code: 'ar', name: 'العربية', flag: '🇲🇦' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
