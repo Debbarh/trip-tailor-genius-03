@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe, Settings } from "lucide-react";
+import { MapIcon, SparklesIcon, ArrowRight, Plane, Camera, Heart, Globe } from "lucide-react";
 import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
@@ -127,13 +127,6 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
           <BrandLogo />
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/admin" className="text-gray-700 hover:text-purple-600 transition-colors font-medium flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              Admin
-            </Link>
-            <Link to="/itinerary" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-              Itinéraire
-            </Link>
             <Button 
               onClick={() => onModeSelect('plan')}
               variant="ghost"
