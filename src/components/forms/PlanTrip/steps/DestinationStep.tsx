@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { PlanTripFormData, StepProps } from '../../../types/planTrip';
+import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
 import DestinationHeader from './components/DestinationHeader';
 import DestinationSummary from './components/DestinationSummary';
 import CountrySelector from './components/CountrySelector';
