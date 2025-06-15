@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import api from '../../../../services/api';
+// Removing the api import for now as the module doesn't exist
+// import api from '../../../../services/api';
 import DestinationHeader from './components/DestinationHeader';
 import DestinationSummary from './components/DestinationSummary';
 import CountrySelector from './components/CountrySelector';
@@ -48,11 +49,30 @@ export default function DestinationStep({ formData, setFormData }: DestinationSt
   const selectedCountries = formData.destination.countries || [];
   const activeCountry = selectedCountries[activeCountryIndex];
 
+  // Mock data for now since api is not available
+  const mockCountries = [
+    { id: 1, name: "Maroc" },
+    { id: 2, name: "France" },
+    { id: 3, name: "Espagne" },
+    { id: 4, name: "Italie" }
+  ];
+
+  const mockCities = [
+    { id: 1, name: "Casablanca" },
+    { id: 2, name: "Marrakech" },
+    { id: 3, name: "Rabat" },
+    { id: 4, name: "Fès" }
+  ];
+
   // Charger les pays
   useEffect(() => {
-    api.get('countries/')
-      .then(({ data }) => setCountriesList(data))
-      .catch(console.error);
+    // Using mock data instead of api call
+    setCountriesList(mockCountries);
+    
+    // Original api call (commented out):
+    // api.get('countries/')
+    //   .then(({ data }) => setCountriesList(data))
+    //   .catch(console.error);
   }, []);
 
   // Charger les villes du pays actif
@@ -61,15 +81,20 @@ export default function DestinationStep({ formData, setFormData }: DestinationSt
       setCitiesList([]);
       return;
     }
-    const countryObj = countriesList.find(
-      (c) => c.name === activeCountry.countryName
-    );
-    if (countryObj) {
-      api
-        .get(`countries/${countryObj.id}/cities/`)
-        .then(({ data }) => setCitiesList(data))
-        .catch(console.error);
-    }
+    
+    // Using mock data instead of api call
+    setCitiesList(mockCities);
+    
+    // Original api call (commented out):
+    // const countryObj = countriesList.find(
+    //   (c) => c.name === activeCountry.countryName
+    // );
+    // if (countryObj) {
+    //   api
+    //     .get(`countries/${countryObj.id}/cities/`)
+    //     .then(({ data }) => setCitiesList(data))
+    //     .catch(console.error);
+    // }
   }, [activeCountry, countriesList]);
 
   // Helpers memoized
