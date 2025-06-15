@@ -15,9 +15,7 @@ import {
   Settings, 
   LogOut, 
   Heart, 
-  MapPin, 
-  Bell,
-  Plus
+  MapPin
 } from "lucide-react";
 
 // Utilisateur simulé
@@ -32,8 +30,6 @@ interface UserHeaderProps {
 }
 
 const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
-  const [notifications] = useState(3); // Notifications simulées
-
   if (!isAuthenticated) {
     return (
       <div className="flex items-center space-x-4">
@@ -53,22 +49,6 @@ const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
 
   return (
     <div className="flex items-center space-x-4">
-      {/* Notifications */}
-      <Button variant="ghost" size="sm" className="relative">
-        <Bell className="w-5 h-5" />
-        {notifications > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {notifications}
-          </span>
-        )}
-      </Button>
-
-      {/* Create Tour */}
-      <Button variant="outline" size="sm" className="hidden md:flex">
-        <Plus className="w-4 h-4 mr-2" />
-        Créer un tour
-      </Button>
-
       {/* User Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
