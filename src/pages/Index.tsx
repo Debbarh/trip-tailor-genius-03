@@ -10,6 +10,7 @@ import LanguageSelector from "@/components/ui/LanguageSelector";
 import ToursSection from "@/components/tours/ToursSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 import UserHeader from "@/components/ui/UserHeader";
+import MobileNavigation from "@/components/layout/MobileNavigation";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
 
@@ -126,6 +127,7 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
         <nav className="max-w-7xl mx-auto flex items-center justify-between">
           <BrandLogo />
           
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Button 
               onClick={() => onModeSelect('plan')}
@@ -146,6 +148,9 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
             <UserHeader />
             <LanguageSelector />
           </div>
+
+          {/* Mobile Navigation */}
+          <MobileNavigation onModeSelect={onModeSelect} />
         </nav>
       </header>
 
