@@ -37,7 +37,7 @@ const Signup = () => {
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Retour</span>
+            <span>{t('planTrip.previous')}</span>
           </Button>
           <LanguageSelector />
         </div>

@@ -205,9 +205,9 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
               <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-3xl flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform duration-300">
                 <SparklesIcon className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">IA Intuitive</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('features.aiIntuitive')}</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
-                Notre intelligence artificielle comprend vos envies et crée des voyages parfaitement adaptés à votre personnalité
+                {t('features.aiDescription')}
               </p>
             </div>
 
@@ -215,9 +215,9 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
               <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform duration-300">
                 <Globe className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Destinations Secrètes</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('features.secretDestinations')}</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
-                Explorez des lieux magiques hors des sentiers battus, sélectionnés par nos experts locaux
+                {t('features.secretDescription')}
               </p>
             </div>
 
@@ -225,9 +225,9 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
               <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-purple-100 rounded-3xl flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform duration-300">
                 <Heart className="w-8 h-8 text-pink-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Expériences Authentiques</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">{t('features.authenticExperiences')}</h3>
               <p className="text-gray-600 leading-relaxed text-lg">
-                Vivez des moments uniques et créez des souvenirs qui dureront toute une vie
+                {t('features.authenticDescription')}
               </p>
             </div>
           </div>
@@ -249,14 +249,14 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
       {/* Footer */}
       <footer className="relative z-10 px-6 py-16 border-t border-white/20 bg-white/30 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Prêt pour l'aventure ?</h3>
-          <p className="text-gray-700 mb-8 text-lg">Rejoignez des milliers de voyageurs qui ont trouvé leur destination de rêve</p>
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('footer.readyForAdventure')}</h3>
+          <p className="text-gray-700 mb-8 text-lg">{t('footer.joinTravelers')}</p>
           <div className="flex justify-center space-x-8 mb-8">
-            <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors font-medium">Conditions</a>
-            <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors font-medium">Confidentialité</a>
-            <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors font-medium">Support</a>
+            <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors font-medium">{t('footer.terms')}</a>
+            <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors font-medium">{t('footer.privacy')}</a>
+            <a href="#" className="text-gray-600 hover:text-purple-600 transition-colors font-medium">{t('footer.support')}</a>
           </div>
-          <p className="text-gray-600">© 2024 TASARINI. Votre passeport vers l'extraordinaire.</p>
+          <p className="text-gray-600">{t('footer.copyright')}</p>
         </div>
       </footer>
     </div>

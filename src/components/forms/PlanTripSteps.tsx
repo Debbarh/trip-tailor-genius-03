@@ -11,8 +11,10 @@ import ActivitiesStep from "./PlanTrip/steps/ActivitiesStep";
 import DefaultStep from "./steps/DefaultStep";
 import ProgressIndicator from "./components/ProgressIndicator";
 import PlanTripHeader from "./components/PlanTripHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<PlanTripFormData>({
     destination: { countries: [] },
@@ -126,11 +128,11 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
               className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-8 py-4 text-lg"
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Précédent
+              {t('planTrip.previous')}
             </Button>
             
             <div className="text-white/80 backdrop-blur-sm bg-white/20 px-6 py-3 rounded-full border border-white/30">
-              Étape {currentStep + 1} sur {stepConfigs.length}
+              {t('planTrip.step')} {currentStep + 1} {t('planTrip.of')} {stepConfigs.length}
             </div>
 
             <Button
@@ -138,7 +140,7 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
               disabled={!isStepValid()}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl border-0"
             >
-              {currentStep === stepConfigs.length - 1 ? 'Créer mon voyage' : 'Suivant'}
+              {currentStep === stepConfigs.length - 1 ? t('planTrip.createTrip') : t('planTrip.next')}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
