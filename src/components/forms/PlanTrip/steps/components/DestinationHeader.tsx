@@ -2,7 +2,7 @@
 import React from 'react';
 import { Globe } from 'lucide-react';
 
-export default function DestinationHeader() {
+const DestinationHeader = React.memo(() => {
   return (
     <div className="text-center space-y-6">
       <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mx-auto flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300">
@@ -18,4 +18,8 @@ export default function DestinationHeader() {
       </div>
     </div>
   );
-}
+});
+
+DestinationHeader.displayName = 'DestinationHeader';
+
+export default DestinationHeader;

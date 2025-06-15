@@ -2,13 +2,37 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 
-export default function DestinationSummary({ 
+interface Country {
+  countryName: string;
+  cities: Array<{
+    cityName: string;
+    startDate: string;
+    endDate: string;
+  }>;
+}
+
+interface DestinationSummaryProps {
+  selectedCountries: Country[];
+  activeCountryIndex: number;
+  navigateToCountry: (index: number) => void;
+  isCountryComplete: (country: Country) => boolean;
+}
+
+const DestinationSummary = React.memo<DestinationSummaryProps>(({ 
   selectedCountries, 
   activeCountryIndex, 
   navigateToCountry, 
   isCountryComplete 
-}) {
+}) => {
   if (selectedCountries.length === 0) return null;
+
+  const handlePrevious = () => {
+    navigateToCountry(Math.max(0, activeCountryIndex - 1));
+  };
+
+  const handleNext = () => {
+    navigateToCountry(Math.min(selectedCountries.length - 1, activeCountryIndex + 1));
+  };
 
   return (
     <div className="sticky top-4 bg-white/95 backdrop-blur-sm border-2 border-blue-200 rounded-3xl p-6 shadow-2xl z-10 transform transition-all duration-300">
@@ -22,9 +46,7 @@ export default function DestinationSummary({
         {selectedCountries.length > 1 && (
           <div className="flex items-center gap-3 bg-gray-50 rounded-2xl p-2">
             <button
-              onClick={() =>
-                navigateToCountry(Math.max(0, activeCountryIndex - 1))
-              }
+              onClick={handlePrevious}
               disabled={activeCountryIndex === 0}
               className="p-2 bg-white border-2 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:border-blue-300 hover:shadow-md transition-all duration-200"
             >
@@ -34,17 +56,8 @@ export default function DestinationSummary({
               {activeCountryIndex + 1} / {selectedCountries.length}
             </span>
             <button
-              onClick={() =>
-                navigateToCountry(
-                  Math.min(
-                    selectedCountries.length - 1,
-                    activeCountryIndex + 1
-                  )
-                )
-              }
-              disabled={
-                activeCountryIndex === selectedCountries.length - 1
-              }
+              onClick={handleNext}
+              disabled={activeCountryIndex === selectedCountries.length - 1}
               className="p-2 bg-white border-2 border-gray-200 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:border-blue-300 hover:shadow-md transition-all duration-200"
             >
               <ChevronRight className="w-5 h-5" />
@@ -53,9 +66,9 @@ export default function DestinationSummary({
         )}
       </div>
       <div className="flex flex-wrap gap-3">
-        {selectedCountries.map((c, idx) => (
+        {selectedCountries.map((country, idx) => (
           <button
-            key={c.countryName}
+            key={`${country.countryName}-${idx}`}
             onClick={() => navigateToCountry(idx)}
             className={`px-4 py-3 border-2 rounded-2xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
               idx === activeCountryIndex
@@ -64,11 +77,11 @@ export default function DestinationSummary({
             }`}
           >
             <span className="flex items-center gap-2">
-              {c.countryName}
+              {country.countryName}
               <span className="text-xs opacity-75">
-                ({c.cities.length})
+                ({country.cities.length})
               </span>
-              {isCountryComplete(c) && (
+              {isCountryComplete(country) && (
                 <span className="text-green-400">✓</span>
               )}
             </span>
@@ -77,4 +90,8 @@ export default function DestinationSummary({
       </div>
     </div>
   );
-}
+});
+
+DestinationSummary.displayName = 'DestinationSummary';
+
+export default DestinationSummary;

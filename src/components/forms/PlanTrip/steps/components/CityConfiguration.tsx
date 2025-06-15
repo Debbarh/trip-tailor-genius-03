@@ -1,8 +1,34 @@
 
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Globe, Camera, Calendar, X } from 'lucide-react';
 
-export default function CityConfiguration({ 
+interface City {
+  id: number;
+  name: string;
+}
+
+interface CityData {
+  cityName: string;
+  startDate: string;
+  endDate: string;
+}
+
+interface Country {
+  countryName: string;
+  cities: CityData[];
+}
+
+interface CityConfigurationProps {
+  activeCountry: Country | undefined;
+  citiesList: City[];
+  removeCountry: (name: string) => void;
+  addCity: (cityName: string) => void;
+  removeCity: (cityName: string) => void;
+  updateCityDates: (cityName: string, field: string, value: string) => void;
+  isCountryComplete: (country: Country) => boolean;
+}
+
+const CityConfiguration = React.memo<CityConfigurationProps>(({ 
   activeCountry, 
   citiesList, 
   removeCountry, 
@@ -10,7 +36,24 @@ export default function CityConfiguration({
   removeCity, 
   updateCityDates, 
   isCountryComplete 
-}) {
+}) => {
+  const selectedCityNames = useMemo(
+    () => new Set(activeCountry?.cities.map(city => city.cityName) || []),
+    [activeCountry?.cities]
+  );
+
+  const handleCityToggle = useCallback((cityName: string) => {
+    if (selectedCityNames.has(cityName)) {
+      removeCity(cityName);
+    } else {
+      addCity(cityName);
+    }
+  }, [selectedCityNames, removeCity, addCity]);
+
+  const handleDateChange = useCallback((cityName: string, field: string, value: string) => {
+    updateCityDates(cityName, field, value);
+  }, [updateCityDates]);
+
   if (!activeCountry) {
     return (
       <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-3xl bg-gradient-to-br from-gray-50 to-blue-50">
@@ -29,7 +72,7 @@ export default function CityConfiguration({
 
   return (
     <div className="space-y-6 p-8 border-2 border-blue-200 rounded-3xl bg-gradient-to-br from-white to-blue-50 shadow-2xl">
-      {/* Header du pays avec style moderne */}
+      {/* Header du pays */}
       <div className="flex justify-between items-center pb-6 border-b border-blue-200">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-xl font-bold">
@@ -50,7 +93,7 @@ export default function CityConfiguration({
         </button>
       </div>
 
-      {/* Sélection villes avec style moderne */}
+      {/* Sélection villes */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg flex items-center justify-center">
@@ -60,19 +103,13 @@ export default function CityConfiguration({
         </div>
         <div className="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto">
           {citiesList.map((city) => {
-            const isSel = activeCountry.cities.some(
-              (ci) => ci.cityName === city.name
-            );
+            const isSelected = selectedCityNames.has(city.name);
             return (
               <button
                 key={city.id}
-                onClick={() =>
-                  isSel
-                    ? removeCity(city.name)
-                    : addCity(city.name)
-                }
+                onClick={() => handleCityToggle(city.name)}
                 className={`p-4 border-2 rounded-2xl text-sm text-center transition-all duration-300 transform hover:scale-105 ${
-                  isSel
+                  isSelected
                     ? 'bg-gradient-to-br from-green-500 to-teal-600 border-transparent text-white shadow-xl'
                     : 'border-gray-200 hover:border-green-300 bg-white hover:shadow-lg'
                 }`}
@@ -85,7 +122,7 @@ export default function CityConfiguration({
         </div>
       </div>
 
-      {/* Configuration des dates avec style moderne */}
+      {/* Configuration des dates */}
       {activeCountry.cities.length > 0 && (
         <div className="space-y-6">
           <div className="flex items-center gap-3">
@@ -95,19 +132,19 @@ export default function CityConfiguration({
             <h6 className="text-xl font-bold text-gray-800">Définissez vos dates</h6>
           </div>
           <div className="space-y-4">
-            {activeCountry.cities.map((ci) => (
-              <div key={ci.cityName} className="p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-lg">
+            {activeCountry.cities.map((cityData) => (
+              <div key={cityData.cityName} className="p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-lg">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                      {ci.cityName.charAt(0)}
+                      {cityData.cityName.charAt(0)}
                     </div>
                     <span className="text-lg font-bold text-gray-900">
-                      {ci.cityName}
+                      {cityData.cityName}
                     </span>
                   </div>
                   <button
-                    onClick={() => removeCity(ci.cityName)}
+                    onClick={() => removeCity(cityData.cityName)}
                     className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
                   >
                     <X className="w-5 h-5" />
@@ -121,10 +158,8 @@ export default function CityConfiguration({
                     </label>
                     <input
                       type="date"
-                      value={ci.startDate}
-                      onChange={(e) =>
-                        updateCityDates(ci.cityName, 'startDate', e.target.value)
-                      }
+                      value={cityData.startDate}
+                      onChange={(e) => handleDateChange(cityData.cityName, 'startDate', e.target.value)}
                       className="w-full p-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200"
                     />
                   </div>
@@ -134,11 +169,9 @@ export default function CityConfiguration({
                     </label>
                     <input
                       type="date"
-                      value={ci.endDate}
-                      onChange={(e) =>
-                        updateCityDates(ci.cityName, 'endDate', e.target.value)
-                      }
-                      min={ci.startDate}
+                      value={cityData.endDate}
+                      onChange={(e) => handleDateChange(cityData.cityName, 'endDate', e.target.value)}
+                      min={cityData.startDate}
                       className="w-full p-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200"
                     />
                   </div>
@@ -149,7 +182,7 @@ export default function CityConfiguration({
         </div>
       )}
 
-      {/* Indicateur de progression stylé */}
+      {/* Indicateur de progression */}
       <div className="pt-6 border-t border-blue-200">
         <div className="flex justify-between items-center text-sm">
           <div className="flex items-center gap-2">
@@ -167,4 +200,8 @@ export default function CityConfiguration({
       </div>
     </div>
   );
-}
+});
+
+CityConfiguration.displayName = 'CityConfiguration';
+
+export default CityConfiguration;

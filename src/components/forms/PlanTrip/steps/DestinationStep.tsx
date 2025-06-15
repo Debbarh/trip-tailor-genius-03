@@ -1,16 +1,48 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../../../../services/api';
 import DestinationHeader from './components/DestinationHeader';
 import DestinationSummary from './components/DestinationSummary';
 import CountrySelector from './components/CountrySelector';
 import CityConfiguration from './components/CityConfiguration';
 
-export default function DestinationStep({ formData, setFormData }) {
+interface City {
+  id: number;
+  name: string;
+}
+
+interface Country {
+  id: number;
+  name: string;
+}
+
+interface CityData {
+  cityName: string;
+  startDate: string;
+  endDate: string;
+}
+
+interface SelectedCountry {
+  countryName: string;
+  cities: CityData[];
+}
+
+interface FormData {
+  destination: {
+    countries: SelectedCountry[];
+  };
+}
+
+interface DestinationStepProps {
+  formData: FormData;
+  setFormData: (data: FormData) => void;
+}
+
+export default function DestinationStep({ formData, setFormData }: DestinationStepProps) {
   // États
   const [searchTerm, setSearchTerm] = useState('');
-  const [countriesList, setCountriesList] = useState([]);
-  const [citiesList, setCitiesList] = useState([]);
+  const [countriesList, setCountriesList] = useState<Country[]>([]);
+  const [citiesList, setCitiesList] = useState<City[]>([]);
   const [activeCountryIndex, setActiveCountryIndex] = useState(0);
 
   const selectedCountries = formData.destination.countries || [];
@@ -40,21 +72,21 @@ export default function DestinationStep({ formData, setFormData }) {
     }
   }, [activeCountry, countriesList]);
 
-  // Helpers
-  const addCountry = (name) => {
+  // Helpers memoized
+  const addCountry = useCallback((name: string) => {
     if (selectedCountries.some((c) => c.countryName === name)) return;
     const updated = [...selectedCountries, { countryName: name, cities: [] }];
     setFormData({ ...formData, destination: { countries: updated } });
     setActiveCountryIndex(updated.length - 1);
-  };
+  }, [selectedCountries, formData, setFormData]);
 
-  const removeCountry = (name) => {
+  const removeCountry = useCallback((name: string) => {
     const updated = selectedCountries.filter((c) => c.countryName !== name);
     setFormData({ ...formData, destination: { countries: updated } });
     setActiveCountryIndex((i) => Math.max(0, Math.min(i, updated.length - 1)));
-  };
+  }, [selectedCountries, formData, setFormData]);
 
-  const addCity = (cityName) => {
+  const addCity = useCallback((cityName: string) => {
     const updated = selectedCountries.map((c, idx) =>
       idx === activeCountryIndex
         ? {
@@ -64,18 +96,18 @@ export default function DestinationStep({ formData, setFormData }) {
         : c
     );
     setFormData({ ...formData, destination: { countries: updated } });
-  };
+  }, [selectedCountries, activeCountryIndex, formData, setFormData]);
 
-  const removeCity = (cityName) => {
+  const removeCity = useCallback((cityName: string) => {
     const updated = selectedCountries.map((c, idx) =>
       idx === activeCountryIndex
         ? { ...c, cities: c.cities.filter((ci) => ci.cityName !== cityName) }
         : c
     );
     setFormData({ ...formData, destination: { countries: updated } });
-  };
+  }, [selectedCountries, activeCountryIndex, formData, setFormData]);
 
-  const updateCityDates = (cityName, field, value) => {
+  const updateCityDates = useCallback((cityName: string, field: string, value: string) => {
     const updated = selectedCountries.map((c, idx) =>
       idx === activeCountryIndex
         ? {
@@ -87,16 +119,18 @@ export default function DestinationStep({ formData, setFormData }) {
         : c
     );
     setFormData({ ...formData, destination: { countries: updated } });
-  };
+  }, [selectedCountries, activeCountryIndex, formData, setFormData]);
 
-  const navigateToCountry = (i) => setActiveCountryIndex(i);
-  const isCountryComplete = (c) =>
-    c.cities.length > 0 && c.cities.every((ci) => ci.startDate && ci.endDate);
+  const navigateToCountry = useCallback((i: number) => setActiveCountryIndex(i), []);
+  
+  const isCountryComplete = useCallback((c: SelectedCountry) =>
+    c.cities.length > 0 && c.cities.every((ci) => ci.startDate && ci.endDate), []);
 
-  // Filter
-  const filteredCountries = countriesList.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter memoized
+  const filteredCountries = useMemo(() => 
+    countriesList.filter((c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ), [countriesList, searchTerm]);
 
   return (
     <div className="space-y-8">
