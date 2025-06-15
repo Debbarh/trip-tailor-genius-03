@@ -49,6 +49,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Destinations',
     'nav.inspiration': 'Inspiration',
+    'nav.adventures': 'Aventures',
     'nav.about': 'À propos',
     'nav.login': 'Se connecter',
     'nav.signup': 'S\'inscrire',
@@ -103,6 +104,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Destinations',
     'nav.inspiration': 'Inspiration',
+    'nav.adventures': 'Adventures',
     'nav.about': 'About',
     'nav.login': 'Login',
     'nav.signup': 'Sign up',
@@ -157,6 +159,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Destinos',
     'nav.inspiration': 'Inspiración',
+    'nav.adventures': 'Aventuras',
     'nav.about': 'Acerca de',
     'nav.login': 'Iniciar sesión',
     'nav.signup': 'Registrarse',
@@ -211,6 +214,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Destinazioni',
     'nav.inspiration': 'Ispirazione',
+    'nav.adventures': 'Avventure',
     'nav.about': 'Chi siamo',
     'nav.login': 'Accedi',
     'nav.signup': 'Registrati',
@@ -265,6 +269,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Reiseziele',
     'nav.inspiration': 'Inspiration',
+    'nav.adventures': 'Abenteuer',
     'nav.about': 'Über uns',
     'nav.login': 'Anmelden',
     'nav.signup': 'Registrieren',
@@ -319,6 +324,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Destinos',
     'nav.inspiration': 'Inspiração',
+    'nav.adventures': 'Aventuras',
     'nav.about': 'Sobre',
     'nav.login': 'Entrar',
     'nav.signup': 'Cadastrar',
@@ -373,6 +379,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'Направления',
     'nav.inspiration': 'Вдохновение',
+    'nav.adventures': 'Приключения',
     'nav.about': 'О нас',
     'nav.login': 'Войти',
     'nav.signup': 'Регистрация',
@@ -427,6 +434,7 @@ const translations = {
     // Navigation
     'nav.destinations': '目的地',
     'nav.inspiration': 'インスピレーション',
+    'nav.adventures': '冒険',
     'nav.about': '私たちについて',
     'nav.login': 'ログイン',
     'nav.signup': 'サインアップ',
@@ -481,6 +489,7 @@ const translations = {
     // Navigation
     'nav.destinations': '목적지',
     'nav.inspiration': '영감',
+    'nav.adventures': '모험',
     'nav.about': '소개',
     'nav.login': '로그인',
     'nav.signup': '회원가입',
@@ -535,6 +544,7 @@ const translations = {
     // Navigation
     'nav.destinations': '目的地',
     'nav.inspiration': '灵感',
+    'nav.adventures': '冒险',
     'nav.about': '关于我们',
     'nav.login': '登录',
     'nav.signup': '注册',
@@ -589,6 +599,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'الوجهات',
     'nav.inspiration': 'الإلهام',
+    'nav.adventures': 'المغامرات',
     'nav.about': 'عنا',
     'nav.login': 'تسجيل الدخول',
     'nav.signup': 'التسجيل',
@@ -643,6 +654,7 @@ const translations = {
     // Navigation
     'nav.destinations': 'गंतव्य',
     'nav.inspiration': 'प्रेरणा',
+    'nav.adventures': 'रोमांच',
     'nav.about': 'हमारे बारे में',
     'nav.login': 'लॉग इन',
     'nav.signup': 'साइन अप',
