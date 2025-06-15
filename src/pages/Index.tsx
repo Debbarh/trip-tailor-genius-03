@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -134,18 +135,9 @@ const HomeScreen = ({ onModeSelect }: { onModeSelect: (mode: 'plan' | 'inspire')
             <Link to="/itinerary" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
               Itinéraire
             </Link>
-            <button 
-              onClick={() => onModeSelect('plan')}
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium cursor-pointer"
-            >
-              Planifier mon voyage
-            </button>
-            <button 
-              onClick={() => onModeSelect('inspire')}
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium cursor-pointer"
-            >
-              M'inspirer aventures
-            </button>
+            <a href="#tours" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">Tours</a>
+            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.inspiration')}</a>
+            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
             <UserHeader />
             <LanguageSelector />
           </div>
