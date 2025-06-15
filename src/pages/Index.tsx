@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
@@ -15,6 +16,16 @@ interface TripData {
 const Index = () => {
   const [mode, setMode] = useState<Mode>('home');
   const [tripData, setTripData] = useState<TripData | null>(null);
+  const [searchParams] = useSearchParams();
+
+  // Handle URL params for mode selection
+  useEffect(() => {
+    const modeParam = searchParams.get('mode');
+    if (modeParam === 'plan' || modeParam === 'inspire') {
+      setMode(modeParam);
+      setTripData({ mode: modeParam });
+    }
+  }, [searchParams]);
 
   const handleModeSelect = (selectedMode: 'plan' | 'inspire') => {
     setMode(selectedMode);
@@ -54,7 +65,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen">
       {renderContent()}
     </div>
   );
