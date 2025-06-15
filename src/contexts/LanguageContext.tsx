@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface LanguageContextType {
   language: string;
@@ -17,19 +16,33 @@ interface Language {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const availableLanguages: Language[] = [
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' }
+  { code: 'pt', name: 'Português', flag: '🇵🇹' },
+  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  { code: 'zh', name: '中文', flag: '🇨🇳' }
 ];
+
+const detectBrowserLanguage = (): string => {
+  // Détecter la langue du navigateur
+  const browserLang = navigator.language || navigator.languages?.[0] || 'en';
+  
+  // Extraire le code de langue (ex: 'fr-FR' -> 'fr')
+  const langCode = browserLang.split('-')[0].toLowerCase();
+  
+  // Vérifier si cette langue est disponible
+  const isAvailable = availableLanguages.some(lang => lang.code === langCode);
+  
+  // Retourner la langue détectée si disponible, sinon anglais
+  return isAvailable ? langCode : 'en';
+};
 
 const translations = {
   fr: {
@@ -236,7 +249,7 @@ const translations = {
     'features.aiIntuitive': 'IA Intuitiva',
     'features.aiDescription': 'La nostra intelligenza artificiale comprende i tuoi desideri e crea viaggi perfettamente adattati alla tua personalità',
     'features.secretDestinations': 'Destinazioni Segrete',
-    'features.secretDescription': 'Esplora luoghi magici fuori dai sentieri battuti, selezionati dai nostri esperti locali',
+    'features.secretDescription': 'Esplora luoghi mágicos fuori dai sentieri battuti, selezionati dai nostri esperti locali',
     'features.authenticExperiences': 'Esperienze Autentiche',
     'features.authenticDescription': 'Vivi momenti unici e crea ricordi che dureranno tutta la vita',
 
@@ -678,12 +691,18 @@ const translations = {
     'footer.terms': 'नियम',
     'footer.privacy': 'गोपनीयता',
     'footer.support': 'सहायता',
-    'footer.copyright': '© 2024 TASARINI. असाधारण की ओर आपका पासपोर्ट।'
+    'footer.copyright': '© 2024 TASARINI. असाधारण की ओर अपना पासपोर्ट।'
   }
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState('fr');
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    // Détecter et définir la langue au démarrage
+    const detectedLanguage = detectBrowserLanguage();
+    setLanguage(detectedLanguage);
+  }, []);
 
   const t = (key: string): string => {
     return translations[language as keyof typeof translations]?.[key as keyof typeof translations.fr] || key;
