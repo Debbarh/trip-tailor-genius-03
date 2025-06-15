@@ -7,7 +7,7 @@ import UserHeader from '@/components/ui/UserHeader';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import MobileNavigation from '@/components/layout/MobileNavigation';
 import BrandLogo from '@/components/layout/BrandLogo';
-import { Plane, SparklesIcon, MapPin, Users } from 'lucide-react';
+import { Plane, SparklesIcon, MapPin, Users, User } from 'lucide-react';
 
 interface GlobalNavigationProps {
   onModeSelect?: (mode: 'plan' | 'inspire') => void;
@@ -62,6 +62,16 @@ const GlobalNavigation = ({ onModeSelect }: GlobalNavigationProps) => {
               >
                 <MapPin className="w-4 h-4" />
                 <span>{t('nav.adventures')}</span>
+              </Button>
+            </Link>
+
+            <Link to="/profile">
+              <Button
+                variant="ghost"
+                className="flex items-center space-x-2 text-gray-700 hover:text-purple-600 font-medium"
+              >
+                <User className="w-4 h-4" />
+                <span>Profil</span>
               </Button>
             </Link>
 
