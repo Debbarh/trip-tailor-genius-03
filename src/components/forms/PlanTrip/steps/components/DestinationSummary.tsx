@@ -21,43 +21,43 @@ const DestinationSummary = React.memo<DestinationSummaryProps>(({
   }
 
   return (
-    <div className="sticky top-0 z-10 bg-white border-2 border-blue-200 rounded-3xl p-6 shadow-xl backdrop-blur-sm bg-white/95">
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <MapPin className="w-4 h-4 text-white" />
+    <div className="sticky top-0 z-10 bg-white border-2 border-blue-200 rounded-2xl p-4 shadow-lg backdrop-blur-sm bg-white/95">
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+          <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <MapPin className="w-3 h-3 text-white" />
           </div>
           Votre voyage ({selectedCountries.length} pays)
         </h4>
         
         {/* Navigation entre pays */}
         {selectedCountries.length > 1 && (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => navigateToCountry(Math.max(0, activeCountryIndex - 1))}
               disabled={activeCountryIndex === 0}
-              className="p-2 rounded-xl border-2 border-gray-200 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="p-1.5 rounded-lg border border-gray-200 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4" />
             </button>
             
-            <span className="text-lg font-semibold text-gray-700 px-4 py-2 bg-blue-50 rounded-xl border border-blue-200">
+            <span className="text-sm font-semibold text-gray-700 px-3 py-1 bg-blue-50 rounded-lg border border-blue-200">
               {activeCountryIndex + 1} / {selectedCountries.length}
             </span>
             
             <button
               onClick={() => navigateToCountry(Math.min(selectedCountries.length - 1, activeCountryIndex + 1))}
               disabled={activeCountryIndex === selectedCountries.length - 1}
-              className="p-2 rounded-xl border-2 border-gray-200 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="p-1.5 rounded-lg border border-gray-200 hover:border-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         )}
       </div>
       
       {/* Liste des pays avec navigation rapide */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-2">
         {selectedCountries.map((country, index) => {
           const isComplete = isCountryComplete(country);
           const isActive = index === activeCountryIndex;
@@ -66,20 +66,20 @@ const DestinationSummary = React.memo<DestinationSummaryProps>(({
             <button
               key={country.countryName}
               onClick={() => navigateToCountry(index)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
                 isActive 
-                  ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-lg' 
-                  : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow-md'
+                  ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md' 
+                  : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow-sm'
               }`}
             >
               <div className="flex items-center gap-2">
-                <span className="font-bold text-lg">{country.countryName}</span>
-                <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                <span className="font-medium text-sm">{country.countryName}</span>
+                <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">
                   {country.cities.length} ville{country.cities.length > 1 ? 's' : ''}
                 </span>
               </div>
               {isComplete && (
-                <span className="text-green-500 text-lg font-bold">✓</span>
+                <span className="text-green-500 text-sm font-bold">✓</span>
               )}
             </button>
           );

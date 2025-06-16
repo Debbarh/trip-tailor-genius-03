@@ -50,7 +50,7 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
   }, [countriesList, searchTerm]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <DestinationHeader />
       
       <DestinationSummary 
@@ -60,7 +60,7 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
         isCountryComplete={isCountryComplete}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <CountrySelector 
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
