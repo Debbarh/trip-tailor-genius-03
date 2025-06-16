@@ -63,8 +63,10 @@ const CountryGrid = React.memo<CountryGridProps>(({
                   : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50/50'
               }`}
             >
-              <div className="text-sm mb-0">{flag}</div>
-              <div className="font-medium text-xs">{country.name}</div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="text-sm">{flag}</div>
+                <div className="font-medium text-xs">{country.name}</div>
+              </div>
               <div className="text-xs text-gray-500">{country.region}</div>
               {isSelected && (
                 <div className="mt-0 text-xs text-blue-600 font-medium">✓ Sélectionné</div>

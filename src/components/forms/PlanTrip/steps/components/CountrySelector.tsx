@@ -120,8 +120,10 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
                   }`}
                   aria-pressed={isSelected}
                 >
-                  <div className="text-3xl mb-2">{flag}</div>
-                  <div className="text-lg font-semibold">{country.name}</div>
+                  <div className="flex items-center justify-center gap-3 mb-2">
+                    <div className="text-2xl">{flag}</div>
+                    <div className="text-lg font-semibold">{country.name}</div>
+                  </div>
                   {isSelected && (
                     <div className="mt-2 text-sm opacity-90">✓ Sélectionné</div>
                   )}
