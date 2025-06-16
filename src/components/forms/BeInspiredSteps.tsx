@@ -74,8 +74,27 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
       case 'budget':
         if (!formData.budget) {
           toast({
-            title: "Budget manquant",
-            description: "Veuillez sélectionner votre budget de voyage.",
+            title: "Budget et période manquants",
+            description: "Veuillez sélectionner votre budget et la durée de votre voyage.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        // Vérifier que budget et période sont sélectionnés
+        try {
+          const budgetData = JSON.parse(formData.budget);
+          if (!budgetData.budget || !budgetData.period) {
+            toast({
+              title: "Informations incomplètes",
+              description: "Veuillez sélectionner à la fois votre budget et la durée de voyage.",
+              variant: "destructive"
+            });
+            return false;
+          }
+        } catch {
+          toast({
+            title: "Budget et période manquants",
+            description: "Veuillez sélectionner votre budget et la durée de votre voyage.",
             variant: "destructive"
           });
           return false;
