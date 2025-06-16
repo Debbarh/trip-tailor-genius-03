@@ -25,11 +25,11 @@ const DayCardHeader = ({
       className="h-32 bg-cover bg-center relative"
       style={{ backgroundImage: `url('${day.image}')` }}
     >
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/40 via-blue-900/40 to-pink-900/40"></div>
       <div className="absolute inset-0 flex items-end p-4">
         <div className="text-white flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold">
               {day.day}
             </div>
             <div>
@@ -54,18 +54,18 @@ const DayCardHeader = ({
           <Button
             size="sm"
             variant="ghost"
-            className="bg-white/20 hover:bg-white/30 text-white"
+            className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 text-white"
           >
             <PlusIcon className="w-4 h-4 mr-1" />
             Ajouter
           </Button>
           <button
             onClick={() => onToggleFavorite(dayIndex)}
-            className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+            className="p-2 rounded-full bg-white/20 hover:bg-pink-600/30 transition-colors"
           >
             <HeartIcon 
               className={`w-5 h-5 ${
-                isFavorite ? 'text-red-500 fill-current' : 'text-white'
+                isFavorite ? 'text-pink-500 fill-current' : 'text-white'
               }`} 
             />
           </button>
