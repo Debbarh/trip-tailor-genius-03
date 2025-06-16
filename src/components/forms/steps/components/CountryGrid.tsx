@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { countriesData } from '@/data/countries';
 
 interface Country {
   code: string;
@@ -32,8 +33,14 @@ const CountryGrid = React.memo<CountryGridProps>(({
   addCountry,
   removeCountry
 }) => {
+  // Function to get flag for a country
+  const getCountryFlag = (countryName: string) => {
+    const country = countriesData.find(c => c.name === countryName);
+    return country?.flagCode || '🌍';
+  };
+
   return (
-    <div className="space-y-0.5">
+    <div className="space-y-0.25">
       <h4 className="text-xs font-bold text-gray-900">
         {searchTerm.trim() === "" 
           ? "Commencez par le Maroc"
@@ -41,21 +48,22 @@ const CountryGrid = React.memo<CountryGridProps>(({
         }
       </h4>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.5 max-h-40 overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.25 max-h-40 overflow-y-auto">
         {filteredCountries.map((country) => {
           const isSelected = selectedCountries.find(c => c.countryName === country.name);
+          const flag = getCountryFlag(country.name);
           
           return (
             <button
               key={country.code}
               onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
-              className={`p-0.5 rounded border transition-all duration-200 hover:scale-105 ${
+              className={`p-0.25 rounded border transition-all duration-200 hover:scale-105 ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm'
                   : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50/50'
               }`}
             >
-              <div className="text-xs mb-0">{country.flagCode}</div>
+              <div className="text-sm mb-0">{flag}</div>
               <div className="font-medium text-xs">{country.name}</div>
               <div className="text-xs text-gray-500">{country.region}</div>
               {isSelected && (

@@ -1,6 +1,7 @@
 
 import React, { useMemo, useCallback } from 'react';
 import { Search, MapPin } from 'lucide-react';
+import { countriesData } from '@/data/countries';
 
 interface Country {
   id: number;
@@ -37,6 +38,12 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
     () => new Set(selectedCountries.map(sc => sc.countryName)),
     [selectedCountries]
   );
+
+  // Function to get flag for a country
+  const getCountryFlag = useCallback((countryName: string) => {
+    const country = countriesData.find(c => c.name === countryName);
+    return country?.flagCode || '🌍';
+  }, []);
 
   const handleCountryToggle = useCallback((countryName: string) => {
     if (selectedCountryNames.has(countryName)) {
@@ -101,6 +108,7 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
           <div className="max-h-96 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
             {filteredCountries.map((country) => {
               const isSelected = selectedCountryNames.has(country.name);
+              const flag = getCountryFlag(country.name);
               return (
                 <button
                   key={country.id}
@@ -112,6 +120,7 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
                   }`}
                   aria-pressed={isSelected}
                 >
+                  <div className="text-3xl mb-2">{flag}</div>
                   <div className="text-lg font-semibold">{country.name}</div>
                   {isSelected && (
                     <div className="mt-2 text-sm opacity-90">✓ Sélectionné</div>
