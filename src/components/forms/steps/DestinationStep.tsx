@@ -1,12 +1,11 @@
-
 import { useState } from "react";
 import { StepProps } from "@/types/planTrip";
 import { countriesData, regions } from "@/data/countries";
 import DestinationFilters from "./components/DestinationFilters";
 import CountryGrid from "./components/CountryGrid";
 import CountryConfiguration from "./components/CountryConfiguration";
-import DestinationHeader from "../../../forms/PlanTrip/steps/components/DestinationHeader";
-import DestinationSummary from "../../../forms/PlanTrip/steps/components/DestinationSummary";
+import DestinationHeader from "../PlanTrip/steps/components/DestinationHeader";
+import DestinationSummary from "../PlanTrip/steps/components/DestinationSummary";
 
 const DestinationStep = ({ formData, setFormData }: StepProps) => {
   const [searchTerm, setSearchTerm] = useState("");
