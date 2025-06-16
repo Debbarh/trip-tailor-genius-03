@@ -145,8 +145,20 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <DestinationHeader />
+    <div className="space-y-2">
+      <div className="text-center mb-2">
+        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-2 shadow-xl">
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+          </svg>
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-1">
+          Planifiez votre voyage multi-destinations
+        </h3>
+        <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+          Sélectionnez vos pays, configurez vos villes et définissez vos dates de voyage
+        </p>
+      </div>
       
       <DestinationSummary 
         selectedCountries={selectedCountries}
@@ -155,8 +167,8 @@ const DestinationStep = ({ formData, setFormData }: StepProps) => {
         isCountryComplete={isCountryComplete}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div className="space-y-2">
           <DestinationFilters
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
