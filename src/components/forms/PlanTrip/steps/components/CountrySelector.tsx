@@ -65,7 +65,7 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
     <div className="space-y-4">
       <div className="bg-white p-4 rounded-lg border">
         <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-gray-600" />
+          <MapPin className="w-4 h-4 text-purple-600" />
           Destinations
         </h4>
         <div className="relative">
@@ -75,7 +75,7 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
             placeholder="Rechercher un pays..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400"
+            className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-400"
           />
           {searchTerm && (
             <button
@@ -115,8 +115,8 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
                   onClick={() => handleCountryToggle(country.name)}
                   className={`p-3 border rounded-lg text-left transition-colors ${
                     isSelected
-                      ? 'bg-blue-50 border-blue-500 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                      ? 'bg-purple-50 border-purple-500 text-purple-700'
+                      : 'border-gray-200 hover:border-purple-300 bg-white hover:bg-purple-50'
                   }`}
                   aria-pressed={isSelected}
                 >
@@ -124,7 +124,7 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
                     <span className="text-lg">{flag}</span>
                     <span className="font-medium">{country.name}</span>
                     {isSelected && (
-                      <span className="ml-auto text-blue-600">✓</span>
+                      <span className="ml-auto text-purple-600">✓</span>
                     )}
                   </div>
                 </button>

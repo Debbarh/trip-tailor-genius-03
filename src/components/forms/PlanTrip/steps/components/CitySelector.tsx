@@ -33,13 +33,13 @@ const CitySelector = React.memo<CitySelectorProps>(({
               onClick={() => handleCityClick(city.name)}
               className={`p-2 border rounded text-sm text-center transition-colors ${
                 isSelected
-                  ? 'bg-green-50 border-green-500 text-green-700'
-                  : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
+                  ? 'bg-blue-50 border-blue-500 text-blue-700'
+                  : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50'
               }`}
             >
               <div className="font-medium">{city.name}</div>
               {isSelected && (
-                <div className="text-xs text-green-600 mt-1">✓</div>
+                <div className="text-xs text-blue-600 mt-1">✓</div>
               )}
             </button>
           );
