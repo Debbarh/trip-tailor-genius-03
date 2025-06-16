@@ -1,15 +1,27 @@
-
 import React, { useState } from 'react';
 import { StepProps } from '../../../../types/planTrip';
 import { Building, Home, Star } from 'lucide-react';
 
 const accommodationTypes = [
-  { value: 'hotel', label: 'Hôtel', description: 'Service complet et confort', icon: '🏨' },
+  { value: 'palais', label: 'Palais', description: 'Luxe royal et raffinement', icon: '🏰' },
+  { value: 'hotel-5', label: 'Hôtel 5*', description: 'Excellence et prestige', icon: '⭐' },
+  { value: 'hotel-4', label: 'Hôtel 4*', description: 'Confort et qualité', icon: '🌟' },
+  { value: 'hotel-3', label: 'Hôtel 3*', description: 'Bon rapport qualité-prix', icon: '✨' },
+  { value: 'hotel-2', label: 'Hôtel 2*', description: 'Simple et économique', icon: '🏨' },
+  { value: 'motel', label: 'Motel', description: 'Pratique et accessible', icon: '🛣️' },
   { value: 'riad', label: 'Riad', description: 'Charme traditionnel marocain', icon: '🕌' },
-  { value: 'villa', label: 'Villa', description: 'Intimité et espace privé', icon: '🏖️' },
-  { value: 'guesthouse', label: 'Maison d\'hôtes', description: 'Accueil familial authentique', icon: '🏡' },
-  { value: 'resort', label: 'Resort', description: 'Luxe et détente tout inclus', icon: '🌴' },
-  { value: 'apartment', label: 'Appartement', description: 'Comme chez soi', icon: '🏠' }
+  { value: 'gite', label: 'Gîte', description: 'Séjour à la campagne', icon: '🏡' },
+  { value: 'chambres-hotes', label: 'Chambres d\'hôtes', description: 'Accueil familial personnalisé', icon: '🏠' },
+  { value: 'maisons-hotes', label: 'Maisons d\'hôtes', description: 'Intimité et authenticité', icon: '🏘️' },
+  { value: 'locations-vacances', label: 'Locations de vacances', description: 'Liberté et indépendance', icon: '🗝️' },
+  { value: 'centres-villegiature', label: 'Centres de villégiature', description: 'Détente et loisirs', icon: '🌴' },
+  { value: 'terrains-camping', label: 'Terrains de camping', description: 'Nature et aventure', icon: '⛺' },
+  { value: 'auberges', label: 'Auberges', description: 'Convivialité et économie', icon: '🎒' },
+  { value: 'appartements-services', label: 'Appartements avec services', description: 'Confort résidentiel avec services', icon: '🏢' },
+  { value: 'peniches', label: 'Péniches', description: 'Séjour flottant unique', icon: '🛥️' },
+  { value: 'sejours-ferme', label: 'Séjours à la ferme', description: 'Expérience rurale authentique', icon: '🚜' },
+  { value: 'glamping', label: 'Glamping', description: 'Camping de luxe', icon: '✨' },
+  { value: 'retraites', label: 'Retraites', description: 'Ressourcement et bien-être', icon: '🧘' }
 ];
 
 const preferences = [
@@ -77,20 +89,20 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
           <h4 className="text-2xl font-bold text-gray-900">Type d'hébergement</h4>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {accommodationTypes.map((option) => (
             <button
               key={option.value}
               onClick={() => handleTypeChange(option.value)}
-              className={`p-6 rounded-3xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
+              className={`p-4 rounded-2xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
                 selectedType === option.value
                   ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-xl ring-4 ring-purple-100'
                   : 'border-gray-200 hover:border-purple-300 bg-white hover:shadow-lg'
               }`}
             >
-              <div className="text-4xl mb-4">{option.icon}</div>
-              <h5 className="text-xl font-bold mb-2">{option.label}</h5>
-              <p className="text-gray-600 text-sm">{option.description}</p>
+              <div className="text-3xl mb-2">{option.icon}</div>
+              <h5 className="text-lg font-bold mb-1">{option.label}</h5>
+              <p className="text-gray-600 text-xs">{option.description}</p>
             </button>
           ))}
         </div>
