@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { stepConfigs } from "@/constants/planTripSteps";
 import DestinationStep from "./PlanTrip/steps/DestinationStep";
@@ -12,29 +12,18 @@ import ActivitiesStep from "./PlanTrip/steps/ActivitiesStep";
 import DefaultStep from "./steps/DefaultStep";
 import ProgressIndicator from "./components/ProgressIndicator";
 import PlanTripHeader from "./components/PlanTripHeader";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import SpecialSpecifications from "./PlanTrip/steps/components/SpecialSpecifications";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 
 const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
-  const [showSpecifications, setShowSpecifications] = useState(false);
   const [formData, setFormData] = useState<PlanTripFormData>({
     destination: { countries: [] },
     travelWith: { segment: '', subSegment: '' },
     budgetAndFood: { budget: '', cuisine: [] },
     accommodation: { type: '', preferences: [] },
     activities: []
-  });
-
-  const [specifications, setSpecifications] = useState({
-    dietary: [] as string[],
-    accessibility: [] as string[],
-    medical: '',
-    specialRequests: '',
-    customPreferences: [] as string[]
   });
 
   const handleNext = () => {
@@ -45,7 +34,7 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
     } else {
       // Dernière étape - créer le voyage
       if (isStepValid()) {
-        const finalData = { ...formData, specifications, mode: 'plan' };
+        const finalData = { ...formData, mode: 'plan' };
         onComplete(finalData);
       }
     }
@@ -167,36 +156,6 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
         <div className="max-w-6xl mx-auto">
           <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8">
             {renderStepContent()}
-
-            {/* Section des spécifications spéciales - visible seulement à la dernière étape */}
-            {isLastStep && (
-              <div className="mt-8 border-t border-gray-200 pt-6">
-                <Collapsible open={showSpecifications} onOpenChange={setShowSpecifications}>
-                  <CollapsibleTrigger asChild>
-                    <Button 
-                      variant="outline" 
-                      className="w-full flex items-center justify-between p-4 text-base bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-blue-200"
-                    >
-                      <span className="flex items-center gap-2">
-                        ✨ Spécifications spéciales pour votre voyage (optionnel)
-                      </span>
-                      {showSpecifications ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </Button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-4 border border-blue-100">
-                      <p className="text-gray-600 mb-4 text-center text-sm">
-                        Aidez-nous à personnaliser davantage votre expérience en nous indiquant vos besoins particuliers
-                      </p>
-                      <SpecialSpecifications 
-                        specifications={specifications}
-                        onSpecificationsChange={setSpecifications}
-                      />
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              </div>
-            )}
           </div>
 
           {/* Navigation */}
