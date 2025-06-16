@@ -1,5 +1,4 @@
 
-import { Users } from "lucide-react";
 import { StepProps } from "@/types/planTrip";
 import { travelSegments } from "@/constants/planTripSteps";
 import TravelDetailsForm from "./components/TravelDetailsForm";
@@ -43,16 +42,6 @@ const TravelWithStep = ({ formData, setFormData }: StepProps) => {
 
   return (
     <div className="space-y-8">
-      <div className="text-center mb-10">
-        <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-          <Users className="w-8 h-8 text-white" />
-        </div>
-        <h3 className="text-3xl font-bold text-gray-900 mb-3">Avec qui voyagez-vous ?</h3>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Chaque type de voyage a sa magie. Avec qui partagerez-vous ces moments précieux ?
-        </p>
-      </div>
-      
       {/* Sélection du segment principal */}
       <div className="space-y-6">
         {travelSegments.map((segment) => (
