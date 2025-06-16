@@ -9,6 +9,8 @@ import BudgetStep from "./steps/BudgetStep";
 import AccommodationStep from "./steps/AccommodationStep";
 import BeInspiredProgressIndicator from "./components/BeInspiredProgressIndicator";
 import BeInspiredHeader from "./components/BeInspiredHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "@/hooks/use-toast";
 
 interface BeInspiredStepsProps {
   onComplete: (data: any) => void;
@@ -16,6 +18,7 @@ interface BeInspiredStepsProps {
 }
 
 const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     activities: [],
@@ -26,9 +29,15 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
 
   const handleNext = () => {
     if (currentStep < beInspiredStepConfigs.length - 1) {
-      setCurrentStep(currentStep + 1);
+      if (isStepValid()) {
+        setCurrentStep(currentStep + 1);
+      }
     } else {
-      onComplete({ ...formData, mode: 'inspire' });
+      // Dernière étape - créer l'inspiration
+      if (isStepValid()) {
+        const finalData = { ...formData, mode: 'inspire' };
+        onComplete(finalData);
+      }
     }
   };
 
@@ -44,13 +53,45 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
     const step = beInspiredStepConfigs[currentStep];
     switch (step.id) {
       case 'activities':
-        return formData.activities.length > 0;
+        if (formData.activities.length === 0) {
+          toast({
+            title: "Activités manquantes",
+            description: "Veuillez sélectionner au moins une activité qui vous passionne.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       case 'travelWith':
-        return formData.travelWith !== '';
+        if (!formData.travelWith) {
+          toast({
+            title: "Compagnons de voyage manquants",
+            description: "Veuillez indiquer avec qui vous voulez voyager.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       case 'budget':
-        return formData.budget !== '';
+        if (!formData.budget) {
+          toast({
+            title: "Budget manquant",
+            description: "Veuillez sélectionner votre budget de voyage.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       case 'accommodation':
-        return formData.accommodation !== '';
+        if (!formData.accommodation) {
+          toast({
+            title: "Hébergement manquant",
+            description: "Veuillez choisir votre type d'hébergement préféré.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       default:
         return false;
     }
@@ -94,6 +135,7 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
   };
 
   const currentStepData = beInspiredStepConfigs[currentStep];
+  const isLastStep = currentStep === beInspiredStepConfigs.length - 1;
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -133,29 +175,30 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center mt-6">
-            <Button
-              onClick={handleBack}
-              variant="ghost"
-              className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Précédent
-            </Button>
-            
-            <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
-              Étape {currentStep + 1} sur {beInspiredStepConfigs.length}
-            </div>
+          {currentStep !== 0 && (
+            <div className="flex justify-between items-center mt-6">
+              <Button
+                onClick={handleBack}
+                variant="ghost"
+                className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Précédent
+              </Button>
+              
+              <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
+                Étape {currentStep + 1} sur {beInspiredStepConfigs.length}
+              </div>
 
-            <Button
-              onClick={handleNext}
-              disabled={!isStepValid()}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl border-0"
-            >
-              {currentStep === beInspiredStepConfigs.length - 1 ? 'Trouvez mon inspiration' : 'Suivant'}
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
+              <Button
+                onClick={handleNext}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl shadow-2xl border-0"
+              >
+                {isLastStep ? 'Trouvez mon inspiration' : 'Suivant'}
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          )}
         </div>
       </main>
 
