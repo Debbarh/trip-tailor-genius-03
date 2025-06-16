@@ -1,22 +1,40 @@
 
 import React, { useState } from 'react';
 import { StepProps } from '../../../../types/planTrip';
-import { DollarSign, Utensils } from 'lucide-react';
+import { DollarSign, Utensils, ChefHat } from 'lucide-react';
 
 const budgetOptions = [
-  { value: 'budget', label: 'Économique', description: '500-1000€', icon: '💰' },
-  { value: 'standard', label: 'Standard', description: '1000-2000€', icon: '💵' },
-  { value: 'premium', label: 'Premium', description: '2000-4000€', icon: '💎' },
-  { value: 'luxury', label: 'Luxe', description: '4000€+', icon: '👑' }
+  { value: 'budget', label: 'Économique', icon: '💰' },
+  { value: 'standard', label: 'Standard', icon: '💵' },
+  { value: 'premium', label: 'Premium', icon: '💎' },
+  { value: 'luxury', label: 'Luxe', icon: '👑' }
 ];
 
-const cuisineOptions = [
+const cuisineTypes = [
   { value: 'local', label: 'Cuisine locale', icon: '🍽️' },
-  { value: 'international', label: 'Internationale', icon: '🌍' },
-  { value: 'vegetarian', label: 'Végétarienne', icon: '🥗' },
-  { value: 'halal', label: 'Halal', icon: '☪️' },
-  { value: 'fine-dining', label: 'Gastronomique', icon: '🍷' },
-  { value: 'street-food', label: 'Street Food', icon: '🌮' }
+  { value: 'moroccan', label: 'Cuisine marocaine', icon: '🍛' },
+  { value: 'french', label: 'Cuisine française', icon: '🥖' },
+  { value: 'international', label: 'Cuisine internationale', icon: '🌍' },
+  { value: 'italian', label: 'Cuisine italienne', icon: '🍝' },
+  { value: 'japanese', label: 'Cuisine japonaise', icon: '🍣' },
+  { value: 'spanish', label: 'Cuisine espagnole', icon: '🥘' },
+  { value: 'asian', label: 'Cuisine asiatique', icon: '🥢' },
+  { value: 'lebanese', label: 'Cuisine libanaise', icon: '🧆' }
+];
+
+const diningPreferences = [
+  { value: 'casual', label: 'Restauration décontractée', icon: '🍔' },
+  { value: 'fast-food', label: 'Fast food', icon: '🍟' },
+  { value: 'fine-dining', label: 'Gastronomie', icon: '🍷' },
+  { value: 'buffet', label: 'Buffet', icon: '🍽️' },
+  { value: 'cafe', label: 'Café ou bistro', icon: '☕' },
+  { value: 'pub', label: 'Pub ou bar', icon: '🍺' },
+  { value: 'food-trucks', label: 'Food trucks', icon: '🚚' },
+  { value: 'street-food', label: 'Street food', icon: '🌮' },
+  { value: 'farm-to-table', label: 'Farm to table', icon: '🌾' },
+  { value: 'seafood', label: 'Fruits de mer', icon: '🦞' },
+  { value: 'vegetarian', label: 'Végétarien ou vegan', icon: '🥗' },
+  { value: 'barbecue', label: 'Barbecue', icon: '🔥' }
 ];
 
 export default function BudgetAndFoodStep({ formData, setFormData }: StepProps) {
@@ -85,8 +103,7 @@ export default function BudgetAndFoodStep({ formData, setFormData }: StepProps) 
               }`}
             >
               <div className="text-4xl mb-4">{option.icon}</div>
-              <h5 className="text-xl font-bold mb-2">{option.label}</h5>
-              <p className="text-gray-600">{option.description}</p>
+              <h5 className="text-xl font-bold">{option.label}</h5>
             </button>
           ))}
         </div>
@@ -96,47 +113,91 @@ export default function BudgetAndFoodStep({ formData, setFormData }: StepProps) 
       <div className="space-y-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-            <Utensils className="w-4 h-4 text-white" />
+            <ChefHat className="w-4 h-4 text-white" />
           </div>
-          <h4 className="text-2xl font-bold text-gray-900">Préférences culinaires</h4>
+          <h4 className="text-2xl font-bold text-gray-900">J'ai envie d'essayer cette cuisine</h4>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {cuisineOptions.map((option) => {
-            const isSelected = selectedCuisines.includes(option.value);
+          {cuisineTypes.map((cuisine) => {
+            const isSelected = selectedCuisines.includes(cuisine.value);
             return (
-              <button
-                key={option.value}
-                onClick={() => handleCuisineToggle(option.value)}
-                className={`p-6 rounded-2xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
+              <label
+                key={cuisine.value}
+                className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
                   isSelected
                     ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-lg'
                     : 'border-gray-200 hover:border-orange-300 bg-white hover:shadow-md'
                 }`}
               >
-                <div className="text-3xl mb-3">{option.icon}</div>
-                <span className="font-semibold text-sm">{option.label}</span>
-              </button>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => handleCuisineToggle(cuisine.value)}
+                  className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                />
+                <span className="text-2xl">{cuisine.icon}</span>
+                <span className="font-medium text-sm">{cuisine.label}</span>
+              </label>
             );
           })}
         </div>
-
-        {selectedCuisines.length > 0 && (
-          <div className="mt-6 p-4 bg-orange-50 rounded-2xl border border-orange-200">
-            <h5 className="font-semibold text-orange-900 mb-2">🍽️ Cuisines sélectionnées :</h5>
-            <div className="flex flex-wrap gap-2">
-              {selectedCuisines.map(cuisine => {
-                const cuisineData = cuisineOptions.find(c => c.value === cuisine);
-                return (
-                  <span key={cuisine} className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm font-medium">
-                    {cuisineData?.icon} {cuisineData?.label}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Dining Preferences */}
+      <div className="space-y-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+            <Utensils className="w-4 h-4 text-white" />
+          </div>
+          <h4 className="text-2xl font-bold text-gray-900">Et je préfère manger</h4>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {diningPreferences.map((preference) => {
+            const isSelected = selectedCuisines.includes(preference.value);
+            return (
+              <label
+                key={preference.value}
+                className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                  isSelected
+                    ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-lg'
+                    : 'border-gray-200 hover:border-purple-300 bg-white hover:shadow-md'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => handleCuisineToggle(preference.value)}
+                  className="w-5 h-5 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
+                />
+                <span className="text-2xl">{preference.icon}</span>
+                <span className="font-medium text-sm">{preference.label}</span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Selected Summary */}
+      {selectedCuisines.length > 0 && (
+        <div className="mt-8 p-6 bg-gradient-to-r from-orange-50 to-purple-50 rounded-3xl border-2 border-orange-200">
+          <h5 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+            <ChefHat className="w-5 h-5 text-orange-600" />
+            Vos préférences culinaires :
+          </h5>
+          <div className="flex flex-wrap gap-3">
+            {selectedCuisines.map(cuisine => {
+              const cuisineData = [...cuisineTypes, ...diningPreferences].find(c => c.value === cuisine);
+              return (
+                <span key={cuisine} className="px-4 py-2 bg-white text-gray-800 rounded-full text-sm font-medium shadow-sm border border-gray-200">
+                  {cuisineData?.icon} {cuisineData?.label}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
