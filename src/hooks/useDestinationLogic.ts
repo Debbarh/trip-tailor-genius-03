@@ -1,6 +1,7 @@
 
 import { useCallback } from 'react';
 import { PlanTripFormData, CountryWithCities } from '../types/planTrip';
+import { toast } from '@/hooks/use-toast';
 
 interface UseDestinationLogicProps {
   formData: PlanTripFormData;
@@ -111,6 +112,59 @@ export const useDestinationLogic = ({
            country.cities.every((city) => city.startDate && city.endDate);
   }, []);
 
+  const validateDestinationData = useCallback(() => {
+    if (selectedCountries.length === 0) {
+      toast({
+        title: "Destination manquante",
+        description: "Veuillez sélectionner au moins un pays pour votre voyage.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    for (const country of selectedCountries) {
+      if (country.cities.length === 0) {
+        toast({
+          title: "Villes manquantes",
+          description: `Veuillez sélectionner au moins une ville pour ${country.countryName}.`,
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      for (const city of country.cities) {
+        if (!city.startDate) {
+          toast({
+            title: "Date d'arrivée manquante",
+            description: `Veuillez renseigner la date d'arrivée pour ${city.cityName}.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        if (!city.endDate) {
+          toast({
+            title: "Date de départ manquante",
+            description: `Veuillez renseigner la date de départ pour ${city.cityName}.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        if (city.endDate < city.startDate) {
+          toast({
+            title: "Dates incohérentes",
+            description: `La date de départ de ${city.cityName} doit être après la date d'arrivée.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [selectedCountries]);
+
   return {
     addCountry,
     removeCountry,
@@ -118,6 +172,7 @@ export const useDestinationLogic = ({
     removeCity,
     updateCityDates,
     navigateToCountry,
-    isCountryComplete
+    isCountryComplete,
+    validateDestinationData
   };
 };

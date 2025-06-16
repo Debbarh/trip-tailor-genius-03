@@ -7,8 +7,16 @@ import DestinationHeader from './components/DestinationHeader';
 import DestinationSummary from './components/DestinationSummary';
 import CountrySelector from './components/CountrySelector';
 import CityConfiguration from './components/CityConfiguration';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-export default function DestinationStep({ formData, setFormData }: StepProps) {
+interface DestinationStepProps extends StepProps {
+  onNext?: () => void;
+}
+
+export default function DestinationStep({ formData, setFormData, onNext }: DestinationStepProps) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCountryIndex, setActiveCountryIndex] = useState(0);
 
@@ -31,7 +39,8 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
     removeCity,
     updateCityDates,
     navigateToCountry,
-    isCountryComplete
+    isCountryComplete,
+    validateDestinationData
   } = useDestinationLogic({
     formData,
     setFormData,
@@ -48,6 +57,12 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
       country.name.toLowerCase().includes(lowerSearchTerm)
     );
   }, [countriesList, searchTerm]);
+
+  const handleNext = () => {
+    if (validateDestinationData() && onNext) {
+      onNext();
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -79,6 +94,17 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
           updateCityDates={updateCityDates}
           isCountryComplete={isCountryComplete}
         />
+      </div>
+
+      {/* Navigation Button for first step */}
+      <div className="flex justify-end mt-8">
+        <Button
+          onClick={handleNext}
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl shadow-2xl border-0"
+        >
+          {t('planTrip.next')}
+          <ArrowRight className="w-5 h-5 ml-2" />
+        </Button>
       </div>
     </div>
   );

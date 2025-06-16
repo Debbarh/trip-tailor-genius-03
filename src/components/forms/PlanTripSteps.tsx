@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -12,6 +13,7 @@ import DefaultStep from "./steps/DefaultStep";
 import ProgressIndicator from "./components/ProgressIndicator";
 import PlanTripHeader from "./components/PlanTripHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "@/hooks/use-toast";
 
 const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   const { t } = useLanguage();
@@ -26,9 +28,13 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
 
   const handleNext = () => {
     if (currentStep < stepConfigs.length - 1) {
-      setCurrentStep(currentStep + 1);
+      if (isStepValid()) {
+        setCurrentStep(currentStep + 1);
+      }
     } else {
-      onComplete({ ...formData, mode: 'plan' });
+      if (isStepValid()) {
+        onComplete({ ...formData, mode: 'plan' });
+      }
     }
   };
 
@@ -44,19 +50,48 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
     const step = stepConfigs[currentStep];
     switch (step.id) {
       case 'destination':
-        return formData.destination.countries.length > 0 && 
-               formData.destination.countries.every(country => 
-                 country.cities.length > 0 && 
-                 country.cities.every(city => city.startDate && city.endDate)
-               );
+        // La validation sera gérée par le composant DestinationStep lui-même
+        return true;
       case 'travelWith':
-        return formData.travelWith.segment;
+        if (!formData.travelWith.segment) {
+          toast({
+            title: "Profil de voyage manquant",
+            description: "Veuillez sélectionner votre profil de voyage.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       case 'budgetAndFood':
-        return formData.budgetAndFood.budget;
+        if (!formData.budgetAndFood.budget) {
+          toast({
+            title: "Budget manquant",
+            description: "Veuillez indiquer votre budget pour le voyage.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       case 'accommodation':
-        return formData.accommodation.type;
+        if (!formData.accommodation.type) {
+          toast({
+            title: "Type d'hébergement manquant",
+            description: "Veuillez sélectionner votre type d'hébergement préféré.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       case 'activities':
-        return formData.activities.length > 0;
+        if (formData.activities.length === 0) {
+          toast({
+            title: "Activités manquantes",
+            description: "Veuillez sélectionner au moins une activité qui vous intéresse.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
       default:
         return false;
     }
@@ -67,7 +102,7 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
     
     switch (step.id) {
       case 'destination':
-        return <DestinationStep formData={formData} setFormData={setFormData} />;
+        return <DestinationStep formData={formData} setFormData={setFormData} onNext={handleNext} />;
       case 'travelWith':
         return <TravelWithStep formData={formData} setFormData={setFormData} />;
       case 'budgetAndFood':
@@ -121,29 +156,30 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center mt-8">
-            <Button
-              onClick={handleBack}
-              variant="ghost"
-              className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-8 py-4 text-lg"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              {t('planTrip.previous')}
-            </Button>
-            
-            <div className="text-white/80 backdrop-blur-sm bg-white/20 px-6 py-3 rounded-full border border-white/30">
-              {t('planTrip.step')} {currentStep + 1} {t('planTrip.of')} {stepConfigs.length}
-            </div>
+          {currentStep !== 0 && (
+            <div className="flex justify-between items-center mt-8">
+              <Button
+                onClick={handleBack}
+                variant="ghost"
+                className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-8 py-4 text-lg"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                {t('planTrip.previous')}
+              </Button>
+              
+              <div className="text-white/80 backdrop-blur-sm bg-white/20 px-6 py-3 rounded-full border border-white/30">
+                {t('planTrip.step')} {currentStep + 1} {t('planTrip.of')} {stepConfigs.length}
+              </div>
 
-            <Button
-              onClick={handleNext}
-              disabled={!isStepValid()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl border-0"
-            >
-              {currentStep === stepConfigs.length - 1 ? t('planTrip.createTrip') : t('planTrip.next')}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
+              <Button
+                onClick={handleNext}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl shadow-2xl border-0"
+              >
+                {currentStep === stepConfigs.length - 1 ? t('planTrip.createTrip') : t('planTrip.next')}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          )}
         </div>
       </main>
 
