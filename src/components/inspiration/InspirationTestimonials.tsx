@@ -22,7 +22,7 @@ const InspirationTestimonials = ({ formData }: InspirationTestimonialsProps) => 
         id: 'culture-lover',
         name: 'Marie L.',
         location: 'Paris, France',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b332f87'b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80',
+        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b332f87b?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=150&q=80',
         rating: 5,
         date: 'Il y a 2 semaines',
         trip: 'Kyoto, Japon',
