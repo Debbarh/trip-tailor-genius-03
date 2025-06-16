@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StepProps } from '../../../../types/planTrip';
 import { Building, Home, Star } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '../../../ui/scroll-area';
 
 const accommodationTypes = [
   { value: 'palais', label: 'Palais', description: 'Luxe royal et raffinement', icon: '🏰' },
@@ -80,7 +81,7 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
         </p>
       </div>
 
-      {/* Accommodation Type */}
+      {/* Accommodation Type avec défilement horizontal */}
       <div className="space-y-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
@@ -89,23 +90,26 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
           <h4 className="text-2xl font-bold text-gray-900">Type d'hébergement</h4>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {accommodationTypes.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleTypeChange(option.value)}
-              className={`p-4 rounded-2xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
-                selectedType === option.value
-                  ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-xl ring-4 ring-purple-100'
-                  : 'border-gray-200 hover:border-purple-300 bg-white hover:shadow-lg'
-              }`}
-            >
-              <div className="text-3xl mb-2">{option.icon}</div>
-              <h5 className="text-lg font-bold mb-1">{option.label}</h5>
-              <p className="text-gray-600 text-xs">{option.description}</p>
-            </button>
-          ))}
-        </div>
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+          <div className="flex w-max space-x-4 p-4">
+            {accommodationTypes.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => handleTypeChange(option.value)}
+                className={`flex-none w-48 p-4 rounded-2xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
+                  selectedType === option.value
+                    ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-xl ring-4 ring-purple-100'
+                    : 'border-gray-200 hover:border-purple-300 bg-white hover:shadow-lg'
+                }`}
+              >
+                <div className="text-3xl mb-2">{option.icon}</div>
+                <h5 className="text-lg font-bold mb-1 truncate">{option.label}</h5>
+                <p className="text-gray-600 text-xs line-clamp-2">{option.description}</p>
+              </button>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
 
       {/* Preferences */}
