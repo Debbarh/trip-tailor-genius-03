@@ -11,7 +11,8 @@ const activityCategories = [
       { value: 'museums', label: 'Musées', icon: '🖼️' },
       { value: 'monuments', label: 'Monuments historiques', icon: '🏰' },
       { value: 'medina', label: 'Visite de médina', icon: '🕌' },
-      { value: 'artisanat', label: 'Artisanat local', icon: '🎨' }
+      { value: 'artisanat', label: 'Artisanat', icon: '🎨' },
+      { value: 'culture', label: 'Culture', icon: '🏛️' }
     ]
   },
   {
@@ -21,7 +22,9 @@ const activityCategories = [
       { value: 'trekking', label: 'Randonnée/Trekking', icon: '🥾' },
       { value: 'desert', label: 'Excursion désert', icon: '🐪' },
       { value: 'surf', label: 'Surf', icon: '🏄' },
-      { value: 'climbing', label: 'Escalade', icon: '🧗' }
+      { value: 'climbing', label: 'Escalade', icon: '🧗' },
+      { value: 'golf', label: 'Golf', icon: '⛳' },
+      { value: 'safari', label: 'Safari', icon: '🦁' }
     ]
   },
   {
@@ -31,17 +34,47 @@ const activityCategories = [
       { value: 'spa', label: 'Spa & Hammam', icon: '🛁' },
       { value: 'yoga', label: 'Yoga & Méditation', icon: '🧘' },
       { value: 'beach', label: 'Plage & Farniente', icon: '🏖️' },
-      { value: 'golf', label: 'Golf', icon: '⛳' }
+      { value: 'meditation', label: 'Méditation', icon: '🧘‍♀️' },
+      { value: 'healthcare', label: 'Soins & Santé', icon: '🏥' }
     ]
   },
   {
-    category: 'Gastronomie',
+    category: 'Gastronomie & Saveurs',
     icon: '🍽️',
     activities: [
       { value: 'cooking', label: 'Cours de cuisine', icon: '👨‍🍳' },
       { value: 'food-tour', label: 'Tour gastronomique', icon: '🍴' },
       { value: 'wine-tasting', label: 'Dégustation de vins', icon: '🍷' },
-      { value: 'market', label: 'Marchés locaux', icon: '🛒' }
+      { value: 'market', label: 'Marchés locaux', icon: '🛒' },
+      { value: 'culinary', label: 'Expériences culinaires', icon: '🍽️' }
+    ]
+  },
+  {
+    category: 'Voyage & Transport',
+    icon: '🚢',
+    activities: [
+      { value: 'cruise', label: 'Croisière', icon: '🚢' },
+      { value: 'business-trip', label: 'Voyage d\'affaires', icon: '💼' },
+      { value: 'eco-tourism', label: 'Écotourisme', icon: '🌿' },
+      { value: 'sustainable-travel', label: 'Voyage durable', icon: '♻️' }
+    ]
+  },
+  {
+    category: 'Famille & Divertissement',
+    icon: '👨‍👩‍👧‍👦',
+    activities: [
+      { value: 'family', label: 'Activités familiales', icon: '👨‍👩‍👧‍👦' },
+      { value: 'nightlife', label: 'Vie nocturne', icon: '🌃' },
+      { value: 'shopping', label: 'Shopping', icon: '🛍️' }
+    ]
+  },
+  {
+    category: 'Spirituel & Religieux',
+    icon: '🕌',
+    activities: [
+      { value: 'religieux', label: 'Sites religieux', icon: '🕌' },
+      { value: 'pilgrimage', label: 'Pèlerinage', icon: '🙏' },
+      { value: 'spiritual', label: 'Retraite spirituelle', icon: '✨' }
     ]
   }
 ];
