@@ -58,21 +58,69 @@ const accommodationCategories = {
 };
 
 const preferences = [
-  { value: 'wifi', label: 'WiFi gratuit', icon: '📶' },
-  { value: 'pool', label: 'Piscine', icon: '🏊' },
-  { value: 'spa', label: 'Spa & Bien-être', icon: '🧘' },
-  { value: 'breakfast', label: 'Petit déjeuner inclus', icon: '🥐' },
-  { value: 'parking', label: 'Parking', icon: '🚗' },
-  { value: 'fitness', label: 'Salle de sport', icon: '💪' },
-  { value: 'restaurant', label: 'Restaurant', icon: '🍽️' },
-  { value: 'concierge', label: 'Service de conciergerie', icon: '🛎️' }
+  // Services de base
+  { value: 'wifi', label: 'WiFi gratuit', icon: '📶', category: 'services' },
+  { value: 'breakfast', label: 'Petit déjeuner inclus', icon: '🥐', category: 'services' },
+  { value: 'restaurant', label: 'Restaurant', icon: '🍽️', category: 'services' },
+  { value: 'room-service', label: 'Service d\'étage', icon: '🛎️', category: 'services' },
+  { value: 'concierge', label: 'Service de conciergerie', icon: '🎩', category: 'services' },
+  { value: 'laundry', label: 'Service de blanchisserie', icon: '🧺', category: 'services' },
+  
+  // Bien-être & Loisirs
+  { value: 'pool', label: 'Piscine', icon: '🏊', category: 'wellness' },
+  { value: 'spa', label: 'Spa & Bien-être', icon: '🧘', category: 'wellness' },
+  { value: 'fitness', label: 'Salle de sport', icon: '💪', category: 'wellness' },
+  { value: 'hammam', label: 'Hammam', icon: '♨️', category: 'wellness' },
+  { value: 'jacuzzi', label: 'Jacuzzi', icon: '🛁', category: 'wellness' },
+  { value: 'massage', label: 'Service de massage', icon: '💆', category: 'wellness' },
+  
+  // Proximité & Localisation
+  { value: 'city-center', label: 'Centre-ville', icon: '🏙️', category: 'location' },
+  { value: 'attractions', label: 'Proche des attractions', icon: '🎭', category: 'location' },
+  { value: 'beach', label: 'Proche de la plage', icon: '🏖️', category: 'location' },
+  { value: 'airport', label: 'Proche de l\'aéroport', icon: '✈️', category: 'location' },
+  { value: 'transport', label: 'Transports publics', icon: '🚇', category: 'location' },
+  { value: 'shopping', label: 'Centres commerciaux', icon: '🛍️', category: 'location' },
+  
+  // Pratique & Confort
+  { value: 'parking', label: 'Parking gratuit', icon: '🚗', category: 'practical' },
+  { value: 'air-conditioning', label: 'Climatisation', icon: '❄️', category: 'practical' },
+  { value: 'elevator', label: 'Ascenseur', icon: '🛗', category: 'practical' },
+  { value: 'balcony', label: 'Balcon/Terrasse', icon: '🌅', category: 'practical' },
+  { value: 'kitchen', label: 'Kitchenette', icon: '🍳', category: 'practical' },
+  { value: 'minibar', label: 'Minibar', icon: '🥤', category: 'practical' },
+  
+  // Accessibilité & Sécurité
+  { value: 'wheelchair', label: 'Accessible PMR', icon: '♿', category: 'accessibility' },
+  { value: 'security', label: 'Sécurité 24h/24', icon: '🔒', category: 'accessibility' },
+  { value: 'safe', label: 'Coffre-fort', icon: '🔐', category: 'accessibility' },
+  { value: 'cctv', label: 'Vidéosurveillance', icon: '📹', category: 'accessibility' },
+  
+  // Atmosphère & Ambiance
+  { value: 'quiet', label: 'Environnement calme', icon: '🤫', category: 'atmosphere' },
+  { value: 'romantic', label: 'Ambiance romantique', icon: '💕', category: 'atmosphere' },
+  { value: 'family', label: 'Adapté aux familles', icon: '👨‍👩‍👧‍👦', category: 'atmosphere' },
+  { value: 'business', label: 'Business center', icon: '💼', category: 'atmosphere' },
+  { value: 'nightlife', label: 'Proche de la vie nocturne', icon: '🌙', category: 'atmosphere' },
+  { value: 'cultural', label: 'Quartier culturel', icon: '🎨', category: 'atmosphere' }
 ];
+
+const preferenceCategories = {
+  'services': { label: 'Services', color: 'blue', icon: '🛎️' },
+  'wellness': { label: 'Bien-être', color: 'green', icon: '🧘' },
+  'location': { label: 'Localisation', color: 'purple', icon: '📍' },
+  'practical': { label: 'Confort', color: 'orange', icon: '🏠' },
+  'accessibility': { label: 'Accessibilité & Sécurité', color: 'red', icon: '🛡️' },
+  'atmosphere': { label: 'Atmosphère', color: 'pink', icon: '✨' }
+};
 
 export default function AccommodationStep({ formData, setFormData }: StepProps) {
   const [selectedType, setSelectedType] = useState(formData.accommodation.type);
   const [selectedPreferences, setSelectedPreferences] = useState(formData.accommodation.preferences);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategories, setActiveCategories] = useState<string[]>(Object.keys(accommodationCategories));
+  const [activePreferenceCategories, setActivePreferenceCategories] = useState<string[]>(Object.keys(preferenceCategories));
+  const [preferenceSearchTerm, setPreferenceSearchTerm] = useState('');
 
   const handleTypeChange = (type: string) => {
     setSelectedType(type);
@@ -108,9 +156,22 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
     );
   };
 
+  const handlePreferenceCategoryToggle = (category: string) => {
+    setActivePreferenceCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
   const handleShowAll = () => {
     setActiveCategories(Object.keys(accommodationCategories));
     setSearchTerm('');
+  };
+
+  const handleShowAllPreferences = () => {
+    setActivePreferenceCategories(Object.keys(preferenceCategories));
+    setPreferenceSearchTerm('');
   };
 
   const getFilteredAccommodations = () => {
@@ -128,7 +189,20 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
     );
   };
 
+  const getFilteredPreferences = () => {
+    const allPreferences = preferences.filter(pref => 
+      activePreferenceCategories.includes(pref.category)
+    );
+
+    if (!preferenceSearchTerm) return allPreferences;
+
+    return allPreferences.filter(pref => 
+      pref.label.toLowerCase().includes(preferenceSearchTerm.toLowerCase())
+    );
+  };
+
   const filteredAccommodations = getFilteredAccommodations();
+  const filteredPreferences = getFilteredPreferences();
 
   const getCategoryColorClasses = (color: string, isActive: boolean) => {
     const colorMap = {
@@ -136,9 +210,21 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
       blue: isActive ? 'bg-blue-500 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100',
       orange: isActive ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-700 hover:bg-orange-100',
       green: isActive ? 'bg-green-500 text-white' : 'bg-green-50 text-green-700 hover:bg-green-100',
-      pink: isActive ? 'bg-pink-500 text-white' : 'bg-pink-50 text-pink-700 hover:bg-pink-100'
+      pink: isActive ? 'bg-pink-500 text-white' : 'bg-pink-50 text-pink-700 hover:bg-pink-100',
+      red: isActive ? 'bg-red-500 text-white' : 'bg-red-50 text-red-700 hover:bg-red-100'
     };
     return colorMap[color as keyof typeof colorMap] || 'bg-gray-100';
+  };
+
+  const groupPreferencesByCategory = () => {
+    const grouped: { [key: string]: typeof preferences } = {};
+    filteredPreferences.forEach(pref => {
+      if (!grouped[pref.category]) {
+        grouped[pref.category] = [];
+      }
+      grouped[pref.category].push(pref);
+    });
+    return grouped;
   };
 
   return (
@@ -258,32 +344,105 @@ export default function AccommodationStep({ formData, setFormData }: StepProps) 
           <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
             <Star className="w-4 h-4 text-white" />
           </div>
-          <h4 className="text-2xl font-bold text-gray-900">Services souhaités</h4>
+          <h4 className="text-2xl font-bold text-gray-900">Critères & Services souhaités</h4>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {preferences.map((option) => {
-            const isSelected = selectedPreferences.includes(option.value);
+        {/* Barre de recherche pour les préférences */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Input
+            type="text"
+            placeholder="Rechercher un service ou critère..."
+            value={preferenceSearchTerm}
+            onChange={(e) => setPreferenceSearchTerm(e.target.value)}
+            className="pl-10 text-lg py-3 border-2 border-gray-200 focus:border-yellow-500"
+          />
+        </div>
+
+        {/* Filtres par catégorie de préférences */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-yellow-600" />
+              <span className="font-semibold text-gray-900">Filtrer par type</span>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleShowAllPreferences}
+              className="text-xs"
+            >
+              Tout afficher
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(preferenceCategories).map(([category, data]) => {
+              const isActive = activePreferenceCategories.includes(category);
+              const count = preferences.filter(p => p.category === category).length;
+              
+              return (
+                <button
+                  key={category}
+                  onClick={() => handlePreferenceCategoryToggle(category)}
+                  className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 border-2 flex items-center gap-1 ${
+                    isActive 
+                      ? getCategoryColorClasses(data.color, true) + ' border-transparent' 
+                      : getCategoryColorClasses(data.color, false) + ' border-gray-200'
+                  }`}
+                >
+                  <span>{data.icon}</span>
+                  {data.label} ({count})
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Compteur de critères */}
+        <div className="text-sm text-gray-600">
+          {filteredPreferences.length} critère{filteredPreferences.length > 1 ? 's' : ''} disponible{filteredPreferences.length > 1 ? 's' : ''}
+        </div>
+
+        {/* Grille des préférences par catégorie */}
+        <div className="space-y-6">
+          {Object.entries(groupPreferencesByCategory()).map(([category, categoryPrefs]) => {
+            const categoryData = preferenceCategories[category as keyof typeof preferenceCategories];
             return (
-              <button
-                key={option.value}
-                onClick={() => handlePreferenceToggle(option.value)}
-                className={`p-4 rounded-2xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
-                  isSelected
-                    ? 'border-yellow-500 bg-yellow-50 text-yellow-700 shadow-lg'
-                    : 'border-gray-200 hover:border-yellow-300 bg-white hover:shadow-md'
-                }`}
-              >
-                <div className="text-2xl mb-2">{option.icon}</div>
-                <span className="font-semibold text-xs">{option.label}</span>
-              </button>
+              <div key={category} className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{categoryData.icon}</span>
+                  <h5 className="font-semibold text-gray-800">{categoryData.label}</h5>
+                  <span className="text-sm text-gray-500">({categoryPrefs.length})</span>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {categoryPrefs.map((option) => {
+                    const isSelected = selectedPreferences.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        onClick={() => handlePreferenceToggle(option.value)}
+                        className={`p-3 rounded-xl border-2 text-center transition-all duration-300 transform hover:scale-105 ${
+                          isSelected
+                            ? `border-${categoryData.color}-500 bg-${categoryData.color}-50 text-${categoryData.color}-700 shadow-lg`
+                            : `border-gray-200 hover:border-${categoryData.color}-300 bg-white hover:shadow-md`
+                        }`}
+                      >
+                        <div className="text-xl mb-1">{option.icon}</div>
+                        <span className="font-medium text-xs leading-tight">{option.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             );
           })}
         </div>
 
         {selectedPreferences.length > 0 && (
           <div className="mt-6 p-4 bg-yellow-50 rounded-2xl border border-yellow-200">
-            <h5 className="font-semibold text-yellow-900 mb-2">⭐ Services sélectionnés :</h5>
+            <h5 className="font-semibold text-yellow-900 mb-2">⭐ Critères sélectionnés ({selectedPreferences.length}) :</h5>
             <div className="flex flex-wrap gap-2">
               {selectedPreferences.map(pref => {
                 const prefData = preferences.find(p => p.value === pref);
