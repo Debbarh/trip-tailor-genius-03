@@ -4,9 +4,10 @@ import { useSearchParams } from "react-router-dom";
 import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
+import InspirationLandingPage from "@/components/inspiration/InspirationLandingPage";
 import HomeScreen from "@/components/home/HomeScreen";
 
-type Mode = 'home' | 'plan' | 'inspire' | 'itinerary';
+type Mode = 'home' | 'plan' | 'inspire' | 'inspiration-landing' | 'itinerary';
 
 interface TripData {
   mode: 'plan' | 'inspire';
@@ -34,7 +35,22 @@ const Index = () => {
 
   const handleFormComplete = (data: TripData) => {
     setTripData(data);
-    setMode('itinerary');
+    if (data.mode === 'inspire') {
+      setMode('inspiration-landing');
+    } else {
+      setMode('itinerary');
+    }
+  };
+
+  const handleCreateItinerary = (destinationOrExperience: any) => {
+    if (tripData) {
+      const enhancedData = {
+        ...tripData,
+        selectedDestination: destinationOrExperience
+      };
+      setTripData(enhancedData);
+      setMode('itinerary');
+    }
   };
 
   const handleBackToHome = () => {
@@ -42,11 +58,27 @@ const Index = () => {
     setTripData(null);
   };
 
+  const handleBackToInspiration = () => {
+    setMode('inspiration-landing');
+  };
+
   const renderContent = () => {
     switch (mode) {
+      case 'inspiration-landing':
+        return tripData ? (
+          <InspirationLandingPage 
+            formData={tripData} 
+            onBack={handleBackToHome}
+            onCreateItinerary={handleCreateItinerary}
+          />
+        ) : null;
+
       case 'itinerary':
         return tripData ? (
-          <ItineraryDisplay data={tripData} onBack={handleBackToHome} />
+          <ItineraryDisplay 
+            data={tripData} 
+            onBack={tripData.mode === 'inspire' ? handleBackToInspiration : handleBackToHome} 
+          />
         ) : null;
 
       case 'plan':
