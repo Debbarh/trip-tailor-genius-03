@@ -33,15 +33,15 @@ const CountryGrid = React.memo<CountryGridProps>(({
   removeCountry
 }) => {
   return (
-    <div className="space-y-2">
-      <h4 className="text-lg font-bold text-gray-900">
+    <div className="space-y-1">
+      <h4 className="text-sm font-bold text-gray-900">
         {searchTerm.trim() === "" 
           ? "Commencez par le Maroc"
           : `Pays disponibles (${filteredCountries.length})`
         }
       </h4>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-48 overflow-y-auto">
         {filteredCountries.map((country) => {
           const isSelected = selectedCountries.find(c => c.countryName === country.name);
           
@@ -49,17 +49,17 @@ const CountryGrid = React.memo<CountryGridProps>(({
             <button
               key={country.code}
               onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
-              className={`p-2 rounded-lg border-2 text-center transition-all duration-300 hover:scale-105 ${
+              className={`p-1.5 rounded-lg border-2 text-center transition-all duration-300 hover:scale-105 ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md'
                   : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50/50'
               }`}
             >
-              <div className="text-xl mb-1">{country.flagCode}</div>
+              <div className="text-base mb-0.5">{country.flagCode}</div>
               <div className="font-medium text-xs">{country.name}</div>
               <div className="text-xs text-gray-500">{country.region}</div>
               {isSelected && (
-                <div className="mt-1 text-xs text-blue-600 font-medium">✓ Sélectionné</div>
+                <div className="mt-0.5 text-xs text-blue-600 font-medium">✓ Sélectionné</div>
               )}
             </button>
           );
