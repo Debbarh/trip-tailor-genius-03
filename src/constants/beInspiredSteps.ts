@@ -52,10 +52,10 @@ export const travelOptions = [
 ];
 
 export const budgetOptions = [
-  { id: 'low', label: 'Économique', desc: 'Moins de 500€', emoji: '💰', color: 'from-green-500 to-emerald-600' },
-  { id: 'medium', label: 'Modéré', desc: '500€ - 1500€', emoji: '💳', color: 'from-blue-500 to-cyan-600' },
-  { id: 'high', label: 'Confortable', desc: '1500€ - 3000€', emoji: '💎', color: 'from-purple-500 to-violet-600' },
-  { id: 'luxury', label: 'Luxe', desc: 'Plus de 3000€', emoji: '👑', color: 'from-yellow-500 to-orange-600' }
+  { id: 'low', label: 'Économique', desc: 'Voyage à petit budget', emoji: '💰', color: 'from-green-500 to-emerald-600' },
+  { id: 'medium', label: 'Modéré', desc: 'Budget intermédiaire', emoji: '💳', color: 'from-blue-500 to-cyan-600' },
+  { id: 'high', label: 'Confortable', desc: 'Voyage haut de gamme', emoji: '💎', color: 'from-purple-500 to-violet-600' },
+  { id: 'luxury', label: 'Luxe', desc: 'Expérience premium', emoji: '👑', color: 'from-yellow-500 to-orange-600' }
 ];
 
 export const accommodationOptions = [
