@@ -1,42 +1,35 @@
 
-import { MapPin, Users, DollarSign, Bed, Activity } from "lucide-react";
+import { Sparkles, Users, DollarSign, Bed } from "lucide-react";
 import { CountryService } from "@/services/countryService";
 
 export const stepConfigs = [
   { 
-    id: 'destination', 
-    title: 'Votre Destination de Rêve', 
-    subtitle: 'Où votre aventure commence-t-elle ?', 
-    icon: MapPin,
-    image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
+    id: 'activities', 
+    title: 'Vos Passions', 
+    subtitle: 'Qu\'est-ce qui fait battre votre cœur de voyageur ?', 
+    icon: Sparkles,
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
   },
   { 
     id: 'travelWith', 
-    title: 'Vos Compagnons d\'Aventure', 
-    subtitle: 'Avec qui partagerez-vous ces moments magiques ?', 
+    title: 'Votre Tribu', 
+    subtitle: 'Avec qui partagerez-vous ces instants magiques ?', 
     icon: Users,
-    image: 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
+    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
   },
   { 
-    id: 'budgetAndFood', 
-    title: 'Budget & Saveurs', 
-    subtitle: 'Définissons votre budget et vos envies culinaires', 
+    id: 'budget', 
+    title: 'Votre Investissement Bonheur', 
+    subtitle: 'Combien voulez-vous investir dans vos rêves ?', 
     icon: DollarSign,
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
+    image: 'https://images.unsplash.com/photo-1544427920-c49ccfb85579?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
   },
   { 
     id: 'accommodation', 
-    title: 'Votre Refuge', 
-    subtitle: 'Où rêvez-vous de poser vos valises ?', 
+    title: 'Votre Cocon', 
+    subtitle: 'Où aimez-vous poser vos valises pour rêver ?', 
     icon: Bed,
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
-  },
-  { 
-    id: 'activities', 
-    title: 'Expériences Inoubliables', 
-    subtitle: 'Quelles aventures vous font vibrer ?', 
-    icon: Activity,
-    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
+    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80'
   }
 ];
 

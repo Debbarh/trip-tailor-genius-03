@@ -4,12 +4,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { stepConfigs } from "@/constants/planTripSteps";
-import DestinationStep from "./PlanTrip/steps/DestinationStep";
-import TravelWithStep from "./steps/TravelWithStep";
-import BudgetAndFoodStep from "./PlanTrip/steps/BudgetAndFoodStep";
-import AccommodationStep from "./PlanTrip/steps/AccommodationStep";
-import ActivitiesStep from "./PlanTrip/steps/ActivitiesStep";
-import DefaultStep from "./steps/DefaultStep";
+import ActivitiesStep from "./steps/ActivitiesStep";
+import TravelCompanionsStep from "./steps/TravelCompanionsStep";
+import BudgetStep from "./steps/BudgetStep";
+import AccommodationStep from "./steps/AccommodationStep";
 import ProgressIndicator from "./components/ProgressIndicator";
 import PlanTripHeader from "./components/PlanTripHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -19,11 +17,10 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<PlanTripFormData>({
-    destination: { countries: [] },
-    travelWith: { segment: '', subSegment: '' },
-    budgetAndFood: { budget: '', cuisine: [] },
-    accommodation: { type: '', preferences: [] },
-    activities: []
+    activities: [],
+    travelWith: '',
+    budget: '',
+    accommodation: ''
   });
 
   const handleNext = () => {
@@ -51,21 +48,28 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   const isStepValid = () => {
     const step = stepConfigs[currentStep];
     switch (step.id) {
-      case 'destination':
-        // La validation sera gérée par le composant DestinationStep lui-même
-        return true;
-      case 'travelWith':
-        if (!formData.travelWith.segment) {
+      case 'activities':
+        if (formData.activities.length === 0) {
           toast({
-            title: "Profil de voyage manquant",
-            description: "Veuillez sélectionner votre profil de voyage.",
+            title: "Activités manquantes",
+            description: "Veuillez sélectionner au moins une activité qui vous intéresse.",
             variant: "destructive"
           });
           return false;
         }
         return true;
-      case 'budgetAndFood':
-        if (!formData.budgetAndFood.budget) {
+      case 'travelWith':
+        if (!formData.travelWith) {
+          toast({
+            title: "Compagnon de voyage manquant",
+            description: "Veuillez indiquer avec qui vous voyagez.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
+      case 'budget':
+        if (!formData.budget) {
           toast({
             title: "Budget manquant",
             description: "Veuillez indiquer votre budget pour le voyage.",
@@ -75,20 +79,10 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
         }
         return true;
       case 'accommodation':
-        if (!formData.accommodation.type) {
+        if (!formData.accommodation) {
           toast({
             title: "Type d'hébergement manquant",
             description: "Veuillez sélectionner votre type d'hébergement préféré.",
-            variant: "destructive"
-          });
-          return false;
-        }
-        return true;
-      case 'activities':
-        if (formData.activities.length === 0) {
-          toast({
-            title: "Activités manquantes",
-            description: "Veuillez sélectionner au moins une activité qui vous intéresse.",
             variant: "destructive"
           });
           return false;
@@ -103,18 +97,36 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
     const step = stepConfigs[currentStep];
     
     switch (step.id) {
-      case 'destination':
-        return <DestinationStep formData={formData} setFormData={setFormData} onNext={handleNext} />;
-      case 'travelWith':
-        return <TravelWithStep formData={formData} setFormData={setFormData} />;
-      case 'budgetAndFood':
-        return <BudgetAndFoodStep formData={formData} setFormData={setFormData} />;
-      case 'accommodation':
-        return <AccommodationStep formData={formData} setFormData={setFormData} />;
       case 'activities':
-        return <ActivitiesStep formData={formData} setFormData={setFormData} />;
+        return (
+          <ActivitiesStep
+            activities={formData.activities}
+            setActivities={(activities) => setFormData({...formData, activities})}
+          />
+        );
+      case 'travelWith':
+        return (
+          <TravelCompanionsStep
+            travelWith={formData.travelWith}
+            setTravelWith={(travelWith) => setFormData({...formData, travelWith})}
+          />
+        );
+      case 'budget':
+        return (
+          <BudgetStep
+            budget={formData.budget}
+            setBudget={(budget) => setFormData({...formData, budget})}
+          />
+        );
+      case 'accommodation':
+        return (
+          <AccommodationStep
+            accommodation={formData.accommodation}
+            setAccommodation={(accommodation) => setFormData({...formData, accommodation})}
+          />
+        );
       default:
-        return <DefaultStep />;
+        return null;
     }
   };
 
@@ -159,30 +171,28 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
           </div>
 
           {/* Navigation */}
-          {currentStep !== 0 && (
-            <div className="flex justify-between items-center mt-6">
-              <Button
-                onClick={handleBack}
-                variant="ghost"
-                className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                {t('planTrip.previous')}
-              </Button>
-              
-              <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
-                {t('planTrip.step')} {currentStep + 1} {t('planTrip.of')} {stepConfigs.length}
-              </div>
-
-              <Button
-                onClick={handleNext}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-2xl shadow-2xl border-0"
-              >
-                {isLastStep ? t('planTrip.createTrip') : t('planTrip.next')}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+          <div className="flex justify-between items-center mt-6">
+            <Button
+              onClick={handleBack}
+              variant="ghost"
+              className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Précédent
+            </Button>
+            
+            <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
+              Étape {currentStep + 1} sur {stepConfigs.length}
             </div>
-          )}
+
+            <Button
+              onClick={handleNext}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-2xl shadow-2xl border-0"
+            >
+              {isLastStep ? 'Planifiez mon voyage' : 'Suivant'}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
         </div>
       </main>
 
