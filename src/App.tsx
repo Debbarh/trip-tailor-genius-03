@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import GlobalNavigation from "@/components/layout/GlobalNavigation";
+import HomeNavigation from "@/components/layout/HomeNavigation";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -26,51 +26,46 @@ const App = () => (
         <BrowserRouter>
           <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
             <Routes>
-              <Route path="/" element={
-                <>
-                  <GlobalNavigation />
-                  <Index />
-                </>
-              } />
+              <Route path="/" element={<Index />} />
               <Route path="/login" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <Login />
                 </>
               } />
               <Route path="/signup" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <Signup />
                 </>
               } />
               <Route path="/profile" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <Profile />
                 </>
               } />
               <Route path="/countries" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <Countries />
                 </>
               } />
               <Route path="/itinerary" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <Itinerary />
                 </>
               } />
               <Route path="/admin" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <Admin />
                 </>
               } />
               <Route path="*" element={
                 <>
-                  <GlobalNavigation />
+                  <HomeNavigation />
                   <NotFound />
                 </>
               } />

@@ -14,11 +14,11 @@ import {
 } from '@/components/ui/drawer';
 import { Menu, X, User } from 'lucide-react';
 
-interface MobileNavigationProps {
+interface MobileNavigationMenuProps {
   onModeSelect: (mode: 'plan' | 'inspire') => void;
 }
 
-const MobileNavigation = ({ onModeSelect }: MobileNavigationProps) => {
+const MobileNavigationMenu = ({ onModeSelect }: MobileNavigationMenuProps) => {
   const { t } = useLanguage();
   const [open, setOpen] = React.useState(false);
 
@@ -116,4 +116,4 @@ const MobileNavigation = ({ onModeSelect }: MobileNavigationProps) => {
   );
 };
 
-export default MobileNavigation;
+export default MobileNavigationMenu;

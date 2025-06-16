@@ -7,7 +7,7 @@ import LanguageSelector from "@/components/ui/LanguageSelector";
 import ToursSection from "@/components/tours/ToursSection";
 import { useLanguage } from "@/contexts/LanguageContext";
 import UserHeader from "@/components/ui/UserHeader";
-import MobileNavigation from "@/components/layout/MobileNavigation";
+import HomeNavigation from "@/components/layout/HomeNavigation";
 import HeroSection from "./HeroSection";
 import FeaturesGrid from "./FeaturesGrid";
 import FloatingElements from "./FloatingElements";
@@ -73,36 +73,7 @@ const HomeScreen = ({ onModeSelect }: HomeScreenProps) => {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 px-6 py-6">
-        <nav className="max-w-7xl mx-auto flex items-center justify-between">
-          <BrandLogo />
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Button 
-              onClick={() => onModeSelect('plan')}
-              variant="ghost"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              {t('hero.plan')}
-            </Button>
-            <Button 
-              onClick={() => onModeSelect('inspire')}
-              variant="ghost"
-              className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-            >
-              {t('hero.inspire')}
-            </Button>
-            <a href="#tours" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.adventures')}</a>
-            <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
-            <UserHeader />
-            <LanguageSelector />
-          </div>
-
-          {/* Mobile Navigation */}
-          <MobileNavigation onModeSelect={onModeSelect} />
-        </nav>
-      </header>
+      <HomeNavigation onModeSelect={onModeSelect} />
 
       {/* Hero Section */}
       <HeroSection 
