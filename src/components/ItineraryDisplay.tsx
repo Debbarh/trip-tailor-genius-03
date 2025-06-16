@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,57 +26,42 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
   };
 
   return (
-    <div className="min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Card className="shadow-2xl bg-white/95 backdrop-blur-sm border-0 overflow-hidden">
+    <div className="min-h-screen py-6">
+      <div className="max-w-6xl mx-auto px-4">
+        <Card className="shadow-lg bg-white border border-gray-200">
           <ItineraryHeader itinerary={itinerary} onBack={onBack} />
 
           <CardContent className="p-0">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 bg-gradient-to-r from-purple-50 via-blue-50 to-pink-50 border-b border-purple-100">
-                <TabsTrigger 
-                  value="overview" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-100 data-[state=active]:to-purple-200 data-[state=active]:text-purple-800 font-medium"
-                >
-                  ✨ Aperçu
+              <TabsList className="grid w-full grid-cols-5 bg-gray-100 border-b">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-white font-medium">
+                  Aperçu
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="itinerary" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-100 data-[state=active]:to-blue-200 data-[state=active]:text-blue-800 font-medium"
-                >
-                  📅 Programme
+                <TabsTrigger value="itinerary" className="data-[state=active]:bg-white font-medium">
+                  Programme
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="practical" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-100 data-[state=active]:to-green-200 data-[state=active]:text-green-800 font-medium"
-                >
-                  💡 Infos Pratiques
+                <TabsTrigger value="practical" className="data-[state=active]:bg-white font-medium">
+                  Infos Pratiques
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="accommodations" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-100 data-[state=active]:to-pink-100 data-[state=active]:text-purple-800 font-medium"
-                >
-                  🏨 Hébergements
+                <TabsTrigger value="accommodations" className="data-[state=active]:bg-white font-medium">
+                  Hébergements
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="experiences" 
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-100 data-[state=active]:to-purple-100 data-[state=active]:text-pink-800 font-medium"
-                >
-                  🎭 Expériences
+                <TabsTrigger value="experiences" className="data-[state=active]:bg-white font-medium">
+                  Expériences
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="overview" className="p-8 bg-gradient-to-br from-purple-50/30 via-blue-50/30 to-pink-50/30">
+              <TabsContent value="overview" className="p-6">
                 <ItineraryOverview itinerary={itinerary} data={data} />
               </TabsContent>
 
-              <TabsContent value="itinerary" className="p-8 bg-gradient-to-br from-blue-50/30 via-purple-50/30 to-pink-50/30">
-                <div className="space-y-8">
-                  <div className="text-center mb-8">
-                    <h3 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-2">
-                      📅 Votre aventure jour par jour
+              <TabsContent value="itinerary" className="p-6">
+                <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      Votre programme jour par jour
                     </h3>
-                    <p className="text-purple-700/80">Chaque moment a été pensé pour vous émerveiller</p>
+                    <p className="text-gray-600">Découvrez votre itinéraire détaillé</p>
                   </div>
 
                   {itinerary.days.map((day, dayIndex) => (
@@ -90,49 +76,43 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
                 </div>
               </TabsContent>
 
-              <TabsContent value="practical" className="p-8 bg-gradient-to-br from-green-50/30 via-blue-50/30 to-purple-50/30">
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                    💡 Informations Pratiques & Recommandations
+              <TabsContent value="practical" className="p-6">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Informations Pratiques
                   </h3>
-                  <p className="text-green-700/80">Tout ce qu'il faut savoir pour réussir votre voyage</p>
+                  <p className="text-gray-600">Conseils et recommandations pour votre voyage</p>
                 </div>
                 <PracticalInfoTab />
               </TabsContent>
 
-              <TabsContent value="accommodations" className="p-8 bg-gradient-to-br from-purple-50/30 via-pink-50/30 to-blue-50/30">
+              <TabsContent value="accommodations" className="p-6">
                 <AccommodationsTab />
               </TabsContent>
 
-              <TabsContent value="experiences" className="p-8 bg-gradient-to-br from-pink-50/30 via-purple-50/30 to-blue-50/30">
+              <TabsContent value="experiences" className="p-6">
                 <ExperiencesTab />
               </TabsContent>
             </Tabs>
           </CardContent>
         </Card>
 
-        {/* Boutons d'action avec les couleurs du logo */}
-        <div className="mt-8 text-center space-y-6">
-          <div className="flex justify-center gap-6">
+        {/* Boutons d'action simplifiés */}
+        <div className="mt-6 text-center space-y-4">
+          <div className="flex justify-center gap-4">
             <Button 
               size="lg"
-              className="bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 hover:from-purple-700 hover:via-blue-700 hover:to-pink-700 text-white px-10 py-6 text-lg shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 transition-all duration-300 border-0"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
             >
-              ✨ Personnaliser cet itinéraire
+              Personnaliser cet itinéraire
             </Button>
             <Button 
               size="lg"
               variant="outline"
-              className="border-2 border-purple-400 bg-white/90 backdrop-blur-sm text-purple-700 hover:bg-purple-50 hover:border-purple-500 px-10 py-6 text-lg shadow-xl hover:shadow-purple-500/20 transform hover:scale-105 transition-all duration-300"
+              className="border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3"
             >
-              💾 Sauvegarder
+              Sauvegarder
             </Button>
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-purple-100">
-            <p className="text-purple-700 italic text-lg font-medium bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent">
-              "Un voyage se vit trois fois : quand on le rêve, quand on le vit, et quand on s'en souvient" ✨
-            </p>
           </div>
         </div>
       </div>

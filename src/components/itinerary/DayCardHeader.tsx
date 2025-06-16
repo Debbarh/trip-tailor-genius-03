@@ -22,22 +22,20 @@ const DayCardHeader = ({
 }: DayCardHeaderProps) => {
   return (
     <div 
-      className="h-48 bg-cover bg-center relative"
+      className="h-32 bg-cover bg-center relative"
       style={{ backgroundImage: `url('${day.image}')` }}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30"></div>
-      <div className="absolute inset-0 flex items-end p-6">
+      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 flex items-end p-4">
         <div className="text-white flex-1">
-          <div className="flex items-center gap-4 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-lg font-bold shadow-lg">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold">
               {day.day}
             </div>
             <div>
-              <h3 className="text-2xl font-bold">{day.title}</h3>
-              <div className="flex items-center gap-4 text-sm opacity-90">
-                <span className="flex items-center gap-1">
-                  📍 {day.city}
-                </span>
+              <h3 className="text-xl font-bold">{day.title}</h3>
+              <div className="flex items-center gap-3 text-sm opacity-90">
+                <span>{day.city}</span>
                 <span className="flex items-center gap-1">
                   <day.weather.icon className="w-4 h-4" />
                   {day.weather.temp}
@@ -46,9 +44,7 @@ const DayCardHeader = ({
                   <ClockIcon className="w-4 h-4" />
                   ~{totalDuration}h
                 </span>
-                <span className="flex items-center gap-1">
-                  💰 {totalBudget}€
-                </span>
+                <span>{totalBudget}€</span>
               </div>
             </div>
           </div>
@@ -58,7 +54,7 @@ const DayCardHeader = ({
           <Button
             size="sm"
             variant="ghost"
-            className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm"
+            className="bg-white/20 hover:bg-white/30 text-white"
           >
             <PlusIcon className="w-4 h-4 mr-1" />
             Ajouter
@@ -68,7 +64,7 @@ const DayCardHeader = ({
             className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
           >
             <HeartIcon 
-              className={`w-6 h-6 transition-colors ${
+              className={`w-5 h-5 ${
                 isFavorite ? 'text-red-500 fill-current' : 'text-white'
               }`} 
             />
