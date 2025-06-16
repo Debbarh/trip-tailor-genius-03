@@ -134,7 +134,7 @@ export default function BudgetAndFoodStep({ formData, setFormData }: StepProps) 
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => handleCuisineToggle(cuisine.value)}
-                  className="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                  className="sr-only"
                 />
                 <span className="text-2xl">{cuisine.icon}</span>
                 <span className="font-medium text-sm">{cuisine.label}</span>
@@ -169,7 +169,7 @@ export default function BudgetAndFoodStep({ formData, setFormData }: StepProps) 
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => handleCuisineToggle(preference.value)}
-                  className="w-5 h-5 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
+                  className="sr-only"
                 />
                 <span className="text-2xl">{preference.icon}</span>
                 <span className="font-medium text-sm">{preference.label}</span>
