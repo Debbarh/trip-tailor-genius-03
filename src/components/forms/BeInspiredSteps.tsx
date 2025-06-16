@@ -109,16 +109,16 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
 
       <BeInspiredHeader onBack={onBack} />
 
-      {/* Progress Indicator */}
-      <div className="relative z-10 px-6 py-8">
+      {/* Progress Indicator - Compact */}
+      <div className="relative z-10 px-6 py-4">
         <div className="max-w-4xl mx-auto">
           <BeInspiredProgressIndicator currentStep={currentStep} />
           
-          <div className="text-center text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <div className="text-center text-white mt-4">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
               {currentStepData.title}
             </h1>
-            <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
               {currentStepData.subtitle}
             </p>
           </div>
@@ -128,32 +128,32 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
       {/* Main Content */}
       <main className="relative z-10 px-6 pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8 md:p-12">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8">
             {renderStepContent()}
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center mt-8">
+          <div className="flex justify-between items-center mt-6">
             <Button
               onClick={handleBack}
               variant="ghost"
-              className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-8 py-4 text-lg"
+              className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
             >
-              <ArrowLeft className="w-5 h-5 mr-2" />
+              <ArrowLeft className="w-4 h-4 mr-2" />
               Précédent
             </Button>
             
-            <div className="text-white/80 backdrop-blur-sm bg-white/20 px-6 py-3 rounded-full border border-white/30">
+            <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
               Étape {currentStep + 1} sur {beInspiredStepConfigs.length}
             </div>
 
             <Button
               onClick={handleNext}
               disabled={!isStepValid()}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 text-lg rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl border-0"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl border-0"
             >
               {currentStep === beInspiredStepConfigs.length - 1 ? 'Trouvez mon inspiration' : 'Suivant'}
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>

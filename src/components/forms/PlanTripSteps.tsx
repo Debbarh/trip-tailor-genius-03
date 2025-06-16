@@ -146,16 +146,16 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
 
       <PlanTripHeader onBack={onBack} />
 
-      {/* Progress Indicator */}
-      <div className="relative z-10 px-6 py-8">
+      {/* Progress Indicator - Compact */}
+      <div className="relative z-10 px-6 py-4">
         <div className="max-w-4xl mx-auto">
           <ProgressIndicator currentStep={currentStep} />
           
-          <div className="text-center text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <div className="text-center text-white mt-4">
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
               {currentStepData.title}
             </h1>
-            <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
               {currentStepData.subtitle}
             </p>
           </div>
@@ -165,27 +165,27 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       {/* Main Content */}
       <main className="relative z-10 px-6 pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8 md:p-12">
+          <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8">
             {renderStepContent()}
 
             {/* Section des spécifications spéciales - visible seulement à la dernière étape */}
             {isLastStep && (
-              <div className="mt-12 border-t border-gray-200 pt-8">
+              <div className="mt-8 border-t border-gray-200 pt-6">
                 <Collapsible open={showSpecifications} onOpenChange={setShowSpecifications}>
                   <CollapsibleTrigger asChild>
                     <Button 
                       variant="outline" 
-                      className="w-full flex items-center justify-between p-6 text-lg bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-blue-200"
+                      className="w-full flex items-center justify-between p-4 text-base bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border-blue-200"
                     >
-                      <span className="flex items-center gap-3">
+                      <span className="flex items-center gap-2">
                         ✨ Spécifications spéciales pour votre voyage (optionnel)
                       </span>
-                      {showSpecifications ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                      {showSpecifications ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </Button>
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-6">
-                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
-                      <p className="text-gray-600 mb-6 text-center">
+                  <CollapsibleContent className="mt-4">
+                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-4 border border-blue-100">
+                      <p className="text-gray-600 mb-4 text-center text-sm">
                         Aidez-nous à personnaliser davantage votre expérience en nous indiquant vos besoins particuliers
                       </p>
                       <SpecialSpecifications 
@@ -201,26 +201,26 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
 
           {/* Navigation */}
           {currentStep !== 0 && (
-            <div className="flex justify-between items-center mt-8">
+            <div className="flex justify-between items-center mt-6">
               <Button
                 onClick={handleBack}
                 variant="ghost"
-                className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-8 py-4 text-lg"
+                className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
               >
-                <ArrowLeft className="w-5 h-5 mr-2" />
+                <ArrowLeft className="w-4 h-4 mr-2" />
                 {t('planTrip.previous')}
               </Button>
               
-              <div className="text-white/80 backdrop-blur-sm bg-white/20 px-6 py-3 rounded-full border border-white/30">
+              <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
                 {t('planTrip.step')} {currentStep + 1} {t('planTrip.of')} {stepConfigs.length}
               </div>
 
               <Button
                 onClick={handleNext}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl shadow-2xl border-0"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-2xl shadow-2xl border-0"
               >
                 {isLastStep ? t('planTrip.createTrip') : t('planTrip.next')}
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           )}
