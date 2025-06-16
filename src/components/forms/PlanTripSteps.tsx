@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { stepConfigs } from "@/constants/planTripSteps";
 import ActivitiesStep from "./steps/ActivitiesStep";
-import TravelCompanionsStep from "./steps/TravelCompanionsStep";
+import TravelCompanionsStep from "./PlanTrip/steps/TravelCompanionsStep";
 import BudgetStep from "./steps/BudgetStep";
 import AccommodationStep from "./steps/AccommodationStep";
 import ProgressIndicator from "./components/ProgressIndicator";
@@ -107,8 +106,8 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       case 'travelWith':
         return (
           <TravelCompanionsStep
-            travelWith={formData.travelWith}
-            setTravelWith={(travelWith) => setFormData({...formData, travelWith})}
+            formData={formData}
+            setFormData={setFormData}
           />
         );
       case 'budget':
