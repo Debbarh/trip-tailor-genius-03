@@ -20,21 +20,21 @@ const DestinationFilters = React.memo<DestinationFiltersProps>(({
   regions
 }) => {
   return (
-    <div className="bg-gray-50 p-2 rounded-lg">
-      <h4 className="text-sm font-semibold text-gray-900 mb-1">Trouvez vos destinations</h4>
-      <div className="space-y-1">
+    <div className="bg-gray-50 p-1 rounded">
+      <h4 className="text-xs font-semibold text-gray-900 mb-0.5">Trouvez vos destinations</h4>
+      <div className="space-y-0.5">
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
+          <Search className="absolute left-1.5 top-1/2 transform -translate-y-1/2 text-gray-400 w-2.5 h-2.5" />
           <Input
             type="text"
             placeholder="Rechercher un pays..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-7 h-7 text-xs"
+            className="pl-5 h-5 text-xs py-0.5 px-1"
           />
         </div>
         <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-          <SelectTrigger className="h-7 text-xs">
+          <SelectTrigger className="h-5 text-xs py-0.5 px-1">
             <SelectValue placeholder="Choisir une région" />
           </SelectTrigger>
           <SelectContent>
