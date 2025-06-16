@@ -28,12 +28,12 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
   return (
     <div className="min-h-screen py-6">
       <div className="max-w-6xl mx-auto px-4">
-        <Card className="shadow-lg bg-white border border-purple-200">
+        <Card className="shadow-lg bg-white border">
           <ItineraryHeader itinerary={itinerary} onBack={onBack} />
 
           <CardContent className="p-0">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 bg-gradient-to-r from-purple-50 via-blue-50 to-pink-50 border-b border-purple-200">
+              <TabsList className="grid w-full grid-cols-5 bg-gray-50 border-b">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:text-purple-700 font-medium">
                   Aperçu
                 </TabsTrigger>
@@ -58,7 +58,7 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
               <TabsContent value="itinerary" className="p-6">
                 <div className="space-y-6">
                   <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
                       Votre programme jour par jour
                     </h3>
                     <p className="text-gray-600">Découvrez votre itinéraire détaillé</p>
@@ -78,7 +78,7 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
 
               <TabsContent value="practical" className="p-6">
                 <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     Informations Pratiques
                   </h3>
                   <p className="text-gray-600">Conseils et recommandations pour votre voyage</p>
