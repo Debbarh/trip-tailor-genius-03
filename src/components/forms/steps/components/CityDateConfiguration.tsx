@@ -30,7 +30,7 @@ const CityDateConfiguration = React.memo<CityDateConfigurationProps>(({
           size="sm"
           className="text-red-600 hover:text-red-700 p-0 h-auto"
         >
-          <X className="w-1.5 h-1.5" />
+          <X className="w-1 h-1" />
         </Button>
       </div>
       
