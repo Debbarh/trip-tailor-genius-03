@@ -1,12 +1,11 @@
 
 import React, { useState, useMemo } from 'react';
-import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
-import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
-import { useCountriesData } from '../../../../hooks/useCountriesData';
-import DestinationHeader from './components/DestinationHeader';
-import DestinationSummary from './components/DestinationSummary';
-import CountrySelector from './components/CountrySelector';
-import CityConfiguration from './components/CityConfiguration';
+import { PlanTripFormData, StepProps } from '../../../types/planTrip';
+import { useDestinationLogic } from '../../../hooks/useDestinationLogic';
+import { useCountriesData } from '../../../hooks/useCountriesData';
+import DestinationFilters from './components/DestinationFilters';
+import CountryGrid from './components/CountryGrid';
+import CountryConfiguration from './components/CountryConfiguration';
 
 export default function DestinationStep({ formData, setFormData }: StepProps) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,39 +39,58 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
     setActiveCountryIndex
   });
 
+  // Filter countries based on search term and get regions
   const filteredCountries = useMemo(() => {
-    if (!searchTerm.trim()) return countriesList;
+    const countries = countriesList.map(country => ({
+      code: country.name.toLowerCase().replace(/\s+/g, '_'),
+      name: country.name,
+      flagCode: '🌍',
+      region: 'Monde'
+    }));
+
+    if (!searchTerm.trim()) return countries;
     
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return countriesList.filter((country) =>
+    return countries.filter((country) =>
       country.name.toLowerCase().includes(lowerSearchTerm)
     );
   }, [countriesList, searchTerm]);
 
+  const regions = useMemo(() => {
+    const uniqueRegions = [...new Set(filteredCountries.map(c => c.region))];
+    return ['Toutes les régions', ...uniqueRegions];
+  }, [filteredCountries]);
+
+  const [selectedRegion, setSelectedRegion] = useState('Toutes les régions');
+
+  const finalFilteredCountries = useMemo(() => {
+    if (selectedRegion === 'Toutes les régions') return filteredCountries;
+    return filteredCountries.filter(c => c.region === selectedRegion);
+  }, [filteredCountries, selectedRegion]);
+
   return (
-    <div className="space-y-1">
-      <DestinationHeader />
-      
-      <DestinationSummary 
-        selectedCountries={selectedCountries}
-        activeCountryIndex={activeCountryIndex}
-        navigateToCountry={navigateToCountry}
-        isCountryComplete={isCountryComplete}
-      />
+    <div className="space-y-0.25">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-0.25">
+        <div className="space-y-0.25">
+          <DestinationFilters 
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedRegion={selectedRegion}
+            setSelectedRegion={setSelectedRegion}
+            regions={regions}
+          />
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-1.5">
-        <CountrySelector 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filteredCountries={filteredCountries}
-          selectedCountries={selectedCountries}
-          addCountry={addCountry}
-          removeCountry={removeCountry}
-        />
+          <CountryGrid 
+            filteredCountries={finalFilteredCountries}
+            selectedCountries={selectedCountries}
+            searchTerm={searchTerm}
+            addCountry={addCountry}
+            removeCountry={removeCountry}
+          />
+        </div>
 
-        <CityConfiguration 
+        <CountryConfiguration 
           activeCountry={activeCountry}
-          citiesList={citiesList}
           removeCountry={removeCountry}
           addCity={addCity}
           removeCity={removeCity}
