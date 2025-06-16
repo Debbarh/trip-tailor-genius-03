@@ -3,7 +3,6 @@ import React, { useState, useMemo } from 'react';
 import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
 import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
 import { useCountriesData } from '../../../../hooks/useCountriesData';
-import DestinationHeader from './components/DestinationHeader';
 import DestinationSummary from './components/DestinationSummary';
 import CountrySelector from './components/CountrySelector';
 import CityConfiguration from './components/CityConfiguration';
@@ -66,8 +65,6 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
 
   return (
     <div className="space-y-4">
-      <DestinationHeader />
-      
       <DestinationSummary 
         selectedCountries={selectedCountries}
         activeCountryIndex={activeCountryIndex}

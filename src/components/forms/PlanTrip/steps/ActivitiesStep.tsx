@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
 import { StepProps } from '../../../../types/planTrip';
-import { Activity, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { Button } from '../../../ui/button';
-import { ToggleGroup, ToggleGroupItem } from '../../../ui/toggle-group';
 
 const activityCategories = [
   {
@@ -125,19 +124,6 @@ export default function ActivitiesStep({ formData, setFormData }: StepProps) {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center">
-        <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
-          <Activity className="w-10 h-10 text-white" />
-        </div>
-        <h3 className="text-3xl font-bold text-gray-900 mb-3">
-          Vos activités de rêve
-        </h3>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Sélectionnez les expériences qui vous font vibrer
-        </p>
-      </div>
-
       {/* Filters */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">

@@ -69,19 +69,6 @@ export default function BudgetAndFoodStep({ formData, setFormData }: StepProps) 
 
   return (
     <div className="space-y-12">
-      {/* Header */}
-      <div className="text-center">
-        <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
-          <DollarSign className="w-10 h-10 text-white" />
-        </div>
-        <h3 className="text-4xl font-bold text-gray-900 mb-4">
-          Budget et préférences culinaires
-        </h3>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Définissez votre budget et vos goûts pour une expérience sur mesure
-        </p>
-      </div>
-
       {/* Budget Selection */}
       <div className="space-y-8">
         <div className="flex items-center gap-3 mb-6">
