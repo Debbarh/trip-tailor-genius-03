@@ -40,15 +40,15 @@ const CountryGrid = React.memo<CountryGridProps>(({
   };
 
   return (
-    <div className="space-y-0.25">
-      <h4 className="text-xs font-bold text-gray-900">
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium text-gray-700">
         {searchTerm.trim() === "" 
-          ? "Commencez par le Maroc"
-          : `Pays disponibles (${filteredCountries.length})`
+          ? "Pays disponibles"
+          : `${filteredCountries.length} résultat${filteredCountries.length !== 1 ? 's' : ''}`
         }
       </h4>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-0.25 max-h-40 overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-80 overflow-y-auto">
         {filteredCountries.map((country) => {
           const isSelected = selectedCountries.find(c => c.countryName === country.name);
           const flag = getCountryFlag(country.name);
@@ -57,20 +57,19 @@ const CountryGrid = React.memo<CountryGridProps>(({
             <button
               key={country.code}
               onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
-              className={`p-0.25 rounded border transition-all duration-200 hover:scale-105 ${
+              className={`px-3 py-2 text-left border rounded transition-colors ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm'
-                  : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50/50'
+                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
               }`}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <div className="text-sm">{flag}</div>
-                <div className="font-medium text-xs">{country.name}</div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm">{flag}</span>
+                <span className="font-medium text-sm">{country.name}</span>
+                {isSelected && (
+                  <span className="ml-auto text-blue-600 text-xs">✓</span>
+                )}
               </div>
-              <div className="text-xs text-gray-500">{country.region}</div>
-              {isSelected && (
-                <div className="mt-0 text-xs text-blue-600 font-medium">✓ Sélectionné</div>
-              )}
             </button>
           );
         })}

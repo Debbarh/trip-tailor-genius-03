@@ -62,25 +62,25 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
   }, [setSearchTerm]);
 
   return (
-    <div className="space-y-6">
-      <div className="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-3xl border border-gray-200">
-        <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-blue-600" />
-          Trouvez vos destinations
+    <div className="space-y-4">
+      <div className="bg-white p-4 rounded-lg border">
+        <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-gray-600" />
+          Destinations
         </h4>
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
             placeholder="Rechercher un pays..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200 text-lg"
+            className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400"
           />
           {searchTerm && (
             <button
               onClick={clearSearch}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 w-5 h-5 flex items-center justify-center"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 w-4 h-4 flex items-center justify-center"
               aria-label="Effacer la recherche"
             >
               ×
@@ -89,23 +89,23 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-2xl font-bold text-gray-900">
+          <h4 className="text-lg font-semibold text-gray-900">
             Pays disponibles
           </h4>
-          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+          <span className="text-sm text-gray-500">
             {filteredCountries.length} résultat{filteredCountries.length !== 1 ? 's' : ''}
           </span>
         </div>
         
         {filteredCountries.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
+          <div className="text-center py-8 text-gray-500">
+            <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>Aucun pays trouvé pour "{searchTerm}"</p>
           </div>
         ) : (
-          <div className="max-h-96 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-4 pr-2">
+          <div className="max-h-96 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2">
             {filteredCountries.map((country) => {
               const isSelected = selectedCountryNames.has(country.name);
               const flag = getCountryFlag(country.name);
@@ -113,20 +113,20 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
                 <button
                   key={country.id}
                   onClick={() => handleCountryToggle(country.name)}
-                  className={`p-6 border-2 rounded-2xl text-center transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-100 ${
+                  className={`p-3 border rounded-lg text-left transition-colors ${
                     isSelected
-                      ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-2xl'
-                      : 'border-gray-200 hover:border-blue-300 bg-white hover:shadow-xl'
+                      ? 'bg-blue-50 border-blue-500 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50'
                   }`}
                   aria-pressed={isSelected}
                 >
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <div className="text-2xl">{flag}</div>
-                    <div className="text-lg font-semibold">{country.name}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{flag}</span>
+                    <span className="font-medium">{country.name}</span>
+                    {isSelected && (
+                      <span className="ml-auto text-blue-600">✓</span>
+                    )}
                   </div>
-                  {isSelected && (
-                    <div className="mt-2 text-sm opacity-90">✓ Sélectionné</div>
-                  )}
                 </button>
               );
             })}
