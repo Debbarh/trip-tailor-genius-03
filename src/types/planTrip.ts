@@ -23,11 +23,22 @@ export interface TravelWith {
   };
 }
 
-export interface PlanTripFormData {
-  activities: string[];
-  travelWith: string;
+export interface BudgetAndFood {
   budget: string;
-  accommodation: string;
+  cuisine: string[];
+}
+
+export interface Accommodation {
+  type: string;
+  preferences: string[];
+}
+
+export interface PlanTripFormData {
+  destination: Destination;
+  travelWith: TravelWith;
+  budgetAndFood: BudgetAndFood;
+  accommodation: Accommodation;
+  activities: string[];
 }
 
 export interface PlanTripStepsProps {
