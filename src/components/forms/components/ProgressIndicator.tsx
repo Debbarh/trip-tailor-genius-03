@@ -14,9 +14,9 @@ const ProgressIndicator = ({ currentStep }: ProgressIndicatorProps) => {
           key={step.id}
           className={`flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-500 ${
             index < currentStep
-              ? 'bg-green-500 text-white shadow-xl scale-110'
+              ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-xl scale-110'
               : index === currentStep
-              ? 'bg-blue-500 text-white shadow-2xl scale-125'
+              ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-2xl scale-125'
               : 'bg-white/30 text-white/70 backdrop-blur-sm'
           }`}
         >
