@@ -17,6 +17,10 @@ export interface Destination {
 export interface TravelWith {
   segment: string;
   subSegment: string;
+  details?: {
+    children?: Array<{ name: string; age: string }>;
+    groupSize?: number;
+  };
 }
 
 export interface BudgetAndFood {
