@@ -9,14 +9,18 @@ import HomeScreen from "@/components/home/HomeScreen";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'inspiration-landing' | 'itinerary';
 
-interface TripData {
+interface BeInspiredFormData {
   mode: 'plan' | 'inspire';
+  activities: string[];
+  travelWith: string;
+  budget: string;
+  accommodation: string;
   [key: string]: any;
 }
 
 const Index = () => {
   const [mode, setMode] = useState<Mode>('home');
-  const [tripData, setTripData] = useState<TripData | null>(null);
+  const [tripData, setTripData] = useState<BeInspiredFormData | null>(null);
   const [searchParams] = useSearchParams();
 
   // Handle URL params for mode selection
@@ -24,16 +28,28 @@ const Index = () => {
     const modeParam = searchParams.get('mode');
     if (modeParam === 'plan' || modeParam === 'inspire') {
       setMode(modeParam);
-      setTripData({ mode: modeParam });
+      setTripData({ 
+        mode: modeParam,
+        activities: [],
+        travelWith: '',
+        budget: '',
+        accommodation: ''
+      });
     }
   }, [searchParams]);
 
   const handleModeSelect = (selectedMode: 'plan' | 'inspire') => {
     setMode(selectedMode);
-    setTripData({ mode: selectedMode });
+    setTripData({ 
+      mode: selectedMode,
+      activities: [],
+      travelWith: '',
+      budget: '',
+      accommodation: ''
+    });
   };
 
-  const handleFormComplete = (data: TripData) => {
+  const handleFormComplete = (data: BeInspiredFormData) => {
     setTripData(data);
     if (data.mode === 'inspire') {
       setMode('inspiration-landing');
