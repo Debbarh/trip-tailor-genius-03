@@ -8,11 +8,11 @@ interface BudgetStepProps {
 }
 
 const periodOptions = [
-  { id: 'weekend', label: 'Week-end (2-3 jours)', emoji: '🏃‍♂️' },
-  { id: 'week', label: 'Une semaine', emoji: '📅' },
-  { id: 'two-weeks', label: 'Deux semaines', emoji: '🗓️' },
-  { id: 'month', label: 'Un mois', emoji: '📆' },
-  { id: 'longer', label: 'Plus d\'un mois', emoji: '🌍' }
+  { id: 'city-break', label: 'City Break', emoji: '🏃‍♂️', desc: '2-3 jours' },
+  { id: 'short-stay', label: 'Séjour Court', emoji: '📅', desc: '4-7 jours' },
+  { id: 'week-long', label: 'Séjour Longue Durée', emoji: '🗓️', desc: '8-14 jours' },
+  { id: 'extended-stay', label: 'Séjour Prolongé', emoji: '📆', desc: '15-30 jours' },
+  { id: 'long-haul', label: 'Voyage Long-Courrier', emoji: '🌍', desc: 'Plus d\'un mois' }
 ];
 
 const BudgetStep = ({ budget, setBudget }: BudgetStepProps) => {
@@ -54,7 +54,7 @@ const BudgetStep = ({ budget, setBudget }: BudgetStepProps) => {
     <div className="space-y-8">
       {/* Sélection de la période */}
       <div className="space-y-4">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Quelle est la durée de votre voyage ?</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Quel type de séjour envisagez-vous ?</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {periodOptions.map((option) => (
             <button
@@ -69,7 +69,8 @@ const BudgetStep = ({ budget, setBudget }: BudgetStepProps) => {
               <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">
                 {option.emoji}
               </div>
-              <div className="font-semibold text-sm">{option.label}</div>
+              <div className="font-semibold text-sm mb-1">{option.label}</div>
+              <div className="text-xs opacity-70">{option.desc}</div>
             </button>
           ))}
         </div>
