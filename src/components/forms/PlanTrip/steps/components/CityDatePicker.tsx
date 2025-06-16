@@ -1,6 +1,6 @@
 
 import React, { useCallback } from 'react';
-import { Calendar, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface CityData {
   cityName: string;
@@ -28,46 +28,41 @@ const CityDatePicker = React.memo<CityDatePickerProps>(({
   }, [city.cityName, onRemoveCity]);
 
   return (
-    <div className="p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-            {city.cityName.charAt(0)}
-          </div>
-          <span className="text-lg font-bold text-gray-900">
-            {city.cityName}
-          </span>
-        </div>
+    <div className="p-4 bg-white rounded-lg border border-gray-200">
+      <div className="flex justify-between items-center mb-3">
+        <span className="font-medium text-gray-900">
+          {city.cityName}
+        </span>
         <button
           onClick={handleRemove}
-          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200"
+          className="p-1 text-gray-400 hover:text-red-500 transition-colors"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            📅 Date d'arrivée
+          <label className="block text-sm text-gray-600 mb-1">
+            Arrivée
           </label>
           <input
             type="date"
             value={city.startDate}
             onChange={(e) => handleDateChange('startDate', e.target.value)}
-            className="w-full p-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200"
+            className="w-full p-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-purple-400"
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            🎯 Date de départ
+          <label className="block text-sm text-gray-600 mb-1">
+            Départ
           </label>
           <input
             type="date"
             value={city.endDate}
             onChange={(e) => handleDateChange('endDate', e.target.value)}
             min={city.startDate}
-            className="w-full p-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all duration-200"
+            className="w-full p-2 text-sm border border-gray-200 rounded focus:outline-none focus:border-purple-400"
           />
         </div>
       </div>
