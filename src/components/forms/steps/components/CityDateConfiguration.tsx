@@ -21,36 +21,36 @@ const CityDateConfiguration = React.memo<CityDateConfigurationProps>(({
   updateCityDates
 }) => {
   return (
-    <div className="bg-gray-50 p-0.5 rounded border">
-      <div className="flex items-center justify-between mb-0.5">
+    <div className="bg-gray-50 p-0 rounded border">
+      <div className="flex items-center justify-between mb-0">
         <h6 className="font-medium text-xs text-gray-900">{city.cityName}</h6>
         <Button
           onClick={() => removeCity(countryName, city.cityName)}
           variant="ghost"
           size="sm"
-          className="text-red-600 hover:text-red-700 p-0.5 h-auto"
+          className="text-red-600 hover:text-red-700 p-0 h-auto"
         >
-          <X className="w-2.5 h-2.5" />
+          <X className="w-1.5 h-1.5" />
         </Button>
       </div>
       
-      <div className="grid grid-cols-2 gap-0.5">
+      <div className="grid grid-cols-2 gap-0">
         <div>
-          <label className="block text-xs text-gray-600 mb-0.5">Arrivée</label>
+          <label className="block text-xs text-gray-600 mb-0">Arrivée</label>
           <input
             type="date"
             value={city.startDate}
             onChange={(e) => updateCityDates(countryName, city.cityName, 'startDate', e.target.value)}
-            className="w-full px-0.5 py-0.5 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            className="w-full px-0 py-0 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500"
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-600 mb-0.5">Départ</label>
+          <label className="block text-xs text-gray-600 mb-0">Départ</label>
           <input
             type="date"
             value={city.endDate}
             onChange={(e) => updateCityDates(countryName, city.cityName, 'endDate', e.target.value)}
-            className="w-full px-0.5 py-0.5 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+            className="w-full px-0 py-0 text-xs border border-gray-300 rounded focus:outline-none focus:border-blue-500"
           />
         </div>
       </div>

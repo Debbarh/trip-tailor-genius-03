@@ -49,17 +49,17 @@ const CountryGrid = React.memo<CountryGridProps>(({
             <button
               key={country.code}
               onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
-              className={`p-0.5 rounded border-2 text-center transition-all duration-200 hover:scale-105 ${
+              className={`p-0.5 rounded border transition-all duration-200 hover:scale-105 ${
                 isSelected
                   ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm'
                   : 'border-gray-200 hover:border-blue-300 bg-white hover:bg-blue-50/50'
               }`}
             >
-              <div className="text-sm mb-0.5">{country.flagCode}</div>
+              <div className="text-xs mb-0">{country.flagCode}</div>
               <div className="font-medium text-xs">{country.name}</div>
               <div className="text-xs text-gray-500">{country.region}</div>
               {isSelected && (
-                <div className="mt-0.5 text-xs text-blue-600 font-medium">✓ Sélectionné</div>
+                <div className="mt-0 text-xs text-blue-600 font-medium">✓ Sélectionné</div>
               )}
             </button>
           );
