@@ -86,7 +86,7 @@ export const travelSegments = [
     emoji: '👥',
     subSegments: [
       { id: 'group-friends', name: 'Group of Friends', desc: 'Amis du même âge', emoji: '🎉' },
-      { id: 'multi-generational', name: 'Multi-generational Group', desc: 'Groupe mixte d\'âges différents', emoji: '🌈' }
+      { id: 'multi-generational', name: 'Multi-generational Group', desc: 'Groupe mixte d\'âges différents', emoji: '👨‍👩‍👧‍👦' }
     ]
   }
 ];
