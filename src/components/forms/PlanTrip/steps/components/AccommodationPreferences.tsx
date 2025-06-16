@@ -99,6 +99,23 @@ export default function AccommodationPreferences({ selectedPreferences, onPrefer
         </div>
       </div>
 
+      {/* Critères sélectionnés - déplacé ici juste après les filtres */}
+      {selectedPreferences.length > 0 && (
+        <div className="p-4 bg-yellow-50 rounded-2xl border border-yellow-200">
+          <h5 className="font-semibold text-yellow-900 mb-2">⭐ Critères sélectionnés ({selectedPreferences.length}) :</h5>
+          <div className="flex flex-wrap gap-2">
+            {selectedPreferences.map(pref => {
+              const prefData = preferences.find(p => p.value === pref);
+              return (
+                <span key={pref} className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                  {prefData?.icon} {prefData?.label}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Compteur de critères */}
       <div className="text-sm text-gray-600">
         {filteredPreferences.length} critère{filteredPreferences.length > 1 ? 's' : ''} disponible{filteredPreferences.length > 1 ? 's' : ''}
@@ -139,22 +156,6 @@ export default function AccommodationPreferences({ selectedPreferences, onPrefer
           );
         })}
       </div>
-
-      {selectedPreferences.length > 0 && (
-        <div className="mt-6 p-4 bg-yellow-50 rounded-2xl border border-yellow-200">
-          <h5 className="font-semibold text-yellow-900 mb-2">⭐ Critères sélectionnés ({selectedPreferences.length}) :</h5>
-          <div className="flex flex-wrap gap-2">
-            {selectedPreferences.map(pref => {
-              const prefData = preferences.find(p => p.value === pref);
-              return (
-                <span key={pref} className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
-                  {prefData?.icon} {prefData?.label}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
