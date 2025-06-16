@@ -1,5 +1,6 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { countriesData } from '@/data/countries';
 
 interface Country {
   id: number;
@@ -11,33 +12,22 @@ interface City {
   name: string;
 }
 
-const MOCK_COUNTRIES: Country[] = [
-  { id: 1, name: "Maroc" },
-  { id: 2, name: "France" },
-  { id: 3, name: "Espagne" },
-  { id: 4, name: "Italie" },
-  { id: 5, name: "Portugal" },
-  { id: 6, name: "Grèce" },
-  { id: 7, name: "Turquie" },
-  { id: 8, name: "Égypte" }
-];
-
-const MOCK_CITIES: City[] = [
-  { id: 1, name: "Casablanca" },
-  { id: 2, name: "Marrakech" },
-  { id: 3, name: "Rabat" },
-  { id: 4, name: "Fès" },
-  { id: 5, name: "Agadir" },
-  { id: 6, name: "Tanger" }
-];
-
 export const useCountriesData = (activeCountry?: { countryName: string }) => {
   const [countriesList, setCountriesList] = useState<Country[]>([]);
   const [citiesList, setCitiesList] = useState<City[]>([]);
 
+  // Convert countries data to the expected format
+  const allCountries = useMemo(() => 
+    countriesData.map((country, index) => ({
+      id: index + 1,
+      name: country.name
+    })), 
+    []
+  );
+
   useEffect(() => {
-    setCountriesList(MOCK_COUNTRIES);
-  }, []);
+    setCountriesList(allCountries);
+  }, [allCountries]);
 
   useEffect(() => {
     if (!activeCountry) {
@@ -46,7 +36,16 @@ export const useCountriesData = (activeCountry?: { countryName: string }) => {
     }
     
     const timer = setTimeout(() => {
-      setCitiesList(MOCK_CITIES);
+      // Find cities for the active country
+      const countryData = countriesData.find(c => c.name === activeCountry.countryName);
+      const cities = countryData?.cities || [];
+      
+      const formattedCities = cities.map((city, index) => ({
+        id: index + 1,
+        name: city
+      }));
+      
+      setCitiesList(formattedCities);
     }, 100);
 
     return () => clearTimeout(timer);

@@ -1,5 +1,5 @@
 
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { Search, MapPin } from 'lucide-react';
 import { countriesData } from '@/data/countries';
 
@@ -38,6 +38,29 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
     () => new Set(selectedCountries.map(sc => sc.countryName)),
     [selectedCountries]
   );
+
+  // Initial 8 popular countries to display
+  const initialCountries = useMemo(() => [
+    'Maroc', 'France', 'Espagne', 'Italie', 'Grèce', 'Turquie', 'Portugal', 'Égypte'
+  ], []);
+
+  // Countries to display: if searching, show filtered results, otherwise show initial + selected
+  const displayedCountries = useMemo(() => {
+    if (searchTerm.trim()) {
+      return filteredCountries;
+    }
+    
+    // Show initial countries + any selected countries not in the initial list
+    const initialCountriesData = filteredCountries.filter(c => 
+      initialCountries.includes(c.name)
+    );
+    
+    const additionalSelected = filteredCountries.filter(c => 
+      selectedCountryNames.has(c.name) && !initialCountries.includes(c.name)
+    );
+    
+    return [...initialCountriesData, ...additionalSelected];
+  }, [filteredCountries, searchTerm, initialCountries, selectedCountryNames]);
 
   // Function to get flag for a country
   const getCountryFlag = useCallback((countryName: string) => {
@@ -92,21 +115,21 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h4 className="text-lg font-semibold text-gray-900">
-            Pays disponibles
+            {searchTerm.trim() ? 'Résultats de recherche' : 'Pays populaires'}
           </h4>
           <span className="text-sm text-gray-500">
-            {filteredCountries.length} résultat{filteredCountries.length !== 1 ? 's' : ''}
+            {displayedCountries.length} résultat{displayedCountries.length !== 1 ? 's' : ''}
           </span>
         </div>
         
-        {filteredCountries.length === 0 ? (
+        {displayedCountries.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>Aucun pays trouvé pour "{searchTerm}"</p>
           </div>
         ) : (
           <div className="max-h-96 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {filteredCountries.map((country) => {
+            {displayedCountries.map((country) => {
               const isSelected = selectedCountryNames.has(country.name);
               const flag = getCountryFlag(country.name);
               return (
@@ -131,6 +154,12 @@ const CountrySelector = React.memo<CountrySelectorProps>(({
               );
             })}
           </div>
+        )}
+        
+        {!searchTerm.trim() && (
+          <p className="text-xs text-gray-500 text-center mt-2">
+            💡 Utilisez la recherche pour explorer plus de 50 pays disponibles
+          </p>
         )}
       </div>
     </div>
