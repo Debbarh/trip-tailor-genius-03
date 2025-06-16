@@ -1,4 +1,3 @@
-
 import { useCallback } from 'react';
 import { PlanTripFormData, CountryWithCities } from '../types/planTrip';
 import { toast } from '@/hooks/use-toast';
@@ -112,6 +111,37 @@ export const useDestinationLogic = ({
            country.cities.every((city) => city.startDate && city.endDate);
   }, []);
 
+  const detectDateGaps = useCallback(() => {
+    const gaps: string[] = [];
+    
+    for (const country of selectedCountries) {
+      if (country.cities.length <= 1) continue;
+      
+      // Trier les villes par date d'arrivée
+      const sortedCities = [...country.cities]
+        .filter(city => city.startDate && city.endDate)
+        .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+      
+      for (let i = 0; i < sortedCities.length - 1; i++) {
+        const currentCity = sortedCities[i];
+        const nextCity = sortedCities[i + 1];
+        
+        const currentEndDate = new Date(currentCity.endDate);
+        const nextStartDate = new Date(nextCity.startDate);
+        
+        // Calculer la différence en jours
+        const diffTime = nextStartDate.getTime() - currentEndDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays > 1) {
+          gaps.push(`${diffDays - 1} jour(s) entre ${currentCity.cityName} et ${nextCity.cityName} en ${country.countryName}`);
+        }
+      }
+    }
+    
+    return gaps;
+  }, [selectedCountries]);
+
   const validateDestinationData = useCallback(() => {
     if (selectedCountries.length === 0) {
       toast({
@@ -162,8 +192,18 @@ export const useDestinationLogic = ({
       }
     }
 
+    // Vérifier les jours creux et afficher un avertissement (sans bloquer)
+    const gaps = detectDateGaps();
+    if (gaps.length > 0) {
+      toast({
+        title: "⚠️ Jours creux détectés",
+        description: gaps.join(', '),
+        variant: "default" // Pas destructive, juste informatif
+      });
+    }
+
     return true;
-  }, [selectedCountries]);
+  }, [selectedCountries, detectDateGaps]);
 
   return {
     addCountry,
@@ -173,6 +213,7 @@ export const useDestinationLogic = ({
     updateCityDates,
     navigateToCountry,
     isCountryComplete,
-    validateDestinationData
+    validateDestinationData,
+    detectDateGaps
   };
 };
