@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -174,31 +173,29 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
             {renderStepContent()}
           </div>
 
-          {/* Navigation */}
-          {currentStep !== 0 && (
-            <div className="flex justify-between items-center mt-6">
-              <Button
-                onClick={handleBack}
-                variant="ghost"
-                className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Précédent
-              </Button>
-              
-              <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
-                Étape {currentStep + 1} sur {beInspiredStepConfigs.length}
-              </div>
-
-              <Button
-                onClick={handleNext}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl shadow-2xl border-0"
-              >
-                {isLastStep ? 'Trouvez mon inspiration' : 'Suivant'}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+          {/* Navigation - Always visible */}
+          <div className="flex justify-between items-center mt-6">
+            <Button
+              onClick={handleBack}
+              variant="ghost"
+              className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 px-6 py-3"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              {currentStep === 0 ? 'Retour' : 'Précédent'}
+            </Button>
+            
+            <div className="text-white/80 backdrop-blur-sm bg-white/20 px-4 py-2 rounded-full border border-white/30 text-sm">
+              Étape {currentStep + 1} sur {beInspiredStepConfigs.length}
             </div>
-          )}
+
+            <Button
+              onClick={handleNext}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl shadow-2xl border-0"
+            >
+              {isLastStep ? 'Trouvez mon inspiration' : 'Suivant'}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
         </div>
       </main>
 
