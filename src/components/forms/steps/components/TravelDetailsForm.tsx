@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Minus, Baby, Child, Users } from "lucide-react";
+import { Plus, Minus, Baby, User, Users } from "lucide-react";
 
 interface TravelDetailsFormProps {
   subSegment: string;
@@ -55,7 +55,7 @@ const TravelDetailsForm = ({ subSegment, details, onDetailsChange }: TravelDetai
           <div className="space-y-4">
             {children.map((child, index) => (
               <div key={index} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
-                <Child className="w-5 h-5 text-pink-500" />
+                <User className="w-5 h-5 text-pink-500" />
                 <div className="flex-1 grid grid-cols-2 gap-3">
                   <div>
                     <Label className="text-sm text-gray-600">Prénom</Label>
