@@ -88,6 +88,10 @@ const CommunityForum = () => {
     }
   };
 
+  const handlePostClick = (postId: string) => {
+    navigate(`/community/post/${postId}`);
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Floating decorative elements */}
@@ -209,7 +213,11 @@ const CommunityForum = () => {
 
               <TabsContent value="all" className="space-y-6 mt-0">
                 {samplePosts.map((post) => (
-                  <Card key={post.id} className="bg-white/80 backdrop-blur-sm border-white/30 shadow-xl hover:bg-white/95 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group">
+                  <Card 
+                    key={post.id} 
+                    className="bg-white/80 backdrop-blur-sm border-white/30 shadow-xl hover:bg-white/95 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group cursor-pointer"
+                    onClick={() => handlePostClick(post.id)}
+                  >
                     <CardContent className="pt-6">
                       <div className="flex gap-4">
                         <Avatar className="ring-4 ring-white/50 group-hover:ring-blue-200/50 transition-all duration-300">

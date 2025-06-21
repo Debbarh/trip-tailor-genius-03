@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Community from "./pages/Community";
 import CreatePost from "./pages/CreatePost";
+import PostDetail from "./pages/PostDetail";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +70,12 @@ const App = () => (
                 <>
                   <HomeNavigation />
                   <CreatePost />
+                </>
+              } />
+              <Route path="/community/post/:postId" element={
+                <>
+                  <HomeNavigation />
+                  <PostDetail />
                 </>
               } />
               <Route path="/admin" element={
