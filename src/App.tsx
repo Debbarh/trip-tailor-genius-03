@@ -14,6 +14,7 @@ import Itinerary from "./pages/Itinerary";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import Community from "./pages/Community";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,12 @@ const App = () => (
                 <>
                   <HomeNavigation />
                   <Itinerary />
+                </>
+              } />
+              <Route path="/community" element={
+                <>
+                  <HomeNavigation />
+                  <Community />
                 </>
               } />
               <Route path="/admin" element={
