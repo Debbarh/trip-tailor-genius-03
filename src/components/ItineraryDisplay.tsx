@@ -44,11 +44,16 @@ const ItineraryDisplay = ({ data, onBack }: ItineraryDisplayProps) => {
     </>
   );
 
+  // Utiliser les propriétés correctes du type GeneratedItinerary
+  const title = itinerary.destinations.join(", ");
+  const subtitle = `${itinerary.duration} • ${itinerary.budget} • Voyage ${mode === 'inspire' ? 'inspiré' : 'planifié'}`;
+  const backgroundImage = itinerary.days[0]?.image || "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80";
+
   return (
     <UnifiedResultsLayout
-      title={itinerary.destination}
-      subtitle={`${itinerary.duration} • ${itinerary.totalBudget} • Voyage ${mode === 'inspire' ? 'inspiré' : 'planifié'}`}
-      backgroundImage={itinerary.image}
+      title={title}
+      subtitle={subtitle}
+      backgroundImage={backgroundImage}
       mode={mode}
       onBack={onBack}
       headerActions={headerActions}

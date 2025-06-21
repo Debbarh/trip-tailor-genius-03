@@ -88,7 +88,7 @@ const InspirationLandingPage = ({ formData, onBack, onCreateItinerary }: Inspira
         </TabsContent>
 
         <TabsContent value="testimonials" className="p-8">
-          <InspirationTestimonials />
+          <InspirationTestimonials formData={formData} />
         </TabsContent>
       </Tabs>
     </UnifiedResultsLayout>
