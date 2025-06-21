@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
-import UnifiedNavigation from "@/components/navigation/UnifiedNavigation";
+import HomeNavigation from "@/components/layout/HomeNavigation";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -24,48 +24,48 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-neutral-50">
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <Login />
                 </>
               } />
               <Route path="/signup" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <Signup />
                 </>
               } />
               <Route path="/profile" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <Profile />
                 </>
               } />
               <Route path="/countries" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <Countries />
                 </>
               } />
               <Route path="/itinerary" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <Itinerary />
                 </>
               } />
               <Route path="/admin" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <Admin />
                 </>
               } />
               <Route path="*" element={
                 <>
-                  <UnifiedNavigation />
+                  <HomeNavigation />
                   <NotFound />
                 </>
               } />

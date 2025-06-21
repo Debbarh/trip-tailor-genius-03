@@ -5,7 +5,7 @@ import PlanTripSteps from "@/components/forms/PlanTripSteps";
 import BeInspiredSteps from "@/components/forms/BeInspiredSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import InspirationLandingPage from "@/components/inspiration/InspirationLandingPage";
-import UnifiedHomeScreen from "@/components/home/UnifiedHomeScreen";
+import HomeScreen from "@/components/home/HomeScreen";
 
 type Mode = 'home' | 'plan' | 'inspire' | 'inspiration-landing' | 'itinerary';
 
@@ -108,7 +108,7 @@ const Index = () => {
         );
 
       default:
-        return <UnifiedHomeScreen onModeSelect={handleModeSelect} />;
+        return <HomeScreen onModeSelect={handleModeSelect} />;
     }
   };
 
