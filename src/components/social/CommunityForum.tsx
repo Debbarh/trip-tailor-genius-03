@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,7 @@ import { MessageSquare, Users, HelpCircle, Lightbulb, MapPin, Coffee, TrendingUp
 import { CommunityPost, ForumCategory } from "@/types/social";
 
 const CommunityForum = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("all");
 
   const categories: ForumCategory[] = [
@@ -198,7 +199,10 @@ const CommunityForum = () => {
                 <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Discussions récentes
                 </h2>
-                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Button 
+                  onClick={() => navigate('/community/create')}
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                >
                   Nouveau post
                 </Button>
               </div>
