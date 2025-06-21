@@ -29,13 +29,13 @@ const InspirationLandingPage = ({ formData, onBack, onCreateItinerary }: Inspira
       <Button
         variant="ghost"
         size="lg"
-        className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30"
+        className="text-white hover:bg-white/20 backdrop-blur-sm border border-white/30 transition-all duration-300 shadow-lg"
       >
         Sauvegarder mes inspirations
       </Button>
       <Button
         size="lg"
-        className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/30"
+        className="bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm border border-white/30 transition-all duration-300 shadow-lg"
       >
         Partager
       </Button>
@@ -52,22 +52,22 @@ const InspirationLandingPage = ({ formData, onBack, onCreateItinerary }: Inspira
       headerActions={headerActions}
     >
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 bg-gray-50 border-b">
+        <TabsList className="grid w-full grid-cols-3 bg-gray-50 border-b mb-8">
           <TabsTrigger 
             value="destinations" 
-            className="data-[state=active]:bg-white data-[state=active]:text-orange-600 font-medium"
+            className="data-[state=active]:bg-white data-[state=active]:text-orange-600 font-medium px-6 py-3 transition-all duration-300"
           >
             🏛️ Destinations
           </TabsTrigger>
           <TabsTrigger 
             value="experiences" 
-            className="data-[state=active]:bg-white data-[state=active]:text-orange-600 font-medium"
+            className="data-[state=active]:bg-white data-[state=active]:text-orange-600 font-medium px-6 py-3 transition-all duration-300"
           >
             ✨ Expériences
           </TabsTrigger>
           <TabsTrigger 
             value="testimonials" 
-            className="data-[state=active]:bg-white data-[state=active]:text-orange-600 font-medium"
+            className="data-[state=active]:bg-white data-[state=active]:text-orange-600 font-medium px-6 py-3 transition-all duration-300"
           >
             💬 Témoignages
           </TabsTrigger>
