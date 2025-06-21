@@ -1,8 +1,8 @@
 
 import { useBeInspiredForm } from "@/hooks/useBeInspiredForm";
 import BeInspiredStepContent from "./components/BeInspiredStepContent";
-import BeInspiredNavigation from "./components/BeInspiredNavigation";
-import BeInspiredLayout from "./components/BeInspiredLayout";
+import UnifiedStepper from "./components/UnifiedStepper";
+import { beInspiredStepConfigs } from "@/constants/beInspiredSteps";
 
 interface BeInspiredStepsProps {
   onComplete: (data: any) => void;
@@ -19,26 +19,25 @@ const BeInspiredSteps = ({ onComplete, onBack }: BeInspiredStepsProps) => {
     isLastStep
   } = useBeInspiredForm(onComplete);
 
+  const currentStepConfig = beInspiredStepConfigs[currentStep];
+
   return (
-    <BeInspiredLayout
+    <UnifiedStepper
       currentStep={currentStep}
-      onBack={onBack}
-      children={
-        <BeInspiredStepContent
-          currentStep={currentStep}
-          formData={formData}
-          setFormData={setFormData}
-        />
-      }
-      navigation={
-        <BeInspiredNavigation
-          currentStep={currentStep}
-          isLastStep={isLastStep}
-          onNext={handleNext}
-          onBack={() => handleBack(onBack)}
-        />
-      }
-    />
+      totalSteps={beInspiredStepConfigs.length}
+      stepConfig={currentStepConfig}
+      onBack={() => handleBack(onBack)}
+      onNext={handleNext}
+      onBackToHome={onBack}
+      isLastStep={isLastStep}
+      mode="inspire"
+    >
+      <BeInspiredStepContent
+        currentStep={currentStep}
+        formData={formData}
+        setFormData={setFormData}
+      />
+    </UnifiedStepper>
   );
 };
 
