@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Users, HelpCircle, Lightbulb, MapPin, Coffee } from "lucide-react";
+import { MessageSquare, Users, HelpCircle, Lightbulb, MapPin, Coffee, TrendingUp, Clock, Heart } from "lucide-react";
 import { CommunityPost, ForumCategory } from "@/types/social";
 
 const CommunityForum = () => {
@@ -88,142 +88,196 @@ const CommunityForum = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Communauté Voyageurs</h1>
-        <p className="text-gray-600">Échangez avec d'autres passionnés de voyage</p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Floating decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-indigo-400/10 to-purple-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <Tabs value={activeCategory} onValueChange={setActiveCategory}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="all">Tout</TabsTrigger>
-          <TabsTrigger value="questions">Questions</TabsTrigger>
-          <TabsTrigger value="conseils">Conseils</TabsTrigger>
-          <TabsTrigger value="experiences">Expériences</TabsTrigger>
-          <TabsTrigger value="rencontres">Rencontres</TabsTrigger>
-        </TabsList>
+      <div className="relative z-10 max-w-6xl mx-auto p-6">
+        {/* Header with gradient text */}
+        <div className="mb-12 text-center">
+          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            Communauté Voyageurs
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Échangez avec d'autres passionnés de voyage, partagez vos expériences et découvrez de nouvelles destinations
+          </p>
+        </div>
 
-        <div className="mt-6 grid md:grid-cols-4 gap-6">
-          {/* Sidebar avec catégories */}
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Catégories
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {categories.map((category) => (
-                  <div
-                    key={category.id}
-                    className="p-3 rounded-lg hover:bg-gray-50 cursor-pointer border"
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-lg">{category.icon}</span>
-                      <div>
-                        <h4 className="font-semibold">{category.name}</h4>
-                        <p className="text-sm text-gray-600">{category.description}</p>
+        <Tabs value={activeCategory} onValueChange={setActiveCategory} className="space-y-8">
+          <TabsList className="grid w-full grid-cols-5 bg-white/80 backdrop-blur-sm border border-white/30 shadow-lg">
+            <TabsTrigger value="all" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Tout</TabsTrigger>
+            <TabsTrigger value="questions" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Questions</TabsTrigger>
+            <TabsTrigger value="conseils" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Conseils</TabsTrigger>
+            <TabsTrigger value="experiences" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Expériences</TabsTrigger>
+            <TabsTrigger value="rencontres" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">Rencontres</TabsTrigger>
+          </TabsList>
+
+          <div className="grid md:grid-cols-4 gap-8">
+            {/* Enhanced Sidebar */}
+            <div className="space-y-6">
+              {/* Categories Card */}
+              <Card className="bg-white/80 backdrop-blur-sm border-white/30 shadow-xl hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      Catégories
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {categories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="p-4 rounded-xl bg-gradient-to-r from-gray-50/80 to-white/80 hover:from-white/90 hover:to-gray-50/90 cursor-pointer border border-white/50 transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                    >
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{category.icon}</span>
+                        <div>
+                          <h4 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                            {category.name}
+                          </h4>
+                          <p className="text-sm text-gray-600">{category.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex justify-between text-sm text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="w-3 h-3" />
+                          {category.postCount} posts
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {category.lastActivity}
+                        </span>
                       </div>
                     </div>
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>{category.postCount} posts</span>
-                      <span>{category.lastActivity}</span>
+                  ))}
+                </CardContent>
+              </Card>
+
+              {/* Stats Card */}
+              <Card className="bg-white/80 backdrop-blur-sm border-white/30 shadow-xl hover:bg-white/95 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+                      <TrendingUp className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                      Statistiques
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50/80 to-purple-50/80 rounded-lg">
+                      <span className="text-gray-700">Membres actifs</span>
+                      <span className="font-bold text-blue-600 text-lg">1,247</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-purple-50/80 to-pink-50/80 rounded-lg">
+                      <span className="text-gray-700">Posts aujourd'hui</span>
+                      <span className="font-bold text-purple-600 text-lg">23</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gradient-to-r from-pink-50/80 to-rose-50/80 rounded-lg">
+                      <span className="text-gray-700">Nouveaux membres</span>
+                      <span className="font-bold text-pink-600 text-lg">12</span>
                     </div>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Statistiques</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>Membres actifs</span>
-                    <span className="font-semibold">1,247</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Posts aujourd'hui</span>
-                    <span className="font-semibold">23</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Nouveaux membres</span>
-                    <span className="font-semibold">12</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Liste des posts */}
-          <div className="md:col-span-3 space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Discussions récentes</h2>
-              <Button>Nouveau post</Button>
+                </CardContent>
+              </Card>
             </div>
 
-            <TabsContent value="all" className="space-y-4 mt-0">
-              {samplePosts.map((post) => (
-                <Card key={post.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="pt-6">
-                    <div className="flex gap-4">
-                      <Avatar>
-                        <AvatarImage src={post.userAvatar} alt={post.userName} />
-                        <AvatarFallback>
-                          {post.userName.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          {getCategoryIcon(post.category)}
-                          <h3 className="font-semibold hover:text-blue-600 cursor-pointer">
-                            {post.title}
-                          </h3>
-                          {post.destination && (
-                            <Badge variant="secondary">{post.destination}</Badge>
-                          )}
-                        </div>
+            {/* Enhanced Posts Section */}
+            <div className="md:col-span-3 space-y-8">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Discussions récentes
+                </h2>
+                <Button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                  Nouveau post
+                </Button>
+              </div>
+
+              <TabsContent value="all" className="space-y-6 mt-0">
+                {samplePosts.map((post) => (
+                  <Card key={post.id} className="bg-white/80 backdrop-blur-sm border-white/30 shadow-xl hover:bg-white/95 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group">
+                    <CardContent className="pt-6">
+                      <div className="flex gap-4">
+                        <Avatar className="ring-4 ring-white/50 group-hover:ring-blue-200/50 transition-all duration-300">
+                          <AvatarImage src={post.userAvatar} alt={post.userName} />
+                          <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                            {post.userName.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
                         
-                        <p className="text-gray-700 mb-3 line-clamp-2">{post.content}</p>
-                        
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                          <span>Par {post.userName}</span>
-                          <span>{post.createdAt}</span>
-                          <span className="flex items-center gap-1">
-                            <MessageSquare className="w-4 h-4" />
-                            {post.replies} réponses
-                          </span>
-                          <span>{post.likes} likes</span>
-                        </div>
-                        
-                        <div className="flex gap-1 mt-2">
-                          {post.tags.map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              #{tag}
-                            </Badge>
-                          ))}
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="p-1.5 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
+                              {getCategoryIcon(post.category)}
+                            </div>
+                            <h3 className="font-semibold text-gray-800 hover:text-blue-600 cursor-pointer transition-colors text-lg group-hover:text-blue-600">
+                              {post.title}
+                            </h3>
+                            {post.destination && (
+                              <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-none shadow-md">
+                                {post.destination}
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <p className="text-gray-700 mb-4 line-clamp-2 leading-relaxed">{post.content}</p>
+                          
+                          <div className="flex items-center gap-6 text-sm text-gray-500 mb-3">
+                            <span className="font-medium text-gray-700">Par {post.userName}</span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {post.createdAt}
+                            </span>
+                            <span className="flex items-center gap-1 hover:text-blue-600 cursor-pointer transition-colors">
+                              <MessageSquare className="w-4 h-4" />
+                              {post.replies} réponses
+                            </span>
+                            <span className="flex items-center gap-1 hover:text-red-500 cursor-pointer transition-colors">
+                              <Heart className="w-4 h-4" />
+                              {post.likes} likes
+                            </span>
+                          </div>
+                          
+                          <div className="flex gap-2 flex-wrap">
+                            {post.tags.map((tag) => (
+                              <Badge key={tag} variant="outline" className="text-xs bg-gradient-to-r from-gray-50 to-white border-gray-200 hover:from-blue-50 hover:to-purple-50 hover:border-blue-200 cursor-pointer transition-all duration-300">
+                                #{tag}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
                       </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </TabsContent>
+
+              {/* Enhanced placeholder sections */}
+              <TabsContent value="questions" className="mt-0">
+                <Card className="bg-white/80 backdrop-blur-sm border-white/30 shadow-xl">
+                  <CardContent className="text-center py-16">
+                    <div className="p-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                      <HelpCircle className="w-10 h-10 text-blue-600" />
                     </div>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">Section Questions</h3>
+                    <p className="text-gray-600">En cours de développement - Bientôt disponible !</p>
                   </CardContent>
                 </Card>
-              ))}
-            </TabsContent>
-
-            {/* Contenu spécifique aux autres onglets */}
-            <TabsContent value="questions" className="mt-0">
-              <div className="text-center py-12 text-gray-500">
-                <HelpCircle className="w-12 h-12 mx-auto mb-4" />
-                <p>Section Questions en cours de développement</p>
-              </div>
-            </TabsContent>
+              </TabsContent>
+            </div>
           </div>
-        </div>
-      </Tabs>
+        </Tabs>
+      </div>
     </div>
   );
 };
