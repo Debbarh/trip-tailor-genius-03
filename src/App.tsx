@@ -32,18 +32,8 @@ const App = () => (
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/login" element={
-                  <>
-                    <HomeNavigation />
-                    <Login />
-                  </>
-                } />
-                <Route path="/signup" element={
-                  <>
-                    <HomeNavigation />
-                    <Signup />
-                  </>
-                } />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={
                   <>
                     <HomeNavigation />
