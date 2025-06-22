@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, authService, LoginData, RegisterData } from '@/services/authService';
 import { useToast } from '@/hooks/use-toast';
@@ -103,7 +102,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
-    isAdmin: user?.is_admin === true,
+    isAdmin: user?.is_superuser === true,
     isLoading,
     login,
     register,

@@ -4,7 +4,7 @@ export interface User {
   id: number;
   email: string;
   name: string;
-  is_admin?: boolean;
+  is_superuser?: boolean;
 }
 
 export interface AuthResponse {
@@ -101,7 +101,7 @@ class AuthService {
 
   isAdmin(): boolean {
     const user = this.getCurrentUser();
-    return user?.is_admin === true;
+    return user?.is_superuser === true;
   }
 }
 
