@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -17,20 +16,12 @@ import {
   Heart, 
   MapPin
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
-// Utilisateur simulé
-const mockUser = {
-  name: "Marie Dubois",
-  email: "marie.dubois@email.com",
-  avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b900?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80"
-};
+const UserHeader = () => {
+  const { user, isAuthenticated, logout } = useAuth();
 
-interface UserHeaderProps {
-  isAuthenticated?: boolean;
-}
-
-const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="flex items-center space-x-4">
         <Link to="/login">
@@ -47,6 +38,14 @@ const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
     );
   }
 
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
   return (
     <div className="flex items-center space-x-4">
       {/* User Dropdown */}
@@ -54,14 +53,14 @@ const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="flex items-center space-x-3 hover:bg-white/20 transition-colors">
             <Avatar className="w-8 h-8">
-              <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
-              <AvatarFallback>
-                {mockUser.name.split(' ').map(n => n[0]).join('')}
+              <AvatarImage src="" alt={user.name} />
+              <AvatarFallback className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+                {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
             <div className="text-left hidden md:block">
-              <div className="font-medium text-gray-900">{mockUser.name}</div>
-              <div className="text-sm text-gray-600">{mockUser.email}</div>
+              <div className="font-medium text-gray-900">{user.name}</div>
+              <div className="text-sm text-gray-600">{user.email}</div>
             </div>
           </Button>
         </DropdownMenuTrigger>
@@ -69,14 +68,14 @@ const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
         <DropdownMenuContent align="end" className="w-56">
           <div className="flex items-center space-x-3 p-3">
             <Avatar className="w-10 h-10">
-              <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
-              <AvatarFallback>
-                {mockUser.name.split(' ').map(n => n[0]).join('')}
+              <AvatarImage src="" alt={user.name} />
+              <AvatarFallback className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+                {getInitials(user.name)}
               </AvatarFallback>
             </Avatar>
             <div>
-              <div className="font-medium">{mockUser.name}</div>
-              <div className="text-sm text-gray-600">{mockUser.email}</div>
+              <div className="font-medium">{user.name}</div>
+              <div className="text-sm text-gray-600">{user.email}</div>
             </div>
           </div>
           
@@ -114,7 +113,10 @@ const UserHeader = ({ isAuthenticated = true }: UserHeaderProps) => {
           
           <DropdownMenuSeparator />
           
-          <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
+          <DropdownMenuItem 
+            className="cursor-pointer text-red-600 focus:text-red-600"
+            onClick={handleLogout}
+          >
             <LogOut className="w-4 h-4 mr-2" />
             Se déconnecter
           </DropdownMenuItem>

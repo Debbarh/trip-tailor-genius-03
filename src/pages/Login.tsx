@@ -7,19 +7,24 @@ import { Label } from '@/components/ui/label';
 import BrandLogo from '@/components/layout/BrandLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 
 const Login = () => {
   const { t } = useLanguage();
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulation de connexion - remplacer par vraie authentification
-    console.log('Login attempt:', { email, password });
-    navigate('/');
+    try {
+      await login({ email, password });
+      navigate('/');
+    } catch (error) {
+      // L'erreur est déjà gérée dans le contexte avec un toast
+    }
   };
 
   return (
@@ -68,6 +73,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="mt-2 h-12 rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500 bg-white/80 backdrop-blur-sm hover:bg-white/90 transition-all duration-300"
                   required
+                  disabled={isLoading}
                 />
               </div>
 
@@ -82,6 +88,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="mt-2 h-12 rounded-xl border-gray-200 focus:border-purple-500 focus:ring-purple-500 bg-white/80 backdrop-blur-sm hover:bg-white/90 transition-all duration-300"
                   required
+                  disabled={isLoading}
                 />
               </div>
 
@@ -96,9 +103,17 @@ const Login = () => {
 
               <Button
                 type="submit"
-                className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                disabled={isLoading}
+                className="w-full h-12 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t('auth.login')}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Connexion...
+                  </>
+                ) : (
+                  t('auth.login')
+                )}
               </Button>
             </form>
 

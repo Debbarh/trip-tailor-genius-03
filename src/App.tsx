@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import HomeNavigation from "@/components/layout/HomeNavigation";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -23,77 +24,79 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={
-                <>
-                  <HomeNavigation />
-                  <Login />
-                </>
-              } />
-              <Route path="/signup" element={
-                <>
-                  <HomeNavigation />
-                  <Signup />
-                </>
-              } />
-              <Route path="/profile" element={
-                <>
-                  <HomeNavigation />
-                  <Profile />
-                </>
-              } />
-              <Route path="/countries" element={
-                <>
-                  <HomeNavigation />
-                  <Countries />
-                </>
-              } />
-              <Route path="/itinerary" element={
-                <>
-                  <HomeNavigation />
-                  <Itinerary />
-                </>
-              } />
-              <Route path="/community" element={
-                <>
-                  <HomeNavigation />
-                  <Community />
-                </>
-              } />
-              <Route path="/community/create" element={
-                <>
-                  <HomeNavigation />
-                  <CreatePost />
-                </>
-              } />
-              <Route path="/community/post/:postId" element={
-                <>
-                  <HomeNavigation />
-                  <PostDetail />
-                </>
-              } />
-              <Route path="/admin" element={
-                <>
-                  <HomeNavigation />
-                  <Admin />
-                </>
-              } />
-              <Route path="*" element={
-                <>
-                  <HomeNavigation />
-                  <NotFound />
-                </>
-              } />
-            </Routes>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={
+                  <>
+                    <HomeNavigation />
+                    <Login />
+                  </>
+                } />
+                <Route path="/signup" element={
+                  <>
+                    <HomeNavigation />
+                    <Signup />
+                  </>
+                } />
+                <Route path="/profile" element={
+                  <>
+                    <HomeNavigation />
+                    <Profile />
+                  </>
+                } />
+                <Route path="/countries" element={
+                  <>
+                    <HomeNavigation />
+                    <Countries />
+                  </>
+                } />
+                <Route path="/itinerary" element={
+                  <>
+                    <HomeNavigation />
+                    <Itinerary />
+                  </>
+                } />
+                <Route path="/community" element={
+                  <>
+                    <HomeNavigation />
+                    <Community />
+                  </>
+                } />
+                <Route path="/community/create" element={
+                  <>
+                    <HomeNavigation />
+                    <CreatePost />
+                  </>
+                } />
+                <Route path="/community/post/:postId" element={
+                  <>
+                    <HomeNavigation />
+                    <PostDetail />
+                  </>
+                } />
+                <Route path="/admin" element={
+                  <>
+                    <HomeNavigation />
+                    <Admin />
+                  </>
+                } />
+                <Route path="*" element={
+                  <>
+                    <HomeNavigation />
+                    <NotFound />
+                  </>
+                } />
+              </Routes>
+            </div>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
     </LanguageProvider>
   </QueryClientProvider>
 );
