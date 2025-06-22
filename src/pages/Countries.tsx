@@ -7,9 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Search, MapPin, Users, Plus, Edit, Trash, Settings } from 'lucide-react';
-import { CountryService } from '@/services/countryService';
-import { Country, regions } from '@/data/countries';
+import { Search, MapPin, Users, Plus, Edit, Trash, Settings, Loader2 } from 'lucide-react';
+import { countryApiService, Country, CountryFormData } from '@/services/countryService';
 import BrandLogo from '@/components/layout/BrandLogo';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import { Link } from 'react-router-dom';
@@ -18,21 +17,16 @@ import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface CountryFormData {
-  name: string;
-  code: string;
-  flagCode: string;
-  region: string;
-  cities: string;
-}
+const regions = ['Europe', 'Asie', 'Afrique', 'Amérique du Nord', 'Amérique du Sud', 'Océanie'];
 
 const Countries = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingCountry, setEditingCountry] = useState<Country | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useLanguage();
   const { toast } = useToast();
 
@@ -40,83 +34,121 @@ const Countries = () => {
     defaultValues: {
       name: '',
       code: '',
-      flagCode: '',
-      region: '',
-      cities: ''
+      flag_code: '',
+      region: ''
     }
   });
 
+  // Load countries on component mount
   useEffect(() => {
-    const allCountries = CountryService.getAllCountries();
-    setCountries(allCountries);
-    setFilteredCountries(allCountries);
+    loadCountries();
   }, []);
 
+  // Real-time search
   useEffect(() => {
-    if (searchTerm) {
-      const filtered = CountryService.searchCountries(searchTerm);
-      setFilteredCountries(filtered);
-    } else {
-      setFilteredCountries(countries);
+    const searchCountries = async () => {
+      if (searchTerm) {
+        try {
+          const results = await countryApiService.searchCountries(searchTerm);
+          setCountries(results);
+        } catch (error) {
+          console.error('Search error:', error);
+        }
+      } else {
+        loadCountries();
+      }
+    };
+
+    const timeoutId = setTimeout(searchCountries, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  const loadCountries = async () => {
+    try {
+      setIsLoading(true);
+      const data = await countryApiService.getAllCountries();
+      setCountries(data);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les pays",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  }, [searchTerm, countries]);
-
-  const refreshCountries = () => {
-    const allCountries = CountryService.getAllCountries();
-    setCountries(allCountries);
-    setFilteredCountries(allCountries);
   };
 
-  const handleAddCountry = (data: CountryFormData) => {
-    const cities = data.cities.split(',').map(city => city.trim()).filter(city => city);
-    const newCountry = CountryService.addCountry({
-      name: data.name,
-      code: data.code,
-      flagCode: data.flagCode,
-      region: data.region,
-      cities
-    });
-    
-    refreshCountries();
-    setIsAddDialogOpen(false);
-    form.reset();
-    toast({
-      title: "Pays ajouté",
-      description: `${newCountry.name} a été ajouté avec succès.`,
-    });
+  const handleAddCountry = async (data: CountryFormData) => {
+    try {
+      setIsSubmitting(true);
+      const newCountry = await countryApiService.createCountry(data);
+      setCountries(prev => [...prev, newCountry]);
+      toast({
+        title: "Pays ajouté",
+        description: `${data.name} a été ajouté avec succès.`,
+      });
+      setIsAddDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de l'ajout",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleEditCountry = (data: CountryFormData) => {
-    if (!editingCountry) return;
+  const handleEditCountry = async (data: CountryFormData) => {
+    if (!editingCountry?.id) return;
     
-    const cities = data.cities.split(',').map(city => city.trim()).filter(city => city);
-    const updatedCountry = CountryService.updateCountry(editingCountry.id, {
-      name: data.name,
-      code: data.code,
-      flagCode: data.flagCode,
-      region: data.region,
-      cities
-    });
-
-    if (updatedCountry) {
-      refreshCountries();
+    try {
+      setIsSubmitting(true);
+      const updatedCountry = await countryApiService.updateCountry(editingCountry.id, data);
+      setCountries(prev => 
+        prev.map(country => 
+          country.id === editingCountry.id ? updatedCountry : country
+        )
+      );
+      toast({
+        title: "Pays modifié",
+        description: `${data.name} a été modifié avec succès.`,
+      });
       setIsEditDialogOpen(false);
       setEditingCountry(null);
       form.reset();
+    } catch (error) {
       toast({
-        title: "Pays modifié",
-        description: `${updatedCountry.name} a été modifié avec succès.`,
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la modification",
+        variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDeleteCountry = (country: Country) => {
-    const success = CountryService.deleteCountry(country.id);
-    if (success) {
-      refreshCountries();
+  const handleDeleteCountry = async (country: Country) => {
+    if (!country.id) return;
+    
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${country.name} ?`)) {
+      return;
+    }
+
+    try {
+      await countryApiService.deleteCountry(country.id);
+      setCountries(prev => prev.filter(c => c.id !== country.id));
       toast({
         title: "Pays supprimé",
         description: `${country.name} a été supprimé avec succès.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la suppression",
+        variant: "destructive",
       });
     }
   };
@@ -126,9 +158,8 @@ const Countries = () => {
     form.reset({
       name: country.name,
       code: country.code,
-      flagCode: country.flagCode,
-      region: country.region,
-      cities: country.cities?.join(', ') || ''
+      flag_code: country.flag_code,
+      region: country.region || ''
     });
     setIsEditDialogOpen(true);
   };
@@ -157,15 +188,20 @@ const Countries = () => {
           rules={{ 
             required: "Le code est requis",
             pattern: {
-              value: /^[A-Z]{2}$/,
-              message: "Le code doit contenir 2 lettres majuscules"
+              value: /^[A-Z]{2,3}$/,
+              message: "Le code doit contenir 2-3 lettres majuscules"
             }
           }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Code pays (2 lettres)</FormLabel>
+              <FormLabel>Code pays (ISO)</FormLabel>
               <FormControl>
-                <Input placeholder="FR" maxLength={2} {...field} onChange={(e) => field.onChange(e.target.value.toUpperCase())} />
+                <Input 
+                  placeholder="FR" 
+                  maxLength={3} 
+                  {...field} 
+                  onChange={(e) => field.onChange(e.target.value.toUpperCase())} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -174,7 +210,7 @@ const Countries = () => {
         
         <FormField
           control={form.control}
-          name="flagCode"
+          name="flag_code"
           rules={{ required: "Le drapeau est requis" }}
           render={({ field }) => (
             <FormItem>
@@ -190,10 +226,9 @@ const Countries = () => {
         <FormField
           control={form.control}
           name="region"
-          rules={{ required: "La région est requise" }}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Région</FormLabel>
+              <FormLabel>Région (optionnel)</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -201,7 +236,7 @@ const Countries = () => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {regions.filter(region => region !== 'Tous').map((region) => (
+                  {regions.map((region) => (
                     <SelectItem key={region} value={region}>
                       {region}
                     </SelectItem>
@@ -213,26 +248,28 @@ const Countries = () => {
           )}
         />
         
-        <FormField
-          control={form.control}
-          name="cities"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Villes (séparées par des virgules)</FormLabel>
-              <FormControl>
-                <Input placeholder="Paris, Lyon, Marseille" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              {submitLabel}...
+            </>
+          ) : (
+            submitLabel
           )}
-        />
-        
-        <Button type="submit" className="w-full">
-          {submitLabel}
         </Button>
       </form>
     </Form>
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="ml-2">Chargement des pays...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
@@ -314,28 +351,32 @@ const Countries = () => {
                   <TableHead>Nom</TableHead>
                   <TableHead>Code</TableHead>
                   <TableHead>Région</TableHead>
-                  <TableHead>Villes</TableHead>
+                  <TableHead>Utilisateurs</TableHead>
+                  <TableHead>Créé le</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCountries.map((country) => (
+                {countries.map((country) => (
                   <TableRow key={country.id}>
                     <TableCell>
-                      <span className="text-2xl">{country.flagCode}</span>
+                      <span className="text-2xl">{country.flag_code}</span>
                     </TableCell>
                     <TableCell className="font-medium">{country.name}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">{country.code}</Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{country.region}</Badge>
+                      {country.region && <Badge variant="outline">{country.region}</Badge>}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{country.cities?.length || 0} villes</span>
+                        <Users className="w-4 h-4 text-gray-500" />
+                        {country.user_count || 0}
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {country.created ? new Date(country.created).toLocaleDateString() : '-'}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -361,10 +402,10 @@ const Countries = () => {
               </TableBody>
             </Table>
 
-            {filteredCountries.length === 0 && searchTerm && (
+            {countries.length === 0 && (
               <div className="text-center py-8">
                 <p className="text-xl text-gray-600">
-                  Aucun pays trouvé pour "{searchTerm}"
+                  {searchTerm ? `Aucun pays trouvé pour "${searchTerm}"` : 'Aucun pays enregistré'}
                 </p>
               </div>
             )}

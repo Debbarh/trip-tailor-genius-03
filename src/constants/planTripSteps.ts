@@ -1,6 +1,5 @@
 
 import { MapPin, Users, DollarSign, Bed, Activity } from "lucide-react";
-import { CountryService } from "@/services/countryService";
 
 export const stepConfigs = [
   { 
@@ -40,13 +39,27 @@ export const stepConfigs = [
   }
 ];
 
-// Utilisation de la nouvelle base de données pour les pays
-export const countries = CountryService.getAllCountries().map(country => ({
-  code: country.code,
-  name: country.name,
-  cities: country.cities || [],
-  emoji: country.flagCode
-}));
+// Temporary static countries data - will be replaced with API calls later
+export const countries = [
+  {
+    code: 'FR',
+    name: 'France',
+    cities: ['Paris', 'Lyon', 'Marseille'],
+    emoji: '🇫🇷'
+  },
+  {
+    code: 'IT',
+    name: 'Italie',
+    cities: ['Rome', 'Milan', 'Venice'],
+    emoji: '🇮🇹'
+  },
+  {
+    code: 'ES',
+    name: 'Espagne',
+    cities: ['Madrid', 'Barcelona', 'Seville'],
+    emoji: '🇪🇸'
+  }
+];
 
 export const travelSegments = [
   { 
