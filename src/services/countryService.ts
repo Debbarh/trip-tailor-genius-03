@@ -1,64 +1,111 @@
 
-import { Country, countriesData } from '@/data/countries';
+const API_BASE_URL = 'http://localhost:8000/api';
 
-export class CountryService {
-  private static countries: Country[] = [...countriesData];
+export interface Country {
+  id?: number;
+  name: string;
+  code: string;
+  flag_code: string;
+  region?: string;
+  user_count?: number;
+  cities_count?: number;
+  created?: string;
+  updated?: string;
+}
 
-  // Récupérer tous les pays
-  static getAllCountries(): Country[] {
-    return [...this.countries];
+export interface CountryFormData {
+  name: string;
+  code: string;
+  flag_code: string;
+  region?: string;
+}
+
+class CountryApiService {
+  private getAuthHeader() {
+    const token = localStorage.getItem('authToken');
+    return token ? { Authorization: `Token ${token}` } : {};
   }
 
-  // Récupérer un pays par ID
-  static getCountryById(id: string): Country | undefined {
-    return this.countries.find(country => country.id === id);
+  async getAllCountries(): Promise<Country[]> {
+    const response = await fetch(`${API_BASE_URL}/countries/`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des pays');
+    }
+
+    return response.json();
   }
 
-  // Récupérer un pays par code
-  static getCountryByCode(code: string): Country | undefined {
-    return this.countries.find(country => country.code === code);
+  async searchCountries(search: string): Promise<Country[]> {
+    const response = await fetch(`${API_BASE_URL}/countries/?search=${encodeURIComponent(search)}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeader(),
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Erreur lors de la recherche des pays');
+    }
+
+    return response.json();
   }
 
-  // Ajouter un nouveau pays
-  static addCountry(countryData: Omit<Country, 'id'>): Country {
-    const newCountry: Country = {
-      id: (this.countries.length + 1).toString(),
-      ...countryData
-    };
-    this.countries.push(newCountry);
-    return newCountry;
+  async createCountry(data: CountryFormData): Promise<Country> {
+    const response = await fetch(`${API_BASE_URL}/countries/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeader(),
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Erreur lors de la création du pays');
+    }
+
+    return response.json();
   }
 
-  // Mettre à jour un pays
-  static updateCountry(id: string, updates: Partial<Omit<Country, 'id'>>): Country | null {
-    const index = this.countries.findIndex(country => country.id === id);
-    if (index === -1) return null;
+  async updateCountry(id: number, data: CountryFormData): Promise<Country> {
+    const response = await fetch(`${API_BASE_URL}/countries/${id}/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeader(),
+      },
+      body: JSON.stringify(data),
+    });
 
-    this.countries[index] = { ...this.countries[index], ...updates };
-    return this.countries[index];
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Erreur lors de la modification du pays');
+    }
+
+    return response.json();
   }
 
-  // Supprimer un pays
-  static deleteCountry(id: string): boolean {
-    const index = this.countries.findIndex(country => country.id === id);
-    if (index === -1) return false;
+  async deleteCountry(id: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/countries/${id}/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.getAuthHeader(),
+      },
+    });
 
-    this.countries.splice(index, 1);
-    return true;
-  }
-
-  // Rechercher des pays par nom
-  static searchCountries(query: string): Country[] {
-    const lowerQuery = query.toLowerCase();
-    return this.countries.filter(country =>
-      country.name.toLowerCase().includes(lowerQuery) ||
-      country.code.toLowerCase().includes(lowerQuery)
-    );
-  }
-
-  // Récupérer les villes d'un pays
-  static getCitiesByCountryCode(code: string): string[] {
-    const country = this.getCountryByCode(code);
-    return country?.cities || [];
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.detail || 'Erreur lors de la suppression du pays');
+    }
   }
 }
+
+export const countryApiService = new CountryApiService();

@@ -1,91 +1,156 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { Plus, Edit, Trash, Search, Users } from 'lucide-react';
+import { Plus, Edit, Trash, Search, Users, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
-
-interface CountryData {
-  id: string;
-  name: string;
-  code: string;
-  user_count: number;
-  cities_count: number;
-  created: string;
-  updated: string;
-}
-
-interface CountryFormData {
-  name: string;
-  code: string;
-}
+import { countryApiService, Country, CountryFormData } from '@/services/countryService';
 
 const CountriesGrid = () => {
+  const [countries, setCountries] = useState<Country[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [editingCountry, setEditingCountry] = useState<CountryData | null>(null);
+  const [editingCountry, setEditingCountry] = useState<Country | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<CountryFormData>({
     defaultValues: {
       name: '',
-      code: ''
+      code: '',
+      flag_code: '',
+      region: ''
     }
   });
 
-  // Données d'exemple correspondant à votre modèle Django
-  const countries: CountryData[] = [
-    { id: '1', name: 'France', code: 'FR', user_count: 15, cities_count: 8, created: '2024-01-15', updated: '2024-01-20' },
-    { id: '2', name: 'Maroc', code: 'MA', user_count: 23, cities_count: 12, created: '2024-01-16', updated: '2024-01-22' },
-    { id: '3', name: 'Espagne', code: 'ES', user_count: 18, cities_count: 10, created: '2024-01-17', updated: '2024-01-21' },
-    { id: '4', name: 'Italie', code: 'IT', user_count: 31, cities_count: 15, created: '2024-01-18', updated: '2024-01-23' },
-  ];
+  // Charger les pays au montage du composant
+  useEffect(() => {
+    loadCountries();
+  }, []);
 
-  const filteredCountries = countries.filter(country =>
-    country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    country.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Recherche en temps réel
+  useEffect(() => {
+    const searchCountries = async () => {
+      if (searchTerm) {
+        try {
+          const results = await countryApiService.searchCountries(searchTerm);
+          setCountries(results);
+        } catch (error) {
+          console.error('Erreur de recherche:', error);
+        }
+      } else {
+        loadCountries();
+      }
+    };
 
-  const handleAddCountry = (data: CountryFormData) => {
-    console.log('Adding country:', data);
-    toast({
-      title: "Pays ajouté",
-      description: `${data.name} a été ajouté avec succès.`,
-    });
-    setIsAddDialogOpen(false);
-    form.reset();
+    const timeoutId = setTimeout(searchCountries, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm]);
+
+  const loadCountries = async () => {
+    try {
+      setIsLoading(true);
+      const data = await countryApiService.getAllCountries();
+      setCountries(data);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les pays",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleEditCountry = (data: CountryFormData) => {
-    console.log('Editing country:', data);
-    toast({
-      title: "Pays modifié",
-      description: `${data.name} a été modifié avec succès.`,
-    });
-    setIsEditDialogOpen(false);
-    form.reset();
+  const handleAddCountry = async (data: CountryFormData) => {
+    try {
+      setIsSubmitting(true);
+      const newCountry = await countryApiService.createCountry(data);
+      setCountries(prev => [...prev, newCountry]);
+      toast({
+        title: "Pays ajouté",
+        description: `${data.name} a été ajouté avec succès.`,
+      });
+      setIsAddDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de l'ajout",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleDeleteCountry = (country: CountryData) => {
-    console.log('Deleting country:', country.id);
-    toast({
-      title: "Pays supprimé",
-      description: `${country.name} a été supprimé avec succès.`,
-    });
+  const handleEditCountry = async (data: CountryFormData) => {
+    if (!editingCountry?.id) return;
+    
+    try {
+      setIsSubmitting(true);
+      const updatedCountry = await countryApiService.updateCountry(editingCountry.id, data);
+      setCountries(prev => 
+        prev.map(country => 
+          country.id === editingCountry.id ? updatedCountry : country
+        )
+      );
+      toast({
+        title: "Pays modifié",
+        description: `${data.name} a été modifié avec succès.`,
+      });
+      setIsEditDialogOpen(false);
+      setEditingCountry(null);
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la modification",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const openEditDialog = (country: CountryData) => {
+  const handleDeleteCountry = async (country: Country) => {
+    if (!country.id) return;
+    
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${country.name} ?`)) {
+      return;
+    }
+
+    try {
+      await countryApiService.deleteCountry(country.id);
+      setCountries(prev => prev.filter(c => c.id !== country.id));
+      toast({
+        title: "Pays supprimé",
+        description: `${country.name} a été supprimé avec succès.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Erreur lors de la suppression",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const openEditDialog = (country: Country) => {
     setEditingCountry(country);
     form.reset({
       name: country.name,
-      code: country.code
+      code: country.code,
+      flag_code: country.flag_code,
+      region: country.region || ''
     });
     setIsEditDialogOpen(true);
   };
@@ -122,19 +187,69 @@ const CountriesGrid = () => {
             <FormItem>
               <FormLabel>Code pays (ISO)</FormLabel>
               <FormControl>
-                <Input placeholder="FR" maxLength={3} {...field} onChange={(e) => field.onChange(e.target.value.toUpperCase())} />
+                <Input 
+                  placeholder="FR" 
+                  maxLength={3} 
+                  {...field} 
+                  onChange={(e) => field.onChange(e.target.value.toUpperCase())} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         
-        <Button type="submit" className="w-full">
-          {submitLabel}
+        <FormField
+          control={form.control}
+          name="flag_code"
+          rules={{ required: "Le drapeau est requis" }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Emoji drapeau</FormLabel>
+              <FormControl>
+                <Input placeholder="🇫🇷" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="region"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Région (optionnel)</FormLabel>
+              <FormControl>
+                <Input placeholder="Europe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              {submitLabel}...
+            </>
+          ) : (
+            submitLabel
+          )}
         </Button>
       </form>
     </Form>
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <span className="ml-2">Chargement des pays...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -142,7 +257,7 @@ const CountriesGrid = () => {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-2xl font-semibold">Gestion des Pays</h3>
-          <p className="text-gray-600">Gérez les pays disponibles dans le système</p>
+          <p className="text-gray-600">Gérez les pays disponibles dans le système ({countries.length} pays)</p>
         </div>
         
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
@@ -178,31 +293,37 @@ const CountriesGrid = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Drapeau</TableHead>
               <TableHead>Nom</TableHead>
               <TableHead>Code</TableHead>
+              <TableHead>Région</TableHead>
               <TableHead>Utilisateurs</TableHead>
-              <TableHead>Villes</TableHead>
               <TableHead>Créé le</TableHead>
-              <TableHead>Modifié le</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCountries.map((country) => (
+            {countries.map((country) => (
               <TableRow key={country.id}>
+                <TableCell>
+                  <span className="text-2xl">{country.flag_code}</span>
+                </TableCell>
                 <TableCell className="font-medium">{country.name}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">{country.code}</Badge>
                 </TableCell>
                 <TableCell>
+                  {country.region && <Badge variant="outline">{country.region}</Badge>}
+                </TableCell>
+                <TableCell>
                   <div className="flex items-center gap-1">
                     <Users className="w-4 h-4 text-gray-500" />
-                    {country.user_count}
+                    {country.user_count || 0}
                   </div>
                 </TableCell>
-                <TableCell>{country.cities_count} villes</TableCell>
-                <TableCell>{new Date(country.created).toLocaleDateString()}</TableCell>
-                <TableCell>{new Date(country.updated).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {country.created ? new Date(country.created).toLocaleDateString() : '-'}
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Button
@@ -226,6 +347,14 @@ const CountriesGrid = () => {
             ))}
           </TableBody>
         </Table>
+
+        {countries.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-xl text-gray-600">
+              {searchTerm ? `Aucun pays trouvé pour "${searchTerm}"` : 'Aucun pays enregistré'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Edit Dialog */}
