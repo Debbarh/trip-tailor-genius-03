@@ -1,10 +1,10 @@
-
 const API_BASE_URL = 'http://localhost:8000/api';
 
 export interface User {
   id: number;
   email: string;
   name: string;
+  is_admin?: boolean;
 }
 
 export interface AuthResponse {
@@ -97,6 +97,11 @@ class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user?.is_admin === true;
   }
 }
 

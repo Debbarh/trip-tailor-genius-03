@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import AdminRoute from "@/components/auth/AdminRoute";
 import HomeNavigation from "@/components/layout/HomeNavigation";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -41,10 +42,9 @@ const App = () => (
                   </>
                 } />
                 <Route path="/countries" element={
-                  <>
-                    <HomeNavigation />
+                  <AdminRoute>
                     <Countries />
-                  </>
+                  </AdminRoute>
                 } />
                 <Route path="/itinerary" element={
                   <>
@@ -71,10 +71,10 @@ const App = () => (
                   </>
                 } />
                 <Route path="/admin" element={
-                  <>
+                  <AdminRoute>
                     <HomeNavigation />
                     <Admin />
-                  </>
+                  </AdminRoute>
                 } />
                 <Route path="*" element={
                   <>
