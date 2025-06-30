@@ -23,39 +23,31 @@ const Index = () => {
   const [tripData, setTripData] = useState<BeInspiredFormData | null>(null);
   const [searchParams] = useSearchParams();
 
+  const createInitialTripData = (selectedMode: 'plan' | 'inspire'): BeInspiredFormData => ({
+    mode: selectedMode,
+    activities: [],
+    travelWith: '',
+    budget: '',
+    accommodation: ''
+  });
+
   // Handle URL params for mode selection
   useEffect(() => {
     const modeParam = searchParams.get('mode');
     if (modeParam === 'plan' || modeParam === 'inspire') {
       setMode(modeParam);
-      setTripData({ 
-        mode: modeParam,
-        activities: [],
-        travelWith: '',
-        budget: '',
-        accommodation: ''
-      });
+      setTripData(createInitialTripData(modeParam));
     }
   }, [searchParams]);
 
   const handleModeSelect = (selectedMode: 'plan' | 'inspire') => {
     setMode(selectedMode);
-    setTripData({ 
-      mode: selectedMode,
-      activities: [],
-      travelWith: '',
-      budget: '',
-      accommodation: ''
-    });
+    setTripData(createInitialTripData(selectedMode));
   };
 
   const handleFormComplete = (data: BeInspiredFormData) => {
     setTripData(data);
-    if (data.mode === 'inspire') {
-      setMode('inspiration-landing');
-    } else {
-      setMode('itinerary');
-    }
+    setMode(data.mode === 'inspire' ? 'inspiration-landing' : 'itinerary');
   };
 
   const handleCreateItinerary = (destinationOrExperience: any) => {
@@ -79,37 +71,34 @@ const Index = () => {
   };
 
   const renderContent = () => {
-    switch (mode) {
-      case 'inspiration-landing':
-        return tripData ? (
-          <InspirationLandingPage 
-            formData={tripData} 
-            onBack={handleBackToHome}
-            onCreateItinerary={handleCreateItinerary}
-          />
-        ) : null;
-
-      case 'itinerary':
-        return tripData ? (
-          <ItineraryDisplay 
-            data={tripData} 
-            onBack={tripData.mode === 'inspire' ? handleBackToInspiration : handleBackToHome} 
-          />
-        ) : null;
-
-      case 'plan':
-        return (
-          <PlanTripSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
-        );
-
-      case 'inspire':
-        return (
-          <BeInspiredSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
-        );
-
-      default:
-        return <HomeScreen onModeSelect={handleModeSelect} />;
+    if (!tripData && (mode === 'inspiration-landing' || mode === 'itinerary')) {
+      return null;
     }
+
+    const contentMap = {
+      'inspiration-landing': () => (
+        <InspirationLandingPage 
+          formData={tripData!} 
+          onBack={handleBackToHome}
+          onCreateItinerary={handleCreateItinerary}
+        />
+      ),
+      'itinerary': () => (
+        <ItineraryDisplay 
+          data={tripData!} 
+          onBack={tripData!.mode === 'inspire' ? handleBackToInspiration : handleBackToHome} 
+        />
+      ),
+      'plan': () => (
+        <PlanTripSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
+      ),
+      'inspire': () => (
+        <BeInspiredSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
+      ),
+      'home': () => <HomeScreen onModeSelect={handleModeSelect} />
+    };
+
+    return contentMap[mode]?.() || contentMap['home']();
   };
 
   return (

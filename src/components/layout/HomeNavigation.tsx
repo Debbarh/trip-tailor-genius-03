@@ -19,10 +19,42 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
     if (onModeSelect) {
       onModeSelect(mode);
     } else {
-      // Navigate to home and trigger mode
       window.location.href = `/?mode=${mode}`;
     }
   };
+
+  const navigationItems = [
+    {
+      key: 'plan',
+      onClick: () => handleModeSelect('plan'),
+      label: t('hero.plan'),
+      type: 'button' as const
+    },
+    {
+      key: 'inspire', 
+      onClick: () => handleModeSelect('inspire'),
+      label: t('hero.inspire'),
+      type: 'button' as const
+    },
+    {
+      key: 'adventures',
+      to: '/countries',
+      label: t('nav.adventures'),
+      type: 'link' as const
+    },
+    {
+      key: 'profile',
+      to: '/profile', 
+      label: 'Profil',
+      type: 'link' as const
+    },
+    {
+      key: 'about',
+      to: '#',
+      label: t('nav.about'),
+      type: 'link' as const
+    }
+  ];
 
   return (
     <header className="relative z-10 px-6 py-6">
@@ -33,27 +65,26 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
         
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <Button 
-            onClick={() => handleModeSelect('plan')}
-            variant="ghost"
-            className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-          >
-            {t('hero.plan')}
-          </Button>
-          <Button 
-            onClick={() => handleModeSelect('inspire')}
-            variant="ghost"
-            className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
-          >
-            {t('hero.inspire')}
-          </Button>
-          <Link to="/countries" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-            {t('nav.adventures')}
-          </Link>
-          <Link to="/profile" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">
-            Profil
-          </Link>
-          <a href="#" className="text-gray-700 hover:text-purple-600 transition-colors font-medium">{t('nav.about')}</a>
+          {navigationItems.map((item) => (
+            item.type === 'button' ? (
+              <Button 
+                key={item.key}
+                onClick={item.onClick}
+                variant="ghost"
+                className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
+              >
+                {item.label}
+              </Button>
+            ) : (
+              <Link 
+                key={item.key}
+                to={item.to!} 
+                className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
+              >
+                {item.label}
+              </Link>
+            )
+          ))}
           <UserHeader />
           <LanguageSelector />
         </div>

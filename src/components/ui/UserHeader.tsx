@@ -46,18 +46,28 @@ const UserHeader = () => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
+  const menuItems = [
+    { to: '/profile', icon: User, label: 'Mon profil' },
+    { to: '/profile?tab=trips', icon: MapPin, label: 'Mes voyages' },
+    { to: '/profile?tab=tours', icon: Heart, label: 'Mes tours favoris' },
+    { to: '/profile?tab=settings', icon: Settings, label: 'Paramètres' }
+  ];
+
+  const UserAvatar = ({ className = "" }) => (
+    <Avatar className={`w-8 h-8 ${className}`}>
+      <AvatarImage src="" alt={user.name} />
+      <AvatarFallback className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        {getInitials(user.name)}
+      </AvatarFallback>
+    </Avatar>
+  );
+
   return (
     <div className="flex items-center space-x-4">
-      {/* User Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="flex items-center space-x-3 hover:bg-white/20 transition-colors">
-            <Avatar className="w-8 h-8">
-              <AvatarImage src="" alt={user.name} />
-              <AvatarFallback className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar />
             <div className="text-left hidden md:block">
               <div className="font-medium text-gray-900">{user.name}</div>
               <div className="text-sm text-gray-600">{user.email}</div>
@@ -67,12 +77,7 @@ const UserHeader = () => {
         
         <DropdownMenuContent align="end" className="w-56">
           <div className="flex items-center space-x-3 p-3">
-            <Avatar className="w-10 h-10">
-              <AvatarImage src="" alt={user.name} />
-              <AvatarFallback className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar className="w-10 h-10" />
             <div>
               <div className="font-medium">{user.name}</div>
               <div className="text-sm text-gray-600">{user.email}</div>
@@ -81,35 +86,14 @@ const UserHeader = () => {
           
           <DropdownMenuSeparator />
           
-          <Link to="/profile">
-            <DropdownMenuItem className="cursor-pointer">
-              <User className="w-4 h-4 mr-2" />
-              Mon profil
-            </DropdownMenuItem>
-          </Link>
-          
-          <Link to="/profile?tab=trips">
-            <DropdownMenuItem className="cursor-pointer">
-              <MapPin className="w-4 h-4 mr-2" />
-              Mes voyages
-            </DropdownMenuItem>
-          </Link>
-          
-          <Link to="/profile?tab=tours">
-            <DropdownMenuItem className="cursor-pointer">
-              <Heart className="w-4 h-4 mr-2" />
-              Mes tours favoris
-            </DropdownMenuItem>
-          </Link>
-          
-          <DropdownMenuSeparator />
-          
-          <Link to="/profile?tab=settings">
-            <DropdownMenuItem className="cursor-pointer">
-              <Settings className="w-4 h-4 mr-2" />
-              Paramètres
-            </DropdownMenuItem>
-          </Link>
+          {menuItems.map((item) => (
+            <Link key={item.to} to={item.to}>
+              <DropdownMenuItem className="cursor-pointer">
+                <item.icon className="w-4 h-4 mr-2" />
+                {item.label}
+              </DropdownMenuItem>
+            </Link>
+          ))}
           
           <DropdownMenuSeparator />
           

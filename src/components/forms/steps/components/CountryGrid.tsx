@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { countriesData } from '@/data/countries';
 
 interface Country {
@@ -33,24 +33,31 @@ const CountryGrid = React.memo<CountryGridProps>(({
   addCountry,
   removeCountry
 }) => {
-  // Function to get flag for a country
-  const getCountryFlag = (countryName: string) => {
-    const country = countriesData.find(c => c.name === countryName);
-    return country?.flagCode || '🌍';
-  };
+  const selectedCountryNames = useMemo(
+    () => new Set(selectedCountries.map(c => c.countryName)),
+    [selectedCountries]
+  );
+
+  const getCountryFlag = useMemo(() => {
+    const flagMap = new Map(countriesData.map(c => [c.name, c.flagCode]));
+    return (countryName: string) => flagMap.get(countryName) || '🌍';
+  }, []);
+
+  const resultsText = useMemo(() => {
+    if (searchTerm.trim() === "") return "Pays disponibles";
+    const count = filteredCountries.length;
+    return `${count} résultat${count !== 1 ? 's' : ''}`;
+  }, [searchTerm, filteredCountries.length]);
 
   return (
     <div className="space-y-2">
       <h4 className="text-sm font-medium text-gray-700">
-        {searchTerm.trim() === "" 
-          ? "Pays disponibles"
-          : `${filteredCountries.length} résultat${filteredCountries.length !== 1 ? 's' : ''}`
-        }
+        {resultsText}
       </h4>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-h-80 overflow-y-auto">
         {filteredCountries.map((country) => {
-          const isSelected = selectedCountries.find(c => c.countryName === country.name);
+          const isSelected = selectedCountryNames.has(country.name);
           const flag = getCountryFlag(country.name);
           
           return (
