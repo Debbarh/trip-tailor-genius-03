@@ -1,6 +1,6 @@
 
 import { StepProps } from "@/types/planTrip";
-import { travelSegments } from "@/constants/planTripSteps";
+import { travelSegments } from "@/constants/stepConfigs";
 import TravelDetailsForm from "./components/TravelDetailsForm";
 
 const TravelWithStep = ({ formData, setFormData }: StepProps) => {

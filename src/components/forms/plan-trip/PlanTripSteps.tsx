@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
-import { planTripStepConfigs as stepConfigs } from "@/constants/formData";
+import { stepConfigs } from "@/constants/stepConfigs";
 import DestinationStep from "./steps/DestinationStep";
 import TravelWithStep from "../steps/TravelWithStep";
 import UnifiedBudgetStep from "../steps/UnifiedBudgetStep";

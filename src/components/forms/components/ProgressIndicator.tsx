@@ -1,6 +1,6 @@
 
 import { Check } from "lucide-react";
-import { stepConfigs } from "@/constants/planTripSteps";
+import { stepConfigs } from "@/constants/stepConfigs";
 
 interface ProgressIndicatorProps {
   currentStep: number;
