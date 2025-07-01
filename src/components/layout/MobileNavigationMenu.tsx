@@ -15,14 +15,14 @@ import {
 import { Menu, X, User } from 'lucide-react';
 
 interface MobileNavigationMenuProps {
-  onModeSelect: (mode: 'plan' | 'inspire') => void;
+  onModeSelect: (mode: 'plan') => void;
 }
 
 const MobileNavigationMenu = ({ onModeSelect }: MobileNavigationMenuProps) => {
   const { t } = useLanguage();
   const [open, setOpen] = React.useState(false);
 
-  const handleModeSelect = (mode: 'plan' | 'inspire') => {
+  const handleModeSelect = (mode: 'plan') => {
     onModeSelect(mode);
     setOpen(false);
   };
@@ -66,14 +66,6 @@ const MobileNavigationMenu = ({ onModeSelect }: MobileNavigationMenuProps) => {
                 className="w-full justify-start text-left text-lg font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 h-12"
               >
                 {t('hero.plan')}
-              </Button>
-              
-              <Button
-                onClick={() => handleModeSelect('inspire')}
-                variant="ghost"
-                className="w-full justify-start text-left text-lg font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 h-12"
-              >
-                {t('hero.inspire')}
               </Button>
               
               <Link

@@ -9,13 +9,13 @@ import UserHeader from "@/components/ui/UserHeader";
 import MobileNavigationMenu from "./MobileNavigationMenu";
 
 interface HomeNavigationProps {
-  onModeSelect?: (mode: 'plan' | 'inspire') => void;
+  onModeSelect?: (mode: 'plan') => void;
 }
 
 const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
   const { t } = useLanguage();
 
-  const handleModeSelect = (mode: 'plan' | 'inspire') => {
+  const handleModeSelect = (mode: 'plan') => {
     if (onModeSelect) {
       onModeSelect(mode);
     } else {
@@ -28,12 +28,6 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
       key: 'plan',
       onClick: () => handleModeSelect('plan'),
       label: t('hero.plan'),
-      type: 'button' as const
-    },
-    {
-      key: 'inspire', 
-      onClick: () => handleModeSelect('inspire'),
-      label: t('hero.inspire'),
       type: 'button' as const
     },
     {
