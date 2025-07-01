@@ -1,8 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
-import { PlanTripFormData, StepProps } from '../../../types/planTrip';
-import { useDestinationLogic } from '../../../hooks/useDestinationLogic';
-import { useCountriesData } from '../../../hooks/useCountriesData';
+import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
+import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
+import { useCountriesData } from '../../../../hooks/useCountriesData';
 import DestinationFilters from './components/DestinationFilters';
 import CountryGrid from './components/CountryGrid';
 import CountryConfiguration from './components/CountryConfiguration';

@@ -1,8 +1,8 @@
 
-import ActivitiesStep from "../steps/ActivitiesStep";
-import TravelCompanionsStep from "../steps/TravelCompanionsStep";
-import BudgetStep from "../steps/BudgetStep";
-import AccommodationStep from "../steps/AccommodationStep";
+import ActivitiesStep from "../../steps/ActivitiesStep";
+import TravelCompanionsStep from "../../steps/TravelCompanionsStep";
+import BudgetStep from "../../steps/BudgetStep";
+import AccommodationStep from "../../steps/AccommodationStep";
 import { beInspiredStepConfigs } from "@/constants/beInspiredSteps";
 
 interface BeInspiredStepContentProps {

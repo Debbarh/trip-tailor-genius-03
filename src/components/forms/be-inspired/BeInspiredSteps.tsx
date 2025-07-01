@@ -1,7 +1,7 @@
 
 import { useBeInspiredForm } from "@/hooks/useBeInspiredForm";
 import BeInspiredStepContent from "./components/BeInspiredStepContent";
-import UnifiedStepper from "./components/UnifiedStepper";
+import UnifiedStepper from "../components/UnifiedStepper";
 import { beInspiredStepConfigs } from "@/constants/beInspiredSteps";
 
 interface BeInspiredStepsProps {
