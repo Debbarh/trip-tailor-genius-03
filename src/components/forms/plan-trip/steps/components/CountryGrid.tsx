@@ -13,8 +13,8 @@ interface CountryGridProps {
   filteredCountries: Country[];
   selectedCountries: any[];
   searchTerm: string;
-  addCountry: (country: Country) => void;
-  removeCountry: (countryCode: string) => void;
+  addCountry: (countryName: string) => void;
+  removeCountry: (countryName: string) => void;
 }
 
 const CountryGrid = ({
@@ -24,8 +24,8 @@ const CountryGrid = ({
   addCountry,
   removeCountry
 }: CountryGridProps) => {
-  const isCountrySelected = (countryCode: string) => {
-    return selectedCountries.some(c => c.code === countryCode);
+  const isCountrySelected = (countryName: string) => {
+    return selectedCountries.some(c => c.countryName === countryName);
   };
 
   return (
@@ -36,12 +36,12 @@ const CountryGrid = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
         {filteredCountries.map((country) => {
-          const isSelected = isCountrySelected(country.code);
+          const isSelected = isCountrySelected(country.name);
           
           return (
             <button
               key={country.code}
-              onClick={() => isSelected ? removeCountry(country.code) : addCountry(country)}
+              onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
               className={`p-4 rounded-2xl border-2 text-left transition-all duration-300 hover:scale-105 ${
                 isSelected
                   ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-lg'

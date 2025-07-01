@@ -49,4 +49,5 @@ export interface PlanTripStepsProps {
 export interface StepProps {
   formData: PlanTripFormData;
   setFormData: (data: PlanTripFormData) => void;
+  onNext?: () => void;
 }

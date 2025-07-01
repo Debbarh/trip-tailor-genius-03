@@ -68,6 +68,15 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
     return filteredCountries.filter(c => c.region === selectedRegion);
   }, [filteredCountries, selectedRegion]);
 
+  // Wrapper functions to handle the type mismatch
+  const handleAddCountry = (countryName: string) => {
+    addCountry(countryName);
+  };
+
+  const handleRemoveCountry = (countryName: string) => {
+    removeCountry(countryName);
+  };
+
   return (
     <div className="space-y-0.25">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-0.25">
@@ -84,8 +93,8 @@ export default function DestinationStep({ formData, setFormData }: StepProps) {
             filteredCountries={finalFilteredCountries}
             selectedCountries={selectedCountries}
             searchTerm={searchTerm}
-            addCountry={addCountry}
-            removeCountry={removeCountry}
+            addCountry={handleAddCountry}
+            removeCountry={handleRemoveCountry}
           />
         </div>
 
