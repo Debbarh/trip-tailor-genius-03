@@ -1,5 +1,4 @@
-
-import { travelOptions } from "@/constants/beInspiredSteps";
+import { travelOptions } from "@/constants/travelOptions";
 
 interface TravelCompanionsStepProps {
   travelWith: string;
