@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
 import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
 import { useCountriesData } from '../../../../hooks/useCountriesData';
-import DestinationSummary from './components/DestinationSummary';
+import DestinationSummary from '../../PlanTrip/steps/components/DestinationSummary';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Search, MapPin, Plus, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
