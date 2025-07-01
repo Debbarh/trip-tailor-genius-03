@@ -81,13 +81,56 @@ export const accommodationOptions = [
   { id: 'riad-traditionnel', label: 'Riad traditionnel', emoji: '🕌', desc: 'Charme authentique marocain' }
 ];
 
-// Travel companion options
+// Travel companion options with subSegments for TravelWithStep
 export const travelOptions = [
-  { id: 'solo', label: 'Seul(e)', emoji: '🧳', desc: 'Liberté totale et découvertes personnelles' },
-  { id: 'couple', label: 'En couple', emoji: '💕', desc: 'Moments romantiques et complicité' },
-  { id: 'family', label: 'En famille', emoji: '👨‍👩‍👧‍👦', desc: 'Souvenirs partagés avec vos proches' },
-  { id: 'friends', label: 'Entre amis', emoji: '👥', desc: 'Fous rires et aventures collectives' },
-  { id: 'group', label: 'En groupe', emoji: '🎭', desc: 'Voyage organisé avec d\'autres voyageurs' }
+  { 
+    id: 'solo', 
+    name: 'Seul(e)', 
+    emoji: '🧳', 
+    desc: 'Liberté totale et découvertes personnelles',
+    label: 'Seul(e)'
+  },
+  { 
+    id: 'couple', 
+    name: 'En couple', 
+    emoji: '💕', 
+    desc: 'Moments romantiques et complicité',
+    label: 'En couple'
+  },
+  { 
+    id: 'family', 
+    name: 'En famille', 
+    emoji: '👨‍👩‍👧‍👦', 
+    desc: 'Souvenirs partagés avec vos proches',
+    label: 'En famille',
+    subSegments: [
+      { id: 'family-young', name: 'Famille avec jeunes enfants', emoji: '👶', desc: 'Enfants de 0 à 6 ans' },
+      { id: 'family-teens', name: 'Famille avec adolescents', emoji: '👦', desc: 'Enfants de 7 à 17 ans' },
+      { id: 'family-adults', name: 'Famille multigénérationnelle', emoji: '👴', desc: 'Adultes et seniors' }
+    ]
+  },
+  { 
+    id: 'friends', 
+    name: 'Entre amis', 
+    emoji: '👥', 
+    desc: 'Fous rires et aventures collectives',
+    label: 'Entre amis',
+    subSegments: [
+      { id: 'friends-small', name: 'Petit groupe d\'amis', emoji: '👫', desc: '2-4 personnes' },
+      { id: 'friends-large', name: 'Grand groupe d\'amis', emoji: '👥', desc: '5-10 personnes' }
+    ]
+  },
+  { 
+    id: 'group', 
+    name: 'En groupe', 
+    emoji: '🎭', 
+    desc: 'Voyage organisé avec d\'autres voyageurs',
+    label: 'En groupe',
+    subSegments: [
+      { id: 'group-organized', name: 'Voyage organisé', emoji: '🚌', desc: 'Circuit avec guide' },
+      { id: 'group-custom', name: 'Groupe personnalisé', emoji: '🎯', desc: 'Voyage sur mesure' }
+    ]
+  }
 ];
 
 // Step configurations for BeInspired

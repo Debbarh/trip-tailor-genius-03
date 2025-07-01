@@ -4,8 +4,8 @@ import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { planTripStepConfigs as stepConfigs } from "@/constants/formData";
 import DestinationStep from "./PlanTrip/steps/DestinationStep";
 import TravelWithStep from "./steps/TravelWithStep";
-import BudgetAndFoodStep from "./PlanTrip/steps/BudgetAndFoodStep";
-import AccommodationStep from "./PlanTrip/steps/AccommodationStep";
+import UnifiedBudgetStep from "./steps/UnifiedBudgetStep";
+import UnifiedAccommodationStep from "./steps/UnifiedAccommodationStep";
 import UnifiedActivitiesStep from "./steps/UnifiedActivitiesStep";
 import DefaultStep from "./steps/DefaultStep";
 import UnifiedStepper from "./components/UnifiedStepper";
@@ -103,9 +103,47 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       case 'travelWith':
         return <TravelWithStep formData={formData} setFormData={setFormData} />;
       case 'budgetAndFood':
-        return <BudgetAndFoodStep formData={formData} setFormData={setFormData} />;
+        return (
+          <UnifiedBudgetStep
+            mode="withFood"
+            budget={formData.budgetAndFood.budget}
+            setBudget={(budget) => setFormData({ 
+              ...formData, 
+              budgetAndFood: { ...formData.budgetAndFood, budget } 
+            })}
+            selectedCuisines={formData.budgetAndFood.cuisine}
+            onCuisineToggle={(cuisine) => {
+              const newCuisines = formData.budgetAndFood.cuisine.includes(cuisine)
+                ? formData.budgetAndFood.cuisine.filter(c => c !== cuisine)
+                : [...formData.budgetAndFood.cuisine, cuisine];
+              setFormData({
+                ...formData,
+                budgetAndFood: { ...formData.budgetAndFood, cuisine: newCuisines }
+              });
+            }}
+          />
+        );
       case 'accommodation':
-        return <AccommodationStep formData={formData} setFormData={setFormData} />;
+        return (
+          <UnifiedAccommodationStep
+            mode="advanced"
+            selectedAccommodation={formData.accommodation.type}
+            onAccommodationChange={(type) => setFormData({ 
+              ...formData, 
+              accommodation: { ...formData.accommodation, type } 
+            })}
+            selectedPreferences={formData.accommodation.preferences}
+            onPreferenceToggle={(preference) => {
+              const newPreferences = formData.accommodation.preferences.includes(preference)
+                ? formData.accommodation.preferences.filter(p => p !== preference)
+                : [...formData.accommodation.preferences, preference];
+              setFormData({
+                ...formData,
+                accommodation: { ...formData.accommodation, preferences: newPreferences }
+              });
+            }}
+          />
+        );
       case 'activities':
         return (
           <UnifiedActivitiesStep
