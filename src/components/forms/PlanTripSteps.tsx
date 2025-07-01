@@ -1,12 +1,12 @@
 
 import { useState } from "react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
-import { stepConfigs } from "@/constants/planTripSteps";
+import { planTripStepConfigs as stepConfigs } from "@/constants/formData";
 import DestinationStep from "./PlanTrip/steps/DestinationStep";
 import TravelWithStep from "./steps/TravelWithStep";
 import BudgetAndFoodStep from "./PlanTrip/steps/BudgetAndFoodStep";
 import AccommodationStep from "./PlanTrip/steps/AccommodationStep";
-import ActivitiesStep from "./PlanTrip/steps/ActivitiesStep";
+import UnifiedActivitiesStep from "./steps/UnifiedActivitiesStep";
 import DefaultStep from "./steps/DefaultStep";
 import UnifiedStepper from "./components/UnifiedStepper";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -107,7 +107,13 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
       case 'accommodation':
         return <AccommodationStep formData={formData} setFormData={setFormData} />;
       case 'activities':
-        return <ActivitiesStep formData={formData} setFormData={setFormData} />;
+        return (
+          <UnifiedActivitiesStep
+            mode="advanced"
+            selectedActivities={formData.activities}
+            onActivitiesChange={(activities) => setFormData({ ...formData, activities })}
+          />
+        );
       default:
         return <DefaultStep />;
     }
