@@ -15,19 +15,19 @@ interface HomeNavigationProps {
 const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
   const { t } = useLanguage();
 
-  const handleModeSelect = (mode: 'plan') => {
+  const handlePlanTrip = () => {
     if (onModeSelect) {
-      onModeSelect(mode);
+      onModeSelect('plan');
     } else {
-      window.location.href = `/?mode=${mode}`;
+      window.location.href = `/?mode=plan`;
     }
   };
 
   const navigationItems = [
     {
       key: 'plan',
-      onClick: () => handleModeSelect('plan'),
-      label: t('hero.plan'),
+      onClick: handlePlanTrip,
+      label: 'Planifier un voyage',
       type: 'button' as const
     },
     {
@@ -84,7 +84,7 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
         </div>
 
         {/* Mobile Navigation */}
-        <MobileNavigationMenu onModeSelect={handleModeSelect} />
+        <MobileNavigationMenu onModeSelect={handlePlanTrip} />
       </nav>
     </header>
   );

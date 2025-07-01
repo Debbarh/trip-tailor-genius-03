@@ -46,24 +46,25 @@ const Index = () => {
   };
 
   const renderContent = () => {
-    if (!tripData && mode === 'itinerary') {
-      return null;
+    switch (mode) {
+      case 'itinerary':
+        return tripData ? (
+          <ItineraryDisplay 
+            data={tripData} 
+            onBack={handleBackToHome} 
+          />
+        ) : null;
+      case 'plan':
+        return (
+          <PlanTripSteps 
+            onComplete={handleFormComplete} 
+            onBack={handleBackToHome} 
+          />
+        );
+      case 'home':
+      default:
+        return <HomeScreen onModeSelect={handleModeSelect} />;
     }
-
-    const contentMap = {
-      'itinerary': () => (
-        <ItineraryDisplay 
-          data={tripData!} 
-          onBack={handleBackToHome} 
-        />
-      ),
-      'plan': () => (
-        <PlanTripSteps onComplete={handleFormComplete} onBack={handleBackToHome} />
-      ),
-      'home': () => <HomeScreen onModeSelect={handleModeSelect} />
-    };
-
-    return contentMap[mode]?.() || contentMap['home']();
   };
 
   return (
