@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { stepConfigs } from "@/constants/stepConfigs";
@@ -7,7 +6,7 @@ import TravelWithStep from "./TravelWithStep";
 import UnifiedBudgetStep from "./UnifiedBudgetStep";
 import UnifiedAccommodationStep from "./UnifiedAccommodationStep";
 import UnifiedActivitiesStep from "./UnifiedActivitiesStep";
-import DefaultStep from "../../steps/DefaultStep";
+import DefaultStep from "./DefaultStep";
 import UnifiedStepper from "./components/UnifiedStepper";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
