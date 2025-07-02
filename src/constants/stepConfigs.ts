@@ -47,15 +47,21 @@ export const travelSegments = [
     emoji: '🧳',
     subSegments: [
       {
-        id: 'solo-adventure',
-        name: 'Aventurier solo',
-        desc: 'Exploration et découverte en autonomie',
+        id: 'solo-young',
+        name: 'Solo junior (18-35 ans)',
+        desc: 'Voyage dynamique avec budget étudiant/jeune actif',
         emoji: '🎒'
       },
       {
-        id: 'solo-relax',
-        name: 'Solo détente',
-        desc: 'Voyage de repos et relaxation',
+        id: 'solo-adult',
+        name: 'Solo adulte (36-55 ans)',
+        desc: 'Voyage équilibré entre confort et découverte',
+        emoji: '🚶‍♀️'
+      },
+      {
+        id: 'solo-senior',
+        name: 'Solo senior (55+ ans)',
+        desc: 'Voyage confortable avec rythme adapté',
         emoji: '🧘'
       }
     ]
@@ -67,16 +73,28 @@ export const travelSegments = [
     emoji: '💑',
     subSegments: [
       {
+        id: 'couple-honeymoon',
+        name: 'Lune de miel',
+        desc: 'Voyage romantique de noces ou anniversaire',
+        emoji: '💍'
+      },
+      {
         id: 'couple-romantic',
-        name: 'Romantique',
-        desc: 'Voyage romantique et intimiste',
+        name: 'Escapade romantique',
+        desc: 'Weekend ou séjour intimiste à deux',
         emoji: '💕'
       },
       {
         id: 'couple-adventure',
         name: 'Couple aventurier',
-        desc: 'Aventures partagées à deux',
+        desc: 'Aventures et activités partagées',
         emoji: '⛰️'
+      },
+      {
+        id: 'couple-relax',
+        name: 'Couple détente',
+        desc: 'Voyage bien-être et relaxation à deux',
+        emoji: '🌅'
       }
     ]
   },
