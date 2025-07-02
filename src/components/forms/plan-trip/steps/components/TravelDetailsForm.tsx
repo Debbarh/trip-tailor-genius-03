@@ -12,14 +12,12 @@ interface TravelDetailsFormProps {
 }
 
 const TravelDetailsForm = ({ subSegment, details, onDetailsChange }: TravelDetailsFormProps) => {
-  const [newChildName, setNewChildName] = useState('');
   const [newChildAge, setNewChildAge] = useState('');
 
   const handleAddChild = () => {
-    if (newChildName.trim() && newChildAge.trim()) {
-      const newChildren = [...(details.children || []), { name: newChildName, age: newChildAge }];
+    if (newChildAge.trim()) {
+      const newChildren = [...(details.children || []), { age: newChildAge }];
       onDetailsChange({ ...details, children: newChildren });
-      setNewChildName('');
       setNewChildAge('');
     }
   };
@@ -37,17 +35,7 @@ const TravelDetailsForm = ({ subSegment, details, onDetailsChange }: TravelDetai
         <div className="space-y-4">
           <div className="flex gap-3">
             <div className="flex-1">
-              <Label htmlFor="childName" className="text-pink-700 font-medium">Prénom de l'enfant</Label>
-              <Input
-                id="childName"
-                value={newChildName}
-                onChange={(e) => setNewChildName(e.target.value)}
-                placeholder="Prénom"
-                className="border-pink-300 focus:border-pink-500"
-              />
-            </div>
-            <div className="w-24">
-              <Label htmlFor="childAge" className="text-pink-700 font-medium">Âge</Label>
+              <Label htmlFor="childAge" className="text-pink-700 font-medium">Âge de l'enfant</Label>
               <Input
                 id="childAge"
                 value={newChildAge}
@@ -73,7 +61,7 @@ const TravelDetailsForm = ({ subSegment, details, onDetailsChange }: TravelDetai
               <Label className="text-pink-700 font-medium">Enfants ajoutés :</Label>
               {details.children.map((child: any, index: number) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg border border-pink-200">
-                  <span className="text-pink-800">{child.name}, {child.age} ans</span>
+                  <span className="text-pink-800">Enfant {index + 1}: {child.age} ans</span>
                   <Button
                     onClick={() => handleRemoveChild(index)}
                     size="sm"
