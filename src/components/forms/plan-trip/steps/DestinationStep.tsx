@@ -5,7 +5,7 @@ import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
 import { countriesData } from '@/data/countries';
 import DestinationSummary from './components/DestinationSummary';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Search, MapPin, X } from 'lucide-react';
+import { Search, MapPin, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +18,6 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCountryIndex, setActiveCountryIndex] = useState(0);
-  const [expandedCountries, setExpandedCountries] = useState<Set<string>>(new Set());
 
   const selectedCountries = useMemo(() => 
     formData.destination.countries || [], 
@@ -63,49 +62,24 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
     );
   }, [searchTerm, topDestinations]);
 
-  const handleNext = () => {
-    if (validateDestinationData() && onNext) {
-      onNext();
-    }
-  };
-
   const handleCountrySelection = (countryName: string) => {
     const isSelected = selectedCountries.some(c => c.countryName === countryName);
     
-    if (isSelected) {
-      // Si le pays est déjà sélectionné, on toggle l'expansion
-      const newExpanded = new Set(expandedCountries);
-      if (newExpanded.has(countryName)) {
-        newExpanded.delete(countryName);
-      } else {
-        newExpanded.add(countryName);
-      }
-      setExpandedCountries(newExpanded);
-    } else {
-      // Ajouter le pays et l'expand automatiquement
+    if (!isSelected) {
       addCountry(countryName);
-      const newExpanded = new Set(expandedCountries);
-      newExpanded.add(countryName);
-      setExpandedCountries(newExpanded);
     }
   };
 
   const handleCitySelection = (countryName: string, cityName: string) => {
-    // Trouver l'index du pays et le définir comme actif
     const countryIndex = selectedCountries.findIndex(c => c.countryName === countryName);
     if (countryIndex !== -1) {
       setActiveCountryIndex(countryIndex);
-      // Utiliser setTimeout pour s'assurer que l'état est mis à jour
       setTimeout(() => addCity(cityName), 0);
     }
   };
 
   const handleRemoveCountry = (countryName: string) => {
     removeCountry(countryName);
-    // Retirer de la liste des pays expandés
-    const newExpanded = new Set(expandedCountries);
-    newExpanded.delete(countryName);
-    setExpandedCountries(newExpanded);
   };
 
   return (
@@ -138,7 +112,6 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {filteredCountries.map((country) => {
               const isSelected = selectedCountries.some(c => c.countryName === country.name);
-              const isExpanded = expandedCountries.has(country.name);
               const selectedCountry = selectedCountries.find(c => c.countryName === country.name);
               
               return (
@@ -220,7 +193,7 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
                   )}
 
                   {/* Liste des villes disponibles */}
-                  {isSelected && isExpanded && country.cities && country.cities.length > 0 && (
+                  {isSelected && country.cities && country.cities.length > 0 && (
                     <div className="px-3 pb-3 bg-purple-50 border-t">
                       <div className="pt-2">
                         <p className="text-xs text-gray-600 mb-2">Villes disponibles :</p>
@@ -257,17 +230,6 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
           </div>
         </CardContent>
       </Card>
-
-      {/* Navigation Button - Un seul bouton */}
-      <div className="flex justify-end">
-        <Button
-          onClick={handleNext}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl shadow-2xl border-0"
-        >
-          {t('planTrip.next')}
-          <ArrowRight className="w-5 h-5 ml-2" />
-        </Button>
-      </div>
     </div>
   );
 }
