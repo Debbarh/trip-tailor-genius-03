@@ -2,11 +2,10 @@
 import React, { useState, useMemo } from 'react';
 import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
 import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
-import { useCountriesData } from '../../../../hooks/useCountriesData';
 import { countriesData } from '@/data/countries';
 import DestinationSummary from './components/DestinationSummary';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Search, MapPin, Plus, X } from 'lucide-react';
+import { ArrowRight, Search, MapPin, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,20 +18,12 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCountryIndex, setActiveCountryIndex] = useState(0);
-  const [newCityName, setNewCityName] = useState('');
   const [expandedCountries, setExpandedCountries] = useState<Set<string>>(new Set());
 
   const selectedCountries = useMemo(() => 
     formData.destination.countries || [], 
     [formData.destination.countries]
   );
-
-  const activeCountry = useMemo(() => 
-    selectedCountries[activeCountryIndex], 
-    [selectedCountries, activeCountryIndex]
-  );
-
-  const { countriesList } = useCountriesData(activeCountry);
 
   const {
     addCountry,
@@ -60,52 +51,53 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
     );
   }, [searchTerm]);
 
-  const activeCountryData = useMemo(() => {
-    if (!activeCountry) return null;
-    return countriesData.find(c => c.name === activeCountry.countryName);
-  }, [activeCountry]);
-
   const handleNext = () => {
     if (validateDestinationData() && onNext) {
       onNext();
     }
   };
 
-  const handleAddCity = () => {
-    if (newCityName.trim()) {
-      addCity(newCityName.trim());
-      setNewCityName('');
-    }
-  };
-
-  const handleAddPredefinedCity = (cityName: string) => {
-    addCity(cityName);
-  };
-
-  const toggleCountryExpansion = (countryName: string) => {
-    const newExpanded = new Set(expandedCountries);
-    if (newExpanded.has(countryName)) {
-      newExpanded.delete(countryName);
-    } else {
-      newExpanded.add(countryName);
-    }
-    setExpandedCountries(newExpanded);
-  };
-
-  const handleCountrySelection = (countryName: string, isSelected: boolean) => {
+  const handleCountrySelection = (countryName: string) => {
+    const isSelected = selectedCountries.some(c => c.countryName === countryName);
+    
     if (isSelected) {
-      removeCountry(countryName);
+      // Si le pays est déjà sélectionné, on toggle l'expansion
+      const newExpanded = new Set(expandedCountries);
+      if (newExpanded.has(countryName)) {
+        newExpanded.delete(countryName);
+      } else {
+        newExpanded.add(countryName);
+      }
+      setExpandedCountries(newExpanded);
     } else {
+      // Ajouter le pays et l'expand automatiquement
       addCountry(countryName);
-      // Auto-expand the country when it's selected
       const newExpanded = new Set(expandedCountries);
       newExpanded.add(countryName);
       setExpandedCountries(newExpanded);
     }
   };
 
+  const handleCitySelection = (countryName: string, cityName: string) => {
+    // Trouver l'index du pays et le définir comme actif
+    const countryIndex = selectedCountries.findIndex(c => c.countryName === countryName);
+    if (countryIndex !== -1) {
+      setActiveCountryIndex(countryIndex);
+      // Utiliser setTimeout pour s'assurer que l'état est mis à jour
+      setTimeout(() => addCity(cityName), 0);
+    }
+  };
+
+  const handleRemoveCountry = (countryName: string) => {
+    removeCountry(countryName);
+    // Retirer de la liste des pays expandés
+    const newExpanded = new Set(expandedCountries);
+    newExpanded.delete(countryName);
+    setExpandedCountries(newExpanded);
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <DestinationSummary 
         selectedCountries={selectedCountries}
         activeCountryIndex={activeCountryIndex}
@@ -113,232 +105,146 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
         isCountryComplete={isCountryComplete}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Country Selector */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="w-5 h-5" />
-              Sélectionner des pays
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Rechercher un pays..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="w-5 h-5" />
+            Sélectionner des pays et des villes
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Rechercher un pays..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
 
-            <div className="space-y-2 max-h-80 overflow-y-auto">
-              {filteredCountries.map((country) => {
-                const isSelected = selectedCountries.some(c => c.countryName === country.name);
-                const isExpanded = expandedCountries.has(country.name);
-                const selectedCountry = selectedCountries.find(c => c.countryName === country.name);
-                
-                return (
-                  <div key={country.id} className="border rounded-lg">
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {filteredCountries.map((country) => {
+              const isSelected = selectedCountries.some(c => c.countryName === country.name);
+              const isExpanded = expandedCountries.has(country.name);
+              const selectedCountry = selectedCountries.find(c => c.countryName === country.name);
+              
+              return (
+                <div key={country.id} className="border rounded-lg">
+                  {/* En-tête du pays */}
+                  <div className="flex items-center justify-between p-3">
                     <button
-                      onClick={() => handleCountrySelection(country.name, isSelected)}
-                      className={`w-full px-3 py-2 text-left border-0 rounded-t-lg transition-colors ${
-                        isSelected
-                          ? 'border-purple-500 bg-purple-50 text-purple-700'
-                          : 'border-gray-200 hover:border-purple-300 bg-white hover:bg-purple-50'
+                      onClick={() => handleCountrySelection(country.name)}
+                      className={`flex items-center gap-2 flex-1 text-left ${
+                        isSelected ? 'text-purple-700 font-medium' : 'text-gray-700'
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{country.flagCode}</span>
-                          <span className="font-medium text-sm">{country.name}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {isSelected && (
-                            <span className="text-purple-600 text-xs">✓</span>
-                          )}
-                          {isSelected && country.cities && country.cities.length > 0 && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleCountryExpansion(country.name);
-                              }}
-                              className="text-purple-600 hover:text-purple-800 text-xs"
-                            >
-                              {isExpanded ? '▼' : '▶'}
-                            </button>
-                          )}
-                        </div>
-                      </div>
+                      <span className="text-lg">{country.flagCode}</span>
+                      <span>{country.name}</span>
+                      {isSelected && (
+                        <span className="text-purple-600 text-xs">
+                          ({selectedCountry?.cities.length || 0} ville{(selectedCountry?.cities.length || 0) > 1 ? 's' : ''})
+                        </span>
+                      )}
                     </button>
-
-                    {/* Cities list - only show when country is selected and expanded */}
-                    {isSelected && isExpanded && country.cities && country.cities.length > 0 && (
-                      <div className="px-3 pb-3 bg-gray-50 rounded-b-lg border-t">
-                        <div className="pt-2">
-                          <p className="text-xs text-gray-600 mb-2">Villes disponibles:</p>
-                          <div className="grid grid-cols-2 gap-1">
-                            {country.cities.map((cityName) => {
-                              const isAlreadyAdded = selectedCountry?.cities.some(city => city.cityName === cityName);
-                              return (
-                                <button
-                                  key={cityName}
-                                  onClick={() => {
-                                    if (!isAlreadyAdded) {
-                                      // Set this country as active first
-                                      const countryIndex = selectedCountries.findIndex(c => c.countryName === country.name);
-                                      if (countryIndex !== -1) {
-                                        setActiveCountryIndex(countryIndex);
-                                        setTimeout(() => handleAddPredefinedCity(cityName), 0);
-                                      }
-                                    }
-                                  }}
-                                  className={`text-xs px-2 py-1 rounded text-left ${
-                                    isAlreadyAdded
-                                      ? 'bg-green-100 text-green-700 cursor-default'
-                                      : 'bg-white hover:bg-purple-100 text-gray-700 hover:text-purple-700 border'
-                                  }`}
-                                  disabled={isAlreadyAdded}
-                                >
-                                  {isAlreadyAdded && <span className="mr-1">✓</span>}
-                                  {cityName}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
+                    
+                    {isSelected && (
+                      <Button
+                        onClick={() => handleRemoveCountry(country.name)}
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
                     )}
                   </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* City Configuration */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>
-                {activeCountry ? (
-                  <div className="flex items-center gap-2">
-                    <span>{activeCountryData?.flagCode}</span>
-                    <span>Villes - {activeCountry.countryName}</span>
-                  </div>
-                ) : 'Sélectionnez un pays'}
-              </span>
-              {activeCountry && (
-                <Button
-                  onClick={() => removeCountry(activeCountry.countryName)}
-                  variant="outline"
-                  size="sm"
-                  className="text-red-600 hover:text-red-700"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {activeCountry ? (
-              <>
-                {/* Predefined Cities */}
-                {activeCountryData?.cities && activeCountryData.cities.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Villes populaires</h4>
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      {activeCountryData.cities.map((cityName) => {
-                        const isAlreadyAdded = activeCountry.cities.some(city => city.cityName === cityName);
-                        return (
-                          <Button
-                            key={cityName}
-                            onClick={() => handleAddPredefinedCity(cityName)}
-                            variant={isAlreadyAdded ? "secondary" : "outline"}
-                            size="sm"
-                            disabled={isAlreadyAdded}
-                            className="text-xs"
-                          >
-                            {isAlreadyAdded && <span className="mr-1">✓</span>}
-                            {cityName}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Add Custom City */}
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Ajouter une ville personnalisée</h4>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Nom de la ville"
-                      value={newCityName}
-                      onChange={(e) => setNewCityName(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleAddCity()}
-                    />
-                    <Button onClick={handleAddCity} size="sm">
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Cities List */}
-                <div className="space-y-3 max-h-60 overflow-y-auto">
-                  {activeCountry.cities.map((city, index) => (
-                    <div key={index} className="p-3 border rounded-lg space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">{city.cityName}</h4>
-                        <Button
-                          onClick={() => removeCity(city.cityName)}
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
+                  {/* Villes ajoutées pour ce pays */}
+                  {isSelected && selectedCountry && selectedCountry.cities.length > 0 && (
+                    <div className="px-3 pb-2 border-t bg-gray-50">
+                      <div className="space-y-2 pt-2">
+                        {selectedCountry.cities.map((city, index) => (
+                          <div key={index} className="bg-white p-3 rounded border">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-medium text-sm flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                {city.cityName}
+                              </span>
+                              <Button
+                                onClick={() => removeCity(city.cityName)}
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700 h-6 w-6 p-0"
+                              >
+                                <X className="w-3 h-3" />
+                              </Button>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <label className="text-xs text-gray-600">Arrivée</label>
+                                <Input
+                                  type="date"
+                                  value={city.startDate}
+                                  onChange={(e) => updateCityDates(city.cityName, 'startDate', e.target.value)}
+                                  className="text-xs h-8"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-600">Départ</label>
+                                <Input
+                                  type="date"
+                                  value={city.endDate}
+                                  onChange={(e) => updateCityDates(city.cityName, 'endDate', e.target.value)}
+                                  className="text-xs h-8"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="text-xs text-gray-600">Arrivée</label>
-                          <Input
-                            type="date"
-                            value={city.startDate}
-                            onChange={(e) => updateCityDates(city.cityName, 'startDate', e.target.value)}
-                            className="text-sm"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs text-gray-600">Départ</label>
-                          <Input
-                            type="date"
-                            value={city.endDate}
-                            onChange={(e) => updateCityDates(city.cityName, 'endDate', e.target.value)}
-                            className="text-sm"
-                          />
+                    </div>
+                  )}
+
+                  {/* Liste des villes disponibles */}
+                  {isSelected && isExpanded && country.cities && country.cities.length > 0 && (
+                    <div className="px-3 pb-3 bg-purple-50 border-t">
+                      <div className="pt-2">
+                        <p className="text-xs text-gray-600 mb-2">Villes disponibles :</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {country.cities.map((cityName) => {
+                            const isAlreadyAdded = selectedCountry?.cities.some(city => city.cityName === cityName);
+                            return (
+                              <button
+                                key={cityName}
+                                onClick={() => {
+                                  if (!isAlreadyAdded) {
+                                    handleCitySelection(country.name, cityName);
+                                  }
+                                }}
+                                className={`text-xs px-2 py-1 rounded text-left transition-colors ${
+                                  isAlreadyAdded
+                                    ? 'bg-green-100 text-green-700 cursor-default'
+                                    : 'bg-white hover:bg-purple-100 text-gray-700 hover:text-purple-700 border border-purple-200'
+                                }`}
+                                disabled={isAlreadyAdded}
+                              >
+                                {isAlreadyAdded && <span className="mr-1">✓</span>}
+                                {cityName}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
-                  ))}
+                  )}
                 </div>
-
-                {activeCountry.cities.length === 0 && (
-                  <p className="text-gray-500 text-sm text-center py-4">
-                    Aucune ville ajoutée pour ce pays
-                  </p>
-                )}
-              </>
-            ) : (
-              <p className="text-gray-500 text-center py-8">
-                Sélectionnez un pays pour commencer à ajouter des villes
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Navigation Button */}
       <div className="flex justify-end mt-8">
