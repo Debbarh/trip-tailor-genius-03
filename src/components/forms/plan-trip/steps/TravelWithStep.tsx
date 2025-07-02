@@ -1,4 +1,3 @@
-
 import { StepProps } from "@/types/planTrip";
 import { travelSegments } from "@/constants/stepConfigs";
 import TravelDetailsForm from "./components/TravelDetailsForm";
