@@ -143,6 +143,9 @@ export const useDestinationLogic = ({
   }, [selectedCountries]);
 
   const validateDestinationData = useCallback(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     if (selectedCountries.length === 0) {
       toast({
         title: "Destination manquante",
@@ -161,6 +164,12 @@ export const useDestinationLogic = ({
         });
         return false;
       }
+
+      // Trier les villes par date d'arrivée pour vérifier les chevauchements
+      const citiesWithDates = country.cities.filter(city => city.startDate && city.endDate);
+      const sortedCities = [...citiesWithDates].sort((a, b) => 
+        new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      );
 
       for (const city of country.cities) {
         if (!city.startDate) {
@@ -181,10 +190,54 @@ export const useDestinationLogic = ({
           return false;
         }
 
-        if (city.endDate < city.startDate) {
+        const startDate = new Date(city.startDate);
+        const endDate = new Date(city.endDate);
+
+        // Règle 1: Les dates ne peuvent pas être dans le passé
+        if (startDate < today) {
+          toast({
+            title: "Date d'arrivée invalide",
+            description: `La date d'arrivée à ${city.cityName} ne peut pas être dans le passé.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        // Règle 2: La date de départ doit être après la date d'arrivée
+        if (endDate <= startDate) {
           toast({
             title: "Dates incohérentes",
             description: `La date de départ de ${city.cityName} doit être après la date d'arrivée.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        // Règle 3: Séjour minimum d'une nuit
+        const diffTime = endDate.getTime() - startDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays < 1) {
+          toast({
+            title: "Séjour trop court",
+            description: `Le séjour à ${city.cityName} doit être d'au moins une nuit.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+      }
+
+      // Règle 4: Vérifier les chevauchements de dates dans le même pays
+      for (let i = 0; i < sortedCities.length - 1; i++) {
+        const currentCity = sortedCities[i];
+        const nextCity = sortedCities[i + 1];
+        
+        const currentEndDate = new Date(currentCity.endDate);
+        const nextStartDate = new Date(nextCity.startDate);
+        
+        if (nextStartDate < currentEndDate) {
+          toast({
+            title: "Dates qui se chevauchent",
+            description: `Les séjours à ${currentCity.cityName} et ${nextCity.cityName} se chevauchent en ${country.countryName}.`,
             variant: "destructive"
           });
           return false;
@@ -198,7 +251,7 @@ export const useDestinationLogic = ({
       toast({
         title: "⚠️ Jours creux détectés",
         description: gaps.join(', '),
-        variant: "default" // Pas destructive, juste informatif
+        variant: "default"
       });
     }
 
