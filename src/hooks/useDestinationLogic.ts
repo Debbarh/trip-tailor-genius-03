@@ -87,9 +87,41 @@ export const useDestinationLogic = ({
       idx === activeCountryIndex
         ? {
             ...c,
-            cities: c.cities.map((ci) =>
-              ci.cityName === cityName ? { ...ci, [field]: value } : ci
-            ),
+            cities: c.cities.map((ci) => {
+              if (ci.cityName === cityName) {
+                const updatedCity = { ...ci, [field]: value };
+                
+                // Validation en temps réel
+                if (field === 'startDate' && updatedCity.endDate) {
+                  const startDate = new Date(value);
+                  const endDate = new Date(updatedCity.endDate);
+                  if (startDate >= endDate) {
+                    toast({
+                      title: "Date invalide",
+                      description: "La date d'arrivée doit être antérieure à la date de départ.",
+                      variant: "destructive"
+                    });
+                    return ci; // Garder l'ancienne valeur
+                  }
+                }
+                
+                if (field === 'endDate' && updatedCity.startDate) {
+                  const startDate = new Date(updatedCity.startDate);
+                  const endDate = new Date(value);
+                  if (endDate <= startDate) {
+                    toast({
+                      title: "Date invalide",
+                      description: "La date de départ doit être postérieure à la date d'arrivée.",
+                      variant: "destructive"
+                    });
+                    return ci; // Garder l'ancienne valeur
+                  }
+                }
+                
+                return updatedCity;
+              }
+              return ci;
+            }),
           }
         : c
     );
@@ -198,6 +230,15 @@ export const useDestinationLogic = ({
           toast({
             title: "Date d'arrivée invalide",
             description: `La date d'arrivée à ${city.cityName} ne peut pas être dans le passé.`,
+            variant: "destructive"
+          });
+          return false;
+        }
+
+        if (endDate < today) {
+          toast({
+            title: "Date de départ invalide",
+            description: `La date de départ de ${city.cityName} ne peut pas être dans le passé.`,
             variant: "destructive"
           });
           return false;
