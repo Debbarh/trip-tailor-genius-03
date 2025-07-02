@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import EditActivityDialog from "@/components/itinerary/EditActivityDialog";
 import DeleteActivityDialog from "@/components/itinerary/DeleteActivityDialog";
-import BookingWidget from "@/components/booking/BookingWidget";
-import BookingOptionsCard from "@/components/booking/BookingOptionsCard";
 
 interface DraggableActivityProps {
   id: string;
@@ -120,49 +118,6 @@ const DraggableActivity = ({ id, activity, activityIndex, onEdit, onDelete }: Dr
         onConfirm={handleDelete}
         activityName={activity.activity}
       />
-      
-      {/* Widget de réservation */}
-      {activity.affiliate && (
-        <BookingWidget 
-          activity={activity}
-          onBooking={(activityId, affiliateId) => {
-            console.log(`Booking activity ${activityId} with affiliate ${affiliateId}`);
-          }}
-        />
-      )}
-      
-      {/* Options de réservation supplémentaires */}
-      {activity.bookingOptions && (
-        <div className="mt-4 space-y-4">
-          {activity.bookingOptions.transport && (
-            <BookingOptionsCard
-              type="transport"
-              options={activity.bookingOptions.transport}
-              onBooking={(optionId, affiliateId) => {
-                console.log(`Booking transport ${optionId} with affiliate ${affiliateId}`);
-              }}
-            />
-          )}
-          {activity.bookingOptions.accommodation && (
-            <BookingOptionsCard
-              type="accommodation"
-              options={activity.bookingOptions.accommodation}
-              onBooking={(optionId, affiliateId) => {
-                console.log(`Booking accommodation ${optionId} with affiliate ${affiliateId}`);
-              }}
-            />
-          )}
-          {activity.bookingOptions.restaurant && (
-            <BookingOptionsCard
-              type="restaurant"
-              options={activity.bookingOptions.restaurant}
-              onBooking={(optionId, affiliateId) => {
-                console.log(`Booking restaurant ${optionId} with affiliate ${affiliateId}`);
-              }}
-            />
-          )}
-        </div>
-      )}
     </div>
   );
 };
