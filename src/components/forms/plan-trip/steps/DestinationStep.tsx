@@ -30,7 +30,7 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
     [selectedCountries, activeCountryIndex]
   );
 
-  const { countriesList, citiesList } = useCountriesData(activeCountry);
+  const { countriesList } = useCountriesData(activeCountry);
 
   const {
     addCountry,
