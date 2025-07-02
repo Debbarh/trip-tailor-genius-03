@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Plane, Camera, Heart, Globe, SparklesIcon } from "lucide-react";
 import BrandLogo from "@/components/layout/BrandLogo";
 import LanguageSelector from "@/components/ui/LanguageSelector";
-import ToursSection from "@/components/tours/ToursSection";
 import { useLanguage } from "@/contexts/LanguageContext";
-import UserHeader from "@/components/ui/UserHeader";
 import HomeNavigation from "@/components/layout/HomeNavigation";
 import HeroSection from "./HeroSection";
 import FeaturesGrid from "./FeaturesGrid";
@@ -14,7 +12,7 @@ import FloatingElements from "./FloatingElements";
 import Footer from "./Footer";
 
 interface HomeScreenProps {
-  onModeSelect: (mode: 'plan' | 'inspire') => void;
+  onModeSelect: (mode: 'plan') => void;
 }
 
 const HomeScreen = ({ onModeSelect }: HomeScreenProps) => {
@@ -84,11 +82,6 @@ const HomeScreen = ({ onModeSelect }: HomeScreenProps) => {
 
       {/* Features Grid */}
       <FeaturesGrid />
-
-      {/* Tours Section */}
-      <div id="tours">
-        <ToursSection />
-      </div>
 
       {/* Floating Elements */}
       <FloatingElements />
