@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { PlanTripFormData, StepProps } from '../../../../types/planTrip';
 import { useDestinationLogic } from '../../../../hooks/useDestinationLogic';
 import { useCountriesData } from '../../../../hooks/useCountriesData';
+import { countriesData } from '@/data/countries';
 import DestinationSummary from './components/DestinationSummary';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Search, MapPin, Plus, X } from 'lucide-react';
@@ -50,13 +51,18 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
   });
 
   const filteredCountries = useMemo(() => {
-    if (!searchTerm.trim()) return countriesList;
+    if (!searchTerm.trim()) return countriesData;
     
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return countriesList.filter((country) =>
+    return countriesData.filter((country) =>
       country.name.toLowerCase().includes(lowerSearchTerm)
     );
-  }, [countriesList, searchTerm]);
+  }, [searchTerm]);
+
+  const activeCountryData = useMemo(() => {
+    if (!activeCountry) return null;
+    return countriesData.find(c => c.name === activeCountry.countryName);
+  }, [activeCountry]);
 
   const handleNext = () => {
     if (validateDestinationData() && onNext) {
@@ -69,6 +75,10 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
       addCity(newCityName.trim());
       setNewCityName('');
     }
+  };
+
+  const handleAddPredefinedCity = (cityName: string) => {
+    addCity(cityName);
   };
 
   return (
@@ -115,7 +125,10 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">{country.name}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{country.flagCode}</span>
+                        <span className="font-medium text-sm">{country.name}</span>
+                      </div>
                       {isSelected && (
                         <span className="text-purple-600 text-xs">✓</span>
                       )}
@@ -132,7 +145,12 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>
-                {activeCountry ? `Villes - ${activeCountry.countryName}` : 'Sélectionnez un pays'}
+                {activeCountry ? (
+                  <div className="flex items-center gap-2">
+                    <span>{activeCountryData?.flagCode}</span>
+                    <span>Villes - {activeCountry.countryName}</span>
+                  </div>
+                ) : 'Sélectionnez un pays'}
               </span>
               {activeCountry && (
                 <Button
@@ -149,17 +167,45 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
           <CardContent className="space-y-4">
             {activeCountry ? (
               <>
-                {/* Add City */}
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Nom de la ville"
-                    value={newCityName}
-                    onChange={(e) => setNewCityName(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddCity()}
-                  />
-                  <Button onClick={handleAddCity} size="sm">
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                {/* Predefined Cities */}
+                {activeCountryData?.cities && activeCountryData.cities.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Villes populaires</h4>
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      {activeCountryData.cities.map((cityName) => {
+                        const isAlreadyAdded = activeCountry.cities.some(city => city.cityName === cityName);
+                        return (
+                          <Button
+                            key={cityName}
+                            onClick={() => handleAddPredefinedCity(cityName)}
+                            variant={isAlreadyAdded ? "secondary" : "outline"}
+                            size="sm"
+                            disabled={isAlreadyAdded}
+                            className="text-xs"
+                          >
+                            {isAlreadyAdded && <span className="mr-1">✓</span>}
+                            {cityName}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Add Custom City */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Ajouter une ville personnalisée</h4>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Nom de la ville"
+                      value={newCityName}
+                      onChange={(e) => setNewCityName(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleAddCity()}
+                    />
+                    <Button onClick={handleAddCity} size="sm">
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Cities List */}
