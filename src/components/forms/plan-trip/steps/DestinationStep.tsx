@@ -42,14 +42,26 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
     setActiveCountryIndex
   });
 
+  // Top 7 destinations with Morocco first
+  const topDestinations = useMemo(() => {
+    const morocco = countriesData.find(country => country.name === 'Maroc');
+    const otherCountries = countriesData
+      .filter(country => country.name !== 'Maroc')
+      .slice(0, 6); // 6 autres pays pour faire 7 au total
+    
+    return morocco ? [morocco, ...otherCountries] : otherCountries.slice(0, 7);
+  }, []);
+
   const filteredCountries = useMemo(() => {
-    if (!searchTerm.trim()) return countriesData;
+    if (!searchTerm.trim()) {
+      return topDestinations;
+    }
     
     const lowerSearchTerm = searchTerm.toLowerCase();
     return countriesData.filter((country) =>
       country.name.toLowerCase().includes(lowerSearchTerm)
     );
-  }, [searchTerm]);
+  }, [searchTerm, topDestinations]);
 
   const handleNext = () => {
     if (validateDestinationData() && onNext) {
@@ -246,8 +258,8 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
         </CardContent>
       </Card>
 
-      {/* Navigation Button */}
-      <div className="flex justify-end mt-8">
+      {/* Navigation Button - Un seul bouton */}
+      <div className="flex justify-end">
         <Button
           onClick={handleNext}
           className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg rounded-2xl shadow-2xl border-0"
