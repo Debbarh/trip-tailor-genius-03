@@ -1,14 +1,13 @@
-
 import { useState } from "react";
 import { PlanTripStepsProps, PlanTripFormData } from "@/types/planTrip";
 import { stepConfigs } from "@/constants/stepConfigs";
-import DestinationStep from "./steps/DestinationStep";
-import TravelWithStep from "../steps/TravelWithStep";
-import UnifiedBudgetStep from "../steps/UnifiedBudgetStep";
-import UnifiedAccommodationStep from "../steps/UnifiedAccommodationStep";
-import UnifiedActivitiesStep from "../steps/UnifiedActivitiesStep";
-import DefaultStep from "../steps/DefaultStep";
-import UnifiedStepper from "../components/UnifiedStepper";
+import DestinationStep from "./DestinationStep";
+import TravelWithStep from "../../steps/TravelWithStep";
+import UnifiedBudgetStep from "../../steps/UnifiedBudgetStep";
+import UnifiedAccommodationStep from "../../steps/UnifiedAccommodationStep";
+import UnifiedActivitiesStep from "../../steps/UnifiedActivitiesStep";
+import DefaultStep from "../../steps/DefaultStep";
+import UnifiedStepper from "./components/UnifiedStepper";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
 

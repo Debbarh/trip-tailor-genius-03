@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import PlanTripSteps from "@/components/forms/plan-trip/PlanTripSteps";
+import PlanTripSteps from "@/components/forms/plan-trip/steps/PlanTripSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import HomeScreen from "@/components/home/HomeScreen";
 
