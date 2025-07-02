@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/contexts/LanguageContext';
-import UserHeader from '@/components/ui/UserHeader';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import {
   Drawer,
@@ -12,7 +10,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface MobileNavigationMenuProps {
   onModeSelect: () => void;
@@ -53,11 +51,6 @@ const MobileNavigationMenu = ({ onModeSelect }: MobileNavigationMenuProps) => {
           </DrawerHeader>
           
           <div className="flex flex-col h-full">
-            {/* User section */}
-            <div className="p-6 border-b border-gray-100">
-              <UserHeader />
-            </div>
-
             {/* Navigation items */}
             <div className="flex-1 p-6 space-y-4">
               <Button
@@ -67,31 +60,6 @@ const MobileNavigationMenu = ({ onModeSelect }: MobileNavigationMenuProps) => {
               >
                 Planifier un voyage
               </Button>
-              
-              <Link
-                to="/countries"
-                onClick={() => setOpen(false)}
-                className="flex items-center w-full text-left text-lg font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-md p-3 h-12"
-              >
-                {t('nav.adventures')}
-              </Link>
-              
-              <Link
-                to="/profile"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 w-full text-left text-lg font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-md p-3 h-12"
-              >
-                <User className="w-5 h-5" />
-                Profil
-              </Link>
-              
-              <a
-                href="#"
-                onClick={() => setOpen(false)}
-                className="flex items-center w-full text-left text-lg font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-md p-3 h-12"
-              >
-                {t('nav.about')}
-              </a>
             </div>
 
             {/* Language selector at bottom */}
