@@ -20,6 +20,7 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCountryIndex, setActiveCountryIndex] = useState(0);
   const [newCityName, setNewCityName] = useState('');
+  const [expandedCountries, setExpandedCountries] = useState<Set<string>>(new Set());
 
   const selectedCountries = useMemo(() => 
     formData.destination.countries || [], 
@@ -81,6 +82,28 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
     addCity(cityName);
   };
 
+  const toggleCountryExpansion = (countryName: string) => {
+    const newExpanded = new Set(expandedCountries);
+    if (newExpanded.has(countryName)) {
+      newExpanded.delete(countryName);
+    } else {
+      newExpanded.add(countryName);
+    }
+    setExpandedCountries(newExpanded);
+  };
+
+  const handleCountrySelection = (countryName: string, isSelected: boolean) => {
+    if (isSelected) {
+      removeCountry(countryName);
+    } else {
+      addCountry(countryName);
+      // Auto-expand the country when it's selected
+      const newExpanded = new Set(expandedCountries);
+      newExpanded.add(countryName);
+      setExpandedCountries(newExpanded);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <DestinationSummary 
@@ -110,30 +133,84 @@ export default function DestinationStep({ formData, setFormData, onNext }: Desti
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto">
+            <div className="space-y-2 max-h-80 overflow-y-auto">
               {filteredCountries.map((country) => {
                 const isSelected = selectedCountries.some(c => c.countryName === country.name);
+                const isExpanded = expandedCountries.has(country.name);
+                const selectedCountry = selectedCountries.find(c => c.countryName === country.name);
                 
                 return (
-                  <button
-                    key={country.id}
-                    onClick={() => isSelected ? removeCountry(country.name) : addCountry(country.name)}
-                    className={`px-3 py-2 text-left border rounded transition-colors ${
-                      isSelected
-                        ? 'border-purple-500 bg-purple-50 text-purple-700'
-                        : 'border-gray-200 hover:border-purple-300 bg-white hover:bg-purple-50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{country.flagCode}</span>
-                        <span className="font-medium text-sm">{country.name}</span>
+                  <div key={country.id} className="border rounded-lg">
+                    <button
+                      onClick={() => handleCountrySelection(country.name, isSelected)}
+                      className={`w-full px-3 py-2 text-left border-0 rounded-t-lg transition-colors ${
+                        isSelected
+                          ? 'border-purple-500 bg-purple-50 text-purple-700'
+                          : 'border-gray-200 hover:border-purple-300 bg-white hover:bg-purple-50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{country.flagCode}</span>
+                          <span className="font-medium text-sm">{country.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {isSelected && (
+                            <span className="text-purple-600 text-xs">✓</span>
+                          )}
+                          {isSelected && country.cities && country.cities.length > 0 && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleCountryExpansion(country.name);
+                              }}
+                              className="text-purple-600 hover:text-purple-800 text-xs"
+                            >
+                              {isExpanded ? '▼' : '▶'}
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      {isSelected && (
-                        <span className="text-purple-600 text-xs">✓</span>
-                      )}
-                    </div>
-                  </button>
+                    </button>
+
+                    {/* Cities list - only show when country is selected and expanded */}
+                    {isSelected && isExpanded && country.cities && country.cities.length > 0 && (
+                      <div className="px-3 pb-3 bg-gray-50 rounded-b-lg border-t">
+                        <div className="pt-2">
+                          <p className="text-xs text-gray-600 mb-2">Villes disponibles:</p>
+                          <div className="grid grid-cols-2 gap-1">
+                            {country.cities.map((cityName) => {
+                              const isAlreadyAdded = selectedCountry?.cities.some(city => city.cityName === cityName);
+                              return (
+                                <button
+                                  key={cityName}
+                                  onClick={() => {
+                                    if (!isAlreadyAdded) {
+                                      // Set this country as active first
+                                      const countryIndex = selectedCountries.findIndex(c => c.countryName === country.name);
+                                      if (countryIndex !== -1) {
+                                        setActiveCountryIndex(countryIndex);
+                                        setTimeout(() => handleAddPredefinedCity(cityName), 0);
+                                      }
+                                    }
+                                  }}
+                                  className={`text-xs px-2 py-1 rounded text-left ${
+                                    isAlreadyAdded
+                                      ? 'bg-green-100 text-green-700 cursor-default'
+                                      : 'bg-white hover:bg-purple-100 text-gray-700 hover:text-purple-700 border'
+                                  }`}
+                                  disabled={isAlreadyAdded}
+                                >
+                                  {isAlreadyAdded && <span className="mr-1">✓</span>}
+                                  {cityName}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
