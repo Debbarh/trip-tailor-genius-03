@@ -99,8 +99,17 @@ const TravelWithStep = ({ formData, setFormData }: StepProps) => {
         ))}
       </div>
 
-      {/* Formulaire de détails selon le sous-segment */}
-      {selectedSubSegment && (
+      {/* Formulaire de détails selon le segment */}
+      {selectedSegment === 'family' && (
+        <TravelDetailsForm 
+          subSegment="family"
+          details={formData.travelWith.details || {}}
+          onDetailsChange={handleDetailsChange}
+        />
+      )}
+
+      {/* Formulaire de détails pour les autres segments avec sous-segments */}
+      {selectedSubSegment && selectedSegment !== 'family' && (
         <TravelDetailsForm 
           subSegment={selectedSubSegment}
           details={formData.travelWith.details || {}}

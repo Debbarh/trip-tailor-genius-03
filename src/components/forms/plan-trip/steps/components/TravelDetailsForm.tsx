@@ -27,7 +27,7 @@ const TravelDetailsForm = ({ subSegment, details, onDetailsChange }: TravelDetai
     onDetailsChange({ ...details, children: newChildren });
   };
 
-  if (subSegment === 'family-young' || subSegment === 'family-teens') {
+  if (subSegment === 'family' || subSegment === 'family-young' || subSegment === 'family-teens') {
     return (
       <div className="space-y-6 p-6 bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl border border-pink-200">
         <h3 className="text-xl font-bold text-pink-800 mb-4">👨‍👩‍👧‍👦 Informations sur votre famille</h3>
@@ -35,7 +35,7 @@ const TravelDetailsForm = ({ subSegment, details, onDetailsChange }: TravelDetai
         <div className="space-y-4">
           <div className="flex gap-3">
             <div className="flex-1">
-              <Label htmlFor="childAge" className="text-pink-700 font-medium">Âge de l'enfant</Label>
+              <Label htmlFor="childAge" className="text-pink-700 font-medium">Âge de l&apos;enfant</Label>
               <Input
                 id="childAge"
                 value={newChildAge}
