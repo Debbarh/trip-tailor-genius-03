@@ -72,24 +72,46 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
         </Card>
 
         {/* Dashboard Tabs */}
-        <Tabs defaultValue="recommendations" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="recommendations">Mes Recommandations</TabsTrigger>
-            <TabsTrigger value="saved">Sauvegardées</TabsTrigger>
-            <TabsTrigger value="preferences">Préférences</TabsTrigger>
-            <TabsTrigger value="stats">Statistiques</TabsTrigger>
+        <Tabs defaultValue="recommendations" className="space-y-8">
+          <TabsList className="grid w-full grid-cols-4 bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg rounded-xl p-1">
+            <TabsTrigger 
+              value="recommendations" 
+              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              Mes Recommandations
+            </TabsTrigger>
+            <TabsTrigger 
+              value="saved"
+              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              Sauvegardées
+            </TabsTrigger>
+            <TabsTrigger 
+              value="preferences"
+              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              Préférences
+            </TabsTrigger>
+            <TabsTrigger 
+              value="stats"
+              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              Statistiques
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="recommendations" className="space-y-6">
-            <Card>
+          <TabsContent value="recommendations" className="space-y-8">
+            <Card className="bg-white/90 backdrop-blur-sm border border-white/30 shadow-xl">
               <CardHeader>
-                <CardTitle>Mes Recommandations Publiées</CardTitle>
+                <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Mes Recommandations Publiées</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Vous n'avez pas encore publié de recommandations.</p>
-                  <Button className="mt-4">
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
+                    <User className="h-10 w-10 text-purple-600" />
+                  </div>
+                  <p className="text-gray-600 text-lg mb-6">Vous n'avez pas encore publié de recommandations.</p>
+                  <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
                     Créer ma première recommandation
                   </Button>
                 </div>
@@ -97,16 +119,18 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="saved" className="space-y-6">
-            <Card>
+          <TabsContent value="saved" className="space-y-8">
+            <Card className="bg-white/90 backdrop-blur-sm border border-white/30 shadow-xl">
               <CardHeader>
-                <CardTitle>Expériences Sauvegardées</CardTitle>
+                <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Expériences Sauvegardées</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <Bookmark className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Aucune expérience sauvegardée pour le moment.</p>
-                  <Button className="mt-4">
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+                    <Bookmark className="h-10 w-10 text-blue-600" />
+                  </div>
+                  <p className="text-gray-600 text-lg mb-6">Aucune expérience sauvegardée pour le moment.</p>
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
                     Découvrir des expériences
                   </Button>
                 </div>
@@ -114,68 +138,96 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="preferences" className="space-y-6">
-            <Card>
+          <TabsContent value="preferences" className="space-y-8">
+            <Card className="bg-white/90 backdrop-blur-sm border border-white/30 shadow-xl">
               <CardHeader>
-                <CardTitle>Mes Préférences de Voyage</CardTitle>
+                <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Mes Préférences de Voyage</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="font-medium mb-3">Activités préférées</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {user.preferences.activities.length > 0 ? (
-                      user.preferences.activities.map((activity) => (
-                        <Badge key={activity} variant="secondary">
-                          {activity}
-                        </Badge>
-                      ))
-                    ) : (
-                      <p className="text-muted-foreground">Aucune préférence définie</p>
-                    )}
+              <CardContent className="space-y-8">
+                <div className="grid md:grid-cols-3 gap-8">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-lg text-gray-800 flex items-center gap-2">
+                      <Heart className="h-5 w-5 text-pink-500" />
+                      Activités préférées
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                      {user.preferences.activities.length > 0 ? (
+                        user.preferences.activities.map((activity) => (
+                          <Badge key={activity} className="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200 px-3 py-1">
+                            {activity}
+                          </Badge>
+                        ))
+                      ) : (
+                        <p className="text-gray-500 italic">Aucune préférence définie</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-lg text-gray-800 flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-yellow-500" />
+                      Budget préféré
+                    </h3>
+                    <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-700 border-yellow-200 px-4 py-2 text-base">
+                      {user.preferences.budget}
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-lg text-gray-800 flex items-center gap-2">
+                      <User className="h-5 w-5 text-blue-500" />
+                      Type de voyageur
+                    </h3>
+                    <Badge className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200 px-4 py-2 text-base">
+                      {user.preferences.travelerType}
+                    </Badge>
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="font-medium mb-3">Budget préféré</h3>
-                  <Badge variant="outline">{user.preferences.budget}</Badge>
+                <div className="pt-6 border-t border-gray-200">
+                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                    Modifier mes préférences
+                  </Button>
                 </div>
-
-                <div>
-                  <h3 className="font-medium mb-3">Type de voyageur</h3>
-                  <Badge variant="outline">{user.preferences.travelerType}</Badge>
-                </div>
-
-                <Button>Modifier mes préférences</Button>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="stats" className="space-y-6">
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card>
-                <CardHeader className="text-center">
-                  <CardTitle className="text-3xl text-primary">
+          <TabsContent value="stats" className="space-y-8">
+            <div className="grid md:grid-cols-3 gap-8">
+              <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border border-purple-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
+                    <Trophy className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                     {user.stats.recommendationsSubmitted}
                   </CardTitle>
-                  <p className="text-muted-foreground">Recommandations publiées</p>
+                  <p className="text-gray-600 font-medium">Recommandations publiées</p>
                 </CardHeader>
               </Card>
 
-              <Card>
-                <CardHeader className="text-center">
-                  <CardTitle className="text-3xl text-red-500">
+              <Card className="bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center shadow-lg">
+                    <Heart className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-4xl font-bold bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
                     {user.stats.totalLikes}
                   </CardTitle>
-                  <p className="text-muted-foreground">Likes reçus</p>
+                  <p className="text-gray-600 font-medium">Likes reçus</p>
                 </CardHeader>
               </Card>
 
-              <Card>
-                <CardHeader className="text-center">
-                  <CardTitle className="text-3xl text-blue-500">
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <CardHeader className="text-center pb-4">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                    <Bookmark className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
                     {user.stats.totalSaves}
                   </CardTitle>
-                  <p className="text-muted-foreground">Fois sauvegardé</p>
+                  <p className="text-gray-600 font-medium">Fois sauvegardé</p>
                 </CardHeader>
               </Card>
             </div>
