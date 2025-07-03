@@ -217,20 +217,20 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   if (!mapReady) {
     return (
-      <div className="h-full w-full bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-3xl flex items-center justify-center border border-border/30 backdrop-blur-sm">
+      <div className="h-full w-full bg-gradient-to-br from-purple-50/40 via-violet-50/30 to-pink-50/40 rounded-3xl flex items-center justify-center border border-purple-200/40 backdrop-blur-sm">
         <div className="text-center space-y-6">
           <div className="relative">
-            <div className="animate-spin rounded-full h-20 w-20 border-4 border-primary/20 border-t-primary mx-auto"></div>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-primary/20 to-secondary/20 animate-pulse"></div>
-            <MapPin className="absolute inset-0 m-auto w-8 h-8 text-primary animate-bounce" />
+            <div className="animate-spin rounded-full h-20 w-20 border-4 border-purple-300/30 border-t-purple-500 mx-auto"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-200/30 to-violet-200/30 animate-pulse"></div>
+            <MapPin className="absolute inset-0 m-auto w-8 h-8 text-purple-600 animate-bounce" />
           </div>
           <div className="space-y-3">
             <h3 className="text-xl font-bold text-foreground">Chargement de la carte interactive</h3>
             <p className="text-muted-foreground">Préparation de vos expériences personnalisées...</p>
             <div className="flex justify-center items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
             </div>
           </div>
         </div>
@@ -239,9 +239,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   }
 
   return (
-    <div className="h-full w-full relative rounded-3xl overflow-hidden border border-border/30 shadow-2xl bg-gradient-to-br from-background to-muted/20">
-      {/* Overlay artistique */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent via-50% to-secondary/5 pointer-events-none z-[1000] rounded-3xl" />
+    <div className="h-full w-full relative rounded-3xl overflow-hidden border border-purple-200/50 shadow-2xl bg-gradient-to-br from-purple-50/30 via-violet-50/20 to-pink-50/30">
+      {/* Overlay violet pâle artistique */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-100/20 via-transparent via-50% to-violet-100/15 pointer-events-none z-[1000] rounded-3xl" />
+      
       
       {/* Header moderne flottant */}
       <div className="absolute top-6 left-6 z-[1000] bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl px-6 py-3 shadow-xl">
@@ -284,25 +285,25 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       >
         <MapController center={center} />
         
-        {/* Couche de base avec style sombre */}
+        {/* Couche de base claire et vivante */}
         <TileLayer
           attribution='&copy; CartoDB'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-          opacity={0.7}
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          opacity={0.8}
         />
         
-        {/* Couche de couleur charismatique */}
+        {/* Couche de couleur violet pâle */}
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          opacity={0.6}
-          className="colorful-map-layer"
+          opacity={0.4}
+          className="purple-map-layer"
         />
         
-        {/* Couche d'accentuation */}
+        {/* Couche d'accentuation violette */}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          opacity={0.3}
-          className="accent-map-layer"
+          opacity={0.2}
+          className="violet-accent-layer"
         />
 
         <Marker position={userLocation} icon={createUserIcon()}>
@@ -426,28 +427,28 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       {/* Styles CSS avancés avec filtres charismatiques */}
       <style>{`
-        /* Filtres charismatiques pour les couches de carte */
-        .colorful-map-layer {
-          filter: hue-rotate(15deg) contrast(1.2) saturate(1.4) brightness(1.1) !important;
+        /* Filtres violet pâle vivant pour les couches de carte */
+        .purple-map-layer {
+          filter: hue-rotate(280deg) contrast(1.1) saturate(1.5) brightness(1.25) !important;
+          mix-blend-mode: soft-light !important;
+        }
+        
+        .violet-accent-layer {
+          filter: sepia(0.15) hue-rotate(270deg) saturate(1.7) brightness(1.35) contrast(1.05) !important;
           mix-blend-mode: overlay !important;
         }
         
-        .accent-map-layer {
-          filter: sepia(0.3) hue-rotate(200deg) saturate(1.6) brightness(0.9) !important;
-          mix-blend-mode: multiply !important;
-        }
-        
-        /* Animation d'éclat pour la carte */
+        /* Animation d'éclat violet pâle pour la carte */
         .leaflet-map-pane {
-          animation: map-glow 8s ease-in-out infinite alternate !important;
+          animation: violet-glow 6s ease-in-out infinite alternate !important;
         }
         
-        @keyframes map-glow {
+        @keyframes violet-glow {
           0% { 
-            filter: brightness(1) contrast(1) saturate(1.2); 
+            filter: brightness(1.15) contrast(1.05) saturate(1.5) hue-rotate(0deg); 
           }
           100% { 
-            filter: brightness(1.05) contrast(1.1) saturate(1.4); 
+            filter: brightness(1.25) contrast(1.08) saturate(1.7) hue-rotate(8deg); 
           }
         }
         
