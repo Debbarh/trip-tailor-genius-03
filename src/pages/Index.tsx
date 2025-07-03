@@ -85,7 +85,8 @@ const Index = () => {
       case 'profile':
         return (
           <ProfileMain 
-            onBack={handleBackToHome} 
+            onBack={handleBackToHome}
+            onModeSelect={handleModeSelect}
           />
         );
       case 'home':
