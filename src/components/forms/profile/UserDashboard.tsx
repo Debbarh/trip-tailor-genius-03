@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { UserProfile } from '@/types/recommendations';
 import CommercialPOIManager from './commercial/CommercialPOIManager';
+import EditProfileForm from './EditProfileForm';
 
 interface UserDashboardProps {
   user: UserProfile;
@@ -15,18 +16,40 @@ interface UserDashboardProps {
 }
 
 const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
-  const [view, setView] = useState<'dashboard' | 'commercial'>('dashboard');
+  const [view, setView] = useState<'dashboard' | 'commercial' | 'edit-profile'>('dashboard');
+  const [currentUser, setCurrentUser] = useState<UserProfile>(user);
 
   const handleCommercialPOI = () => {
     setView('commercial');
+  };
+
+  const handleEditProfile = () => {
+    setView('edit-profile');
   };
 
   const handleBackToDashboard = () => {
     setView('dashboard');
   };
 
+  const handleSaveProfile = (updatedUser: UserProfile) => {
+    setCurrentUser(updatedUser);
+    setView('dashboard');
+  };
+
   if (view === 'commercial') {
     return <CommercialPOIManager onBack={handleBackToDashboard} />;
+  }
+
+  if (view === 'edit-profile') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <EditProfileForm
+          user={currentUser}
+          onSave={handleSaveProfile}
+          onCancel={handleBackToDashboard}
+        />
+      </div>
+    );
   }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
@@ -51,34 +74,37 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
           <CardContent className="p-8">
             <div className="flex items-center gap-6">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={user.avatar} />
+                <AvatarImage src={currentUser.avatar} />
                 <AvatarFallback className="text-lg">
-                  {user.name.split(' ').map(n => n[0]).join('')}
+                  {currentUser.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
               
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-2">{user.name}</h2>
-                <p className="text-muted-foreground mb-4">{user.email}</p>
+                <h2 className="text-2xl font-bold mb-2">{currentUser.name}</h2>
+                <p className="text-muted-foreground mb-4">{currentUser.email}</p>
                 
                 <div className="flex gap-6 text-sm">
                   <div className="flex items-center gap-2">
                     <Trophy className="h-4 w-4 text-primary" />
-                    <span>{user.stats.recommendationsSubmitted} recommandations</span>
+                    <span>{currentUser.stats.recommendationsSubmitted} recommandations</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Heart className="h-4 w-4 text-red-500" />
-                    <span>{user.stats.totalLikes} likes reçus</span>
+                    <span>{currentUser.stats.totalLikes} likes reçus</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Bookmark className="h-4 w-4 text-blue-500" />
-                    <span>{user.stats.totalSaves} sauvegardes</span>
+                    <span>{currentUser.stats.totalSaves} sauvegardes</span>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <Button className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                <Button 
+                  onClick={handleEditProfile}
+                  className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                >
                   <Settings className="h-4 w-4" />
                   Modifier le profil
                 </Button>
@@ -203,8 +229,8 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                       Activités préférées
                     </h3>
                     <div className="flex flex-wrap gap-3">
-                      {user.preferences.activities.length > 0 ? (
-                        user.preferences.activities.map((activity) => (
+                      {currentUser.preferences.activities.length > 0 ? (
+                        currentUser.preferences.activities.map((activity) => (
                           <Badge key={activity} className="bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200 px-3 py-1">
                             {activity}
                           </Badge>
@@ -221,7 +247,7 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                       Budget préféré
                     </h3>
                     <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-700 border-yellow-200 px-4 py-2 text-base">
-                      {user.preferences.budget}
+                      {currentUser.preferences.budget}
                     </Badge>
                   </div>
 
@@ -231,13 +257,16 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                       Type de voyageur
                     </h3>
                     <Badge className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200 px-4 py-2 text-base">
-                      {user.preferences.travelerType}
+                      {currentUser.preferences.travelerType}
                     </Badge>
                   </div>
                 </div>
 
                 <div className="pt-6 border-t border-gray-200">
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Button 
+                    onClick={handleEditProfile}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
                     Modifier mes préférences
                   </Button>
                 </div>
@@ -253,7 +282,7 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                     <Trophy className="h-8 w-8 text-white" />
                   </div>
                   <CardTitle className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                    {user.stats.recommendationsSubmitted}
+                    {currentUser.stats.recommendationsSubmitted}
                   </CardTitle>
                   <p className="text-gray-600 font-medium">Recommandations publiées</p>
                 </CardHeader>
@@ -265,7 +294,7 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                     <Heart className="h-8 w-8 text-white" />
                   </div>
                   <CardTitle className="text-4xl font-bold bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
-                    {user.stats.totalLikes}
+                    {currentUser.stats.totalLikes}
                   </CardTitle>
                   <p className="text-gray-600 font-medium">Likes reçus</p>
                 </CardHeader>
@@ -277,7 +306,7 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                     <Bookmark className="h-8 w-8 text-white" />
                   </div>
                   <CardTitle className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-                    {user.stats.totalSaves}
+                    {currentUser.stats.totalSaves}
                   </CardTitle>
                   <p className="text-gray-600 font-medium">Fois sauvegardé</p>
                 </CardHeader>
