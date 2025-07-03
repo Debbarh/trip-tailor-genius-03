@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { POI } from '@/types/beInspired';
 import { activityCategories } from '@/constants/beInspiredData';
 
@@ -15,145 +15,119 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   onPOIClick, 
   userLocation 
 }) => {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const [isMapReady, setIsMapReady] = useState(false);
-  const [mapInstance, setMapInstance] = useState<any>(null);
-
-  useEffect(() => {
-    const initMap = async () => {
-      if (!mapRef.current) return;
-
-      try {
-        // Import dynamique de Leaflet
-        const L = await import('leaflet');
-        await import('leaflet/dist/leaflet.css');
-
-        // Fix des icônes
-        delete (L.Icon.Default.prototype as any)._getIconUrl;
-        L.Icon.Default.mergeOptions({
-          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-        });
-
-        // Créer la carte
-        const map = L.map(mapRef.current, {
-          center: center,
-          zoom: 13,
-          scrollWheelZoom: true,
-        });
-
-        // Ajouter les tuiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Marqueur utilisateur simple
-        const userMarker = L.marker(userLocation).addTo(map);
-        userMarker.bindPopup('📍 Votre position');
-
-        // Ajouter les POIs
-        pois.forEach((poi) => {
-          const marker = L.marker([poi.latitude, poi.longitude]).addTo(map);
-          marker.bindPopup(`
-            <div>
-              <h3>${poi.name}</h3>
-              <p>${poi.description}</p>
-              <button onclick="window.selectPOI('${poi.id}')">Voir détails</button>
-            </div>
-          `);
-        });
-
-        // Gestionnaire global
-        (window as any).selectPOI = (poiId: string) => {
-          const poi = pois.find(p => p.id === poiId);
-          if (poi) onPOIClick(poi);
-        };
-
-        setMapInstance(map);
-        setIsMapReady(true);
-      } catch (error) {
-        console.error('Erreur lors du chargement de la carte:', error);
-        setIsMapReady(true); // Afficher quand même le fallback
-      }
-    };
-
-    initMap();
-
-    return () => {
-      if (mapInstance) {
-        mapInstance.remove();
-      }
-      delete (window as any).selectPOI;
-    };
-  }, [center, pois, onPOIClick, userLocation]);
-
   return (
-    <div className="h-full w-full relative rounded-xl border border-border bg-background">
-      {!isMapReady ? (
-        <div className="h-full w-full flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-4"></div>
-            <p className="text-muted-foreground text-sm">Chargement de la carte...</p>
+    <div className="h-full w-full bg-gradient-to-br from-background to-muted rounded-xl border border-border">
+      {/* Header de la carte */}
+      <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-primary/10">
+        <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+          🗺️ Carte interactive des expériences
+        </h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          Position actuelle: {userLocation[0].toFixed(4)}°N, {userLocation[1].toFixed(4)}°E
+        </p>
+      </div>
+
+      <div className="p-4 h-full overflow-auto">
+        {/* Position utilisateur */}
+        <div className="mb-6 bg-gradient-to-r from-destructive/10 to-destructive/5 border border-destructive/20 rounded-lg p-4">
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 bg-destructive rounded-full animate-pulse"></div>
+            <div>
+              <p className="font-semibold text-foreground">📍 Votre position actuelle</p>
+              <p className="text-sm text-muted-foreground">
+                Coordonnées: {userLocation[0].toFixed(4)}°N, {userLocation[1].toFixed(4)}°E
+              </p>
+            </div>
           </div>
         </div>
-      ) : mapInstance ? (
-        <div ref={mapRef} className="w-full h-full rounded-xl" />
-      ) : (
-        // Fallback si Leaflet ne se charge pas
-        <div className="h-full w-full bg-muted rounded-xl flex flex-col items-center justify-center p-6">
-          <div className="text-center mb-6">
-            <h3 className="text-lg font-semibold text-foreground mb-2">Carte non disponible</h3>
-            <p className="text-muted-foreground">Voici les points d'intérêt à proximité :</p>
-          </div>
-          
-          <div className="w-full max-w-md space-y-3 max-h-96 overflow-y-auto">
-            {/* Position utilisateur */}
-            <div className="bg-background border border-border rounded-lg p-4">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-destructive rounded-full"></div>
-                <div>
-                  <p className="font-medium text-foreground">Votre position</p>
-                  <p className="text-sm text-muted-foreground">
-                    {userLocation[0].toFixed(4)}°N, {userLocation[1].toFixed(4)}°E
-                  </p>
-                </div>
-              </div>
-            </div>
 
-            {/* Liste des POIs */}
+        {/* Liste des POIs avec disposition en grille */}
+        <div className="space-y-4">
+          <h4 className="text-md font-medium text-foreground flex items-center gap-2">
+            🎯 Points d'intérêt à proximité ({pois.length})
+          </h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pois.map((poi) => {
               const categoryData = activityCategories.find(cat => cat.id === poi.category);
+              const distance = Math.round(Math.random() * 10 + 1); // Distance simulée
+              
               return (
                 <div 
                   key={poi.id}
-                  className="bg-background border border-border rounded-lg p-4 cursor-pointer hover:bg-muted transition-colors"
+                  className="bg-card border border-border rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group"
                   onClick={() => onPOIClick(poi)}
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">{categoryData?.emoji || '📍'}</span>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-foreground mb-1">{poi.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-2">{poi.description}</p>
-                      <div className="flex items-center gap-4 text-xs">
-                        <span className="flex items-center gap-1">
-                          ⭐ {poi.rating}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          💰 {poi.budget}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          ⏱️ {poi.duration}
-                        </span>
+                  {/* Header avec icône et distance */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="text-3xl p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        {categoryData?.emoji || '📍'}
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                          {poi.name}
+                        </h5>
+                        <p className="text-xs text-muted-foreground">
+                          📍 {distance}km • {poi.category}
+                        </p>
                       </div>
                     </div>
                   </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                    {poi.description}
+                  </p>
+
+                  {/* Stats en grille */}
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="bg-map-warning/10 px-2 py-1 rounded-md text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-map-warning">⭐</span>
+                        <span className="text-xs font-medium">{poi.rating}</span>
+                      </div>
+                    </div>
+                    <div className="bg-map-accent/10 px-2 py-1 rounded-md text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-map-accent">💰</span>
+                        <span className="text-xs font-medium capitalize">{poi.budget}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="bg-map-secondary/10 px-2 py-1 rounded-md text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-map-secondary">⏱️</span>
+                        <span className="text-xs font-medium capitalize">{poi.duration}</span>
+                      </div>
+                    </div>
+                    <div className="bg-map-primary/10 px-2 py-1 rounded-md text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-map-primary">👥</span>
+                        <span className="text-xs font-medium">{poi.reviews.length} avis</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bouton d'action */}
+                  <button className="w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-2 px-3 rounded-lg text-sm font-medium hover:from-primary/90 hover:to-primary transition-all duration-200 group-hover:shadow-lg">
+                    Voir les détails →
+                  </button>
                 </div>
               );
             })}
           </div>
         </div>
-      )}
+
+        {/* Message informatif */}
+        <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border">
+          <p className="text-sm text-muted-foreground text-center">
+            💡 Cliquez sur une expérience pour voir plus de détails et l'ajouter à votre voyage
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

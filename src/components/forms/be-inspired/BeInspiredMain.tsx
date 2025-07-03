@@ -28,17 +28,24 @@ const BeInspiredMain = ({ onBack }: BeInspiredMainProps) => {
   });
   const [filteredPOIs, setFilteredPOIs] = useState<POI[]>(samplePOIs);
 
-  // Demander la géolocalisation de l'utilisateur
+  // Utiliser des coordonnées par défaut (Paris)
   useEffect(() => {
+    // Essayer la géolocalisation rapidement, sinon utiliser Paris
     if (navigator.geolocation) {
+      const timeoutId = setTimeout(() => {
+        console.log('Géolocalisation timeout - utilisation de Paris par défaut');
+      }, 2000);
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          clearTimeout(timeoutId);
           setUserLocation([position.coords.latitude, position.coords.longitude]);
         },
         (error) => {
-          console.log('Géolocalisation non disponible:', error);
-          // Garder Paris comme position par défaut
-        }
+          clearTimeout(timeoutId);
+          console.log('Géolocalisation refusée - utilisation de Paris par défaut:', error);
+        },
+        { timeout: 2000 }
       );
     }
   }, []);
