@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ArrowLeft, User, Settings, Heart, Bookmark, Trophy } from 'lucide-react';
+import { ArrowLeft, User, Settings, Heart, Bookmark, Trophy, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { UserProfile } from '@/types/recommendations';
+import CommercialPOIManager from './commercial/CommercialPOIManager';
 
 interface UserDashboardProps {
   user: UserProfile;
@@ -14,6 +15,19 @@ interface UserDashboardProps {
 }
 
 const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
+  const [view, setView] = useState<'dashboard' | 'commercial'>('dashboard');
+
+  const handleCommercialPOI = () => {
+    setView('commercial');
+  };
+
+  const handleBackToDashboard = () => {
+    setView('dashboard');
+  };
+
+  if (view === 'commercial') {
+    return <CommercialPOIManager onBack={handleBackToDashboard} />;
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="max-w-6xl mx-auto p-4">
@@ -63,17 +77,27 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                 </div>
               </div>
 
-              <Button className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
-                <Settings className="h-4 w-4" />
-                Modifier le profil
-              </Button>
+              <div className="flex gap-4">
+                <Button className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Settings className="h-4 w-4" />
+                  Modifier le profil
+                </Button>
+                
+                <Button 
+                  onClick={handleCommercialPOI}
+                  className="gap-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Store className="h-4 w-4" />
+                  Mes Points d'Intérêt
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Dashboard Tabs */}
         <Tabs defaultValue="recommendations" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-4 bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg rounded-xl p-1">
+          <TabsList className="grid w-full grid-cols-5 bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg rounded-xl p-1">
             <TabsTrigger 
               value="recommendations" 
               className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
@@ -87,6 +111,12 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
               Sauvegardées
             </TabsTrigger>
             <TabsTrigger 
+              value="commercial"
+              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+            >
+              Points d'Intérêt
+            </TabsTrigger>
+            <TabsTrigger 
               value="preferences"
               className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
@@ -94,7 +124,7 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
             </TabsTrigger>
             <TabsTrigger 
               value="stats"
-              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
+              className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-600 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
             >
               Statistiques
             </TabsTrigger>
@@ -132,6 +162,28 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                   <p className="text-gray-600 text-lg mb-6">Aucune expérience sauvegardée pour le moment.</p>
                   <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
                     Découvrir des expériences
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="commercial" className="space-y-8">
+            <Card className="bg-white/90 backdrop-blur-sm border border-white/30 shadow-xl">
+              <CardHeader>
+                <CardTitle className="text-2xl bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">Mes Points d'Intérêt Commerciaux</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                    <Store className="h-10 w-10 text-green-600" />
+                  </div>
+                  <p className="text-gray-600 text-lg mb-6">Vous n'avez pas encore créé de points d'intérêt commerciaux.</p>
+                  <Button 
+                    onClick={handleCommercialPOI}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    Créer mon premier point d'intérêt
                   </Button>
                 </div>
               </CardContent>
