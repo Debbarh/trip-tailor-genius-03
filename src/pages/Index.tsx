@@ -70,7 +70,8 @@ const Index = () => {
       case 'be-inspired':
         return (
           <BeInspiredMain 
-            onBack={handleBackToHome} 
+            onBack={handleBackToHome}
+            onModeSelect={handleModeSelect}
           />
         );
       case 'recommendations':
