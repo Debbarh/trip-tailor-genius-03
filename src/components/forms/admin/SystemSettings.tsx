@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Cog, Database, Shield, Plus, Edit, Trash2, Globe, MapPin } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { countriesData, Country } from '@/data/countries';
 
 const SystemSettings = () => {
@@ -17,6 +18,16 @@ const SystemSettings = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Cities management state
+  const [selectedCity, setSelectedCity] = useState<{ name: string; countryId: string; country: string } | null>(null);
+  const [isAddCityDialogOpen, setIsAddCityDialogOpen] = useState(false);
+  const [isEditCityDialogOpen, setIsEditCityDialogOpen] = useState(false);
+  const [citySearchTerm, setCitySearchTerm] = useState('');
+  const [newCityData, setNewCityData] = useState({
+    name: '',
+    countryId: ''
+  });
 
   const [newCountry, setNewCountry] = useState({
     name: '',
@@ -31,6 +42,28 @@ const SystemSettings = () => {
   const filteredCountries = countries.filter(country =>
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     country.region.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Cities data management
+  const allCities = useMemo(() => {
+    const cities: { name: string; countryId: string; country: string }[] = [];
+    countries.forEach(country => {
+      if (country.cities) {
+        country.cities.forEach(city => {
+          cities.push({
+            name: city,
+            countryId: country.id,
+            country: country.name
+          });
+        });
+      }
+    });
+    return cities;
+  }, [countries]);
+
+  const filteredCities = allCities.filter(city =>
+    city.name.toLowerCase().includes(citySearchTerm.toLowerCase()) ||
+    city.country.toLowerCase().includes(citySearchTerm.toLowerCase())
   );
 
   const handleAddCountry = () => {
@@ -97,6 +130,44 @@ const SystemSettings = () => {
         cities: selectedCountry.cities?.filter((_, i) => i !== index) || []
       });
     }
+  };
+
+  // Cities CRUD functions
+  const handleAddCity = () => {
+    if (newCityData.name && newCityData.countryId) {
+      setCountries(countries.map(country => 
+        country.id === newCityData.countryId 
+          ? { ...country, cities: [...(country.cities || []), newCityData.name] }
+          : country
+      ));
+      setNewCityData({ name: '', countryId: '' });
+      setIsAddCityDialogOpen(false);
+    }
+  };
+
+  const handleEditCity = () => {
+    if (selectedCity && newCityData.name) {
+      setCountries(countries.map(country => {
+        if (country.id === selectedCity.countryId) {
+          const updatedCities = country.cities?.map(city => 
+            city === selectedCity.name ? newCityData.name : city
+          ) || [];
+          return { ...country, cities: updatedCities };
+        }
+        return country;
+      }));
+      setSelectedCity(null);
+      setNewCityData({ name: '', countryId: '' });
+      setIsEditCityDialogOpen(false);
+    }
+  };
+
+  const handleDeleteCity = (cityName: string, countryId: string) => {
+    setCountries(countries.map(country => 
+      country.id === countryId 
+        ? { ...country, cities: country.cities?.filter(city => city !== cityName) || [] }
+        : country
+    ));
   };
 
   const CountryForm = ({ country, isEdit = false }: { country: any, isEdit?: boolean }) => (
@@ -208,8 +279,9 @@ const SystemSettings = () => {
       </div>
 
       <Tabs defaultValue="countries" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="countries">Pays & Villes</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="countries">Pays</TabsTrigger>
+          <TabsTrigger value="cities">Villes</TabsTrigger>
           <TabsTrigger value="system">Configuration</TabsTrigger>
           <TabsTrigger value="security">Sécurité</TabsTrigger>
         </TabsList>
@@ -220,7 +292,7 @@ const SystemSettings = () => {
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="h-5 w-5" />
-                  Gestion des Pays et Villes
+                  Gestion des Pays
                 </CardTitle>
                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                   <DialogTrigger asChild>
@@ -323,6 +395,180 @@ const SystemSettings = () => {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDeleteCountry(country.id)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="cities">
+          <Card className="bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Gestion des Villes
+                </CardTitle>
+                <Dialog open={isAddCityDialogOpen} onOpenChange={setIsAddCityDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Ajouter une ville
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Ajouter une nouvelle ville</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="cityName">Nom de la ville</Label>
+                        <Input
+                          id="cityName"
+                          value={newCityData.name}
+                          onChange={(e) => setNewCityData({...newCityData, name: e.target.value})}
+                          placeholder="Paris"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="countrySelect">Pays</Label>
+                        <Select 
+                          value={newCityData.countryId} 
+                          onValueChange={(value) => setNewCityData({...newCityData, countryId: value})}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner un pays" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {countries.map((country) => (
+                              <SelectItem key={country.id} value={country.id}>
+                                <div className="flex items-center gap-2">
+                                  <span>{country.flagCode}</span>
+                                  {country.name}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setIsAddCityDialogOpen(false)}>
+                        Annuler
+                      </Button>
+                      <Button onClick={handleAddCity}>
+                        Ajouter
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <Input
+                  placeholder="Rechercher une ville ou un pays..."
+                  value={citySearchTerm}
+                  onChange={(e) => setCitySearchTerm(e.target.value)}
+                  className="max-w-md"
+                />
+                <Badge variant="outline">{filteredCities.length} villes</Badge>
+              </div>
+            </CardHeader>
+            
+            <CardContent>
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Ville</TableHead>
+                      <TableHead>Pays</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredCities.map((city, index) => (
+                      <TableRow key={`${city.countryId}-${city.name}-${index}`}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-muted-foreground" />
+                            {city.name}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm">
+                              {countries.find(c => c.id === city.countryId)?.flagCode}
+                            </span>
+                            {city.country}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Dialog 
+                              open={isEditCityDialogOpen && selectedCity?.name === city.name && selectedCity?.countryId === city.countryId} 
+                              onOpenChange={setIsEditCityDialogOpen}
+                            >
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedCity(city);
+                                    setNewCityData({ name: city.name, countryId: city.countryId });
+                                  }}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-md">
+                                <DialogHeader>
+                                  <DialogTitle>Modifier {selectedCity?.name}</DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-4">
+                                  <div>
+                                    <Label htmlFor="editCityName">Nom de la ville</Label>
+                                    <Input
+                                      id="editCityName"
+                                      value={newCityData.name}
+                                      onChange={(e) => setNewCityData({...newCityData, name: e.target.value})}
+                                      placeholder="Paris"
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label>Pays actuel</Label>
+                                    <div className="flex items-center gap-2 p-2 border rounded">
+                                      <span>{countries.find(c => c.id === selectedCity?.countryId)?.flagCode}</span>
+                                      {selectedCity?.country}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="outline" onClick={() => {
+                                    setIsEditCityDialogOpen(false);
+                                    setSelectedCity(null);
+                                  }}>
+                                    Annuler
+                                  </Button>
+                                  <Button onClick={handleEditCity}>
+                                    Sauvegarder
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                            
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteCity(city.name, city.countryId)}
                               className="text-red-600 hover:text-red-700"
                             >
                               <Trash2 className="h-4 w-4" />
