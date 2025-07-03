@@ -217,21 +217,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
   if (!mapReady) {
     return (
-      <div className="h-full w-full bg-gradient-to-br from-purple-50/40 via-violet-50/30 to-pink-50/40 rounded-3xl flex items-center justify-center border border-purple-200/40 backdrop-blur-sm">
-        <div className="text-center space-y-6">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-20 w-20 border-4 border-purple-300/30 border-t-purple-500 mx-auto"></div>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-200/30 to-violet-200/30 animate-pulse"></div>
-            <MapPin className="absolute inset-0 m-auto w-8 h-8 text-purple-600 animate-bounce" />
-          </div>
-          <div className="space-y-3">
-            <h3 className="text-xl font-bold text-foreground">Chargement de la carte interactive</h3>
-            <p className="text-muted-foreground">Préparation de vos expériences personnalisées...</p>
-            <div className="flex justify-center items-center gap-2">
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-              <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-            </div>
+      <div className="h-full w-full bg-neutral-50 rounded-3xl flex items-center justify-center border border-neutral-200/60">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-3 border-neutral-300 border-t-neutral-600 mx-auto"></div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-medium text-neutral-700">Chargement de la carte</h3>
+            <p className="text-neutral-500 text-sm">Préparation en cours...</p>
           </div>
         </div>
       </div>
@@ -239,39 +230,20 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   }
 
   return (
-    <div className="h-full w-full relative rounded-3xl overflow-hidden border border-purple-200/50 shadow-2xl bg-gradient-to-br from-purple-50/30 via-violet-50/20 to-pink-50/30">
-      {/* Overlay violet pâle artistique */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-100/20 via-transparent via-50% to-violet-100/15 pointer-events-none z-[1000] rounded-3xl" />
-      
-      
-      {/* Header moderne flottant */}
-      <div className="absolute top-6 left-6 z-[1000] bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl px-6 py-3 shadow-xl">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Navigation className="w-5 h-5 text-primary" />
-            <div className="absolute -inset-1 bg-primary/20 rounded-full animate-ping"></div>
-          </div>
-          <div>
-            <span className="font-bold text-foreground">Carte Interactive</span>
-            <div className="flex items-center gap-1 mt-1">
-              <Zap className="w-3 h-3 text-secondary" />
-              <span className="text-xs text-muted-foreground">Temps réel</span>
-            </div>
-          </div>
+    <div className="h-full w-full relative rounded-3xl overflow-hidden border border-neutral-200/60 shadow-lg bg-neutral-50">
+      {/* Header minimaliste */}
+      <div className="absolute top-4 left-4 z-[1000] bg-white/90 backdrop-blur-sm border border-neutral-200/60 rounded-xl px-4 py-2 shadow-md">
+        <div className="flex items-center gap-2">
+          <Navigation className="w-4 h-4 text-neutral-600" />
+          <span className="font-medium text-neutral-700 text-sm">Carte Interactive</span>
         </div>
       </div>
 
-      {/* Compteur stylisé */}
-      <div className="absolute top-6 right-6 z-[1000] bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl px-6 py-3 shadow-xl">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-3 h-3 bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse"></div>
-            <div className="absolute inset-0 w-3 h-3 bg-primary/30 rounded-full animate-ping"></div>
-          </div>
-          <div>
-            <span className="font-bold text-lg text-foreground">{pois.length}</span>
-            <p className="text-xs text-muted-foreground">expériences uniques</p>
-          </div>
+      {/* Compteur minimaliste */}
+      <div className="absolute top-4 right-4 z-[1000] bg-white/90 backdrop-blur-sm border border-neutral-200/60 rounded-xl px-4 py-2 shadow-md">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-neutral-400 rounded-full"></div>
+          <span className="font-medium text-neutral-700 text-sm">{pois.length} lieux</span>
         </div>
       </div>
 
@@ -285,18 +257,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       >
         <MapController center={center} />
         
-        {/* Couche de base équilibrée */}
+        {/* Style minimaliste beige/gris comme charge-and-fetch-go */}
         <TileLayer
-          attribution='&copy; OpenStreetMap'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          opacity={0.9}
-        />
-        
-        {/* Couche de couleur violet pâle subtile */}
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          opacity={0.15}
-          className="purple-overlay-layer"
+          attribution='&copy; CartoDB'
+          url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+          opacity={1.0}
+          className="minimal-base-layer"
         />
 
         <Marker position={userLocation} icon={createUserIcon()}>
@@ -418,26 +384,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         ))}
       </MapContainer>
 
-      {/* Styles CSS avancés avec filtres charismatiques */}
+      {/* Styles CSS minimalistes comme charge-and-fetch-go */}
       <style>{`
-        /* Filtre violet pâle subtil pour la couche overlay */
-        .purple-overlay-layer {
-          filter: hue-rotate(280deg) contrast(1.05) saturate(1.3) brightness(0.95) !important;
-          mix-blend-mode: soft-light !important;
+        /* Style minimaliste beige/gris pour la couche de base */
+        .minimal-base-layer {
+          filter: contrast(1.1) saturate(0.8) brightness(0.98) hue-rotate(20deg) !important;
         }
         
-        /* Animation d'éclat violet subtil pour la carte */
+        /* Pas d'animation pour un style plus épuré */
         .leaflet-map-pane {
-          animation: subtle-violet-glow 8s ease-in-out infinite alternate !important;
-        }
-        
-        @keyframes subtle-violet-glow {
-          0% { 
-            filter: brightness(1) contrast(1.02) saturate(1.1) hue-rotate(0deg); 
-          }
-          100% { 
-            filter: brightness(1.05) contrast(1.05) saturate(1.2) hue-rotate(3deg); 
-          }
+          filter: brightness(1.02) contrast(1.05) saturate(0.9) !important;
         }
         
         /* Effet de profondeur pour les marqueurs */
