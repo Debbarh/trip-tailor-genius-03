@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Plane } from "lucide-react";
+import { ArrowRight, Plane, Lightbulb } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Destination {
@@ -12,7 +12,7 @@ interface Destination {
 interface HeroSectionProps {
   destinations: Destination[];
   currentDestination: number;
-  onModeSelect: (mode: 'plan') => void;
+  onModeSelect: (mode: 'plan' | 'be-inspired') => void;
 }
 
 const HeroSection = ({ destinations, currentDestination, onModeSelect }: HeroSectionProps) => {
@@ -41,14 +41,23 @@ const HeroSection = ({ destinations, currentDestination, onModeSelect }: HeroSec
           </p>
         </div>
 
-        {/* CTA Button */}
-        <div className="flex justify-center mb-24">
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-6 mb-24">
           <Button 
             onClick={() => onModeSelect('plan')}
             className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-purple-500/25 border-0"
           >
             <Plane className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
             Planifier mon voyage
+            <ArrowRight className="w-6 h-6 ml-4 group-hover:translate-x-2 transition-transform duration-300" />
+          </Button>
+          
+          <Button 
+            onClick={() => onModeSelect('be-inspired')}
+            className="group bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-blue-500/25 border-0"
+          >
+            <Lightbulb className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
+            Be Inspired
             <ArrowRight className="w-6 h-6 ml-4 group-hover:translate-x-2 transition-transform duration-300" />
           </Button>
         </div>

@@ -8,7 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import MobileNavigationMenu from "./MobileNavigationMenu";
 
 interface HomeNavigationProps {
-  onModeSelect?: (mode: 'plan') => void;
+  onModeSelect?: (mode: 'plan' | 'be-inspired') => void;
 }
 
 const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
@@ -37,6 +37,13 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
             className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
           >
             Planifier un voyage
+          </Button>
+          <Button 
+            onClick={() => onModeSelect?.('be-inspired')}
+            variant="ghost"
+            className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+          >
+            Be Inspired
           </Button>
           <LanguageSelector />
         </div>

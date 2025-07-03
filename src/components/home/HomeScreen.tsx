@@ -12,7 +12,7 @@ import FloatingElements from "./FloatingElements";
 import Footer from "./Footer";
 
 interface HomeScreenProps {
-  onModeSelect: (mode: 'plan') => void;
+  onModeSelect: (mode: 'plan' | 'be-inspired') => void;
 }
 
 const HomeScreen = ({ onModeSelect }: HomeScreenProps) => {

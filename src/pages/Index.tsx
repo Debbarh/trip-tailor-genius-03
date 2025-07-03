@@ -3,8 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import PlanTripSteps from "@/components/forms/plan-trip/steps/PlanTripSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import HomeScreen from "@/components/home/HomeScreen";
+import BeInspiredMain from "@/components/forms/be-inspired/BeInspiredMain";
 
-type Mode = 'home' | 'plan' | 'itinerary';
+type Mode = 'home' | 'plan' | 'itinerary' | 'be-inspired';
 
 interface PlanTripFormData {
   mode: 'plan';
@@ -26,12 +27,16 @@ const Index = () => {
     if (modeParam === 'plan') {
       setMode('plan');
       setTripData(createInitialTripData());
+    } else if (modeParam === 'be-inspired') {
+      setMode('be-inspired');
     }
   }, [searchParams]);
 
-  const handleModeSelect = (selectedMode: 'plan') => {
+  const handleModeSelect = (selectedMode: 'plan' | 'be-inspired') => {
     setMode(selectedMode);
-    setTripData(createInitialTripData());
+    if (selectedMode === 'plan') {
+      setTripData(createInitialTripData());
+    }
   };
 
   const handleFormComplete = (data: PlanTripFormData) => {
@@ -57,6 +62,12 @@ const Index = () => {
         return (
           <PlanTripSteps 
             onComplete={handleFormComplete} 
+            onBack={handleBackToHome} 
+          />
+        );
+      case 'be-inspired':
+        return (
+          <BeInspiredMain 
             onBack={handleBackToHome} 
           />
         );
