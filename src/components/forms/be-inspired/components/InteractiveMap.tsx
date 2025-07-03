@@ -285,25 +285,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       >
         <MapController center={center} />
         
-        {/* Couche de base claire et vivante */}
+        {/* Couche de base équilibrée */}
         <TileLayer
-          attribution='&copy; CartoDB'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          opacity={0.8}
+          attribution='&copy; OpenStreetMap'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          opacity={0.9}
         />
         
-        {/* Couche de couleur violet pâle */}
+        {/* Couche de couleur violet pâle subtile */}
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          opacity={0.4}
-          className="purple-map-layer"
-        />
-        
-        {/* Couche d'accentuation violette */}
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          opacity={0.2}
-          className="violet-accent-layer"
+          opacity={0.15}
+          className="purple-overlay-layer"
         />
 
         <Marker position={userLocation} icon={createUserIcon()}>
@@ -427,28 +420,23 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
 
       {/* Styles CSS avancés avec filtres charismatiques */}
       <style>{`
-        /* Filtres violet pâle vivant pour les couches de carte */
-        .purple-map-layer {
-          filter: hue-rotate(280deg) contrast(1.1) saturate(1.5) brightness(1.25) !important;
+        /* Filtre violet pâle subtil pour la couche overlay */
+        .purple-overlay-layer {
+          filter: hue-rotate(280deg) contrast(1.05) saturate(1.3) brightness(0.95) !important;
           mix-blend-mode: soft-light !important;
         }
         
-        .violet-accent-layer {
-          filter: sepia(0.15) hue-rotate(270deg) saturate(1.7) brightness(1.35) contrast(1.05) !important;
-          mix-blend-mode: overlay !important;
-        }
-        
-        /* Animation d'éclat violet pâle pour la carte */
+        /* Animation d'éclat violet subtil pour la carte */
         .leaflet-map-pane {
-          animation: violet-glow 6s ease-in-out infinite alternate !important;
+          animation: subtle-violet-glow 8s ease-in-out infinite alternate !important;
         }
         
-        @keyframes violet-glow {
+        @keyframes subtle-violet-glow {
           0% { 
-            filter: brightness(1.15) contrast(1.05) saturate(1.5) hue-rotate(0deg); 
+            filter: brightness(1) contrast(1.02) saturate(1.1) hue-rotate(0deg); 
           }
           100% { 
-            filter: brightness(1.25) contrast(1.08) saturate(1.7) hue-rotate(8deg); 
+            filter: brightness(1.05) contrast(1.05) saturate(1.2) hue-rotate(3deg); 
           }
         }
         
