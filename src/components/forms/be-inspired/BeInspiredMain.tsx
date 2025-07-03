@@ -87,39 +87,24 @@ const BeInspiredMain = ({ onBack }: BeInspiredMainProps) => {
 
     // Filtrer par activités
     if (filters.activities.length > 0) {
+      console.log('🎯 Filtrage par activités:', filters.activities);
       filtered = filtered.filter(poi => 
         filters.activities.includes(poi.category)
       );
     }
 
-    // Filtrer par budget
-    if (filters.budget) {
-      filtered = filtered.filter(poi => poi.budget === filters.budget);
-    }
-
-    // Filtrer par durée
-    if (filters.duration) {
-      filtered = filtered.filter(poi => poi.duration === filters.duration);
-    }
-
     // Filtrer par segment de voyageur
     if (filters.travelerSegment.type) {
+      console.log('👥 Filtrage par segment:', filters.travelerSegment.type);
       filtered = filtered.filter(poi => 
         poi.travelerSegment.includes(filters.travelerSegment.type)
-      );
-    }
-
-    // Filtrer par type d'hébergement
-    if (filters.accommodationType.length > 0) {
-      filtered = filtered.filter(poi => 
-        poi.accommodationType && 
-        poi.accommodationType.some(type => filters.accommodationType.includes(type))
       );
     }
 
     // Trier par distance (les plus proches en premier)
     filtered.sort((a, b) => a.distance - b.distance);
 
+    console.log('📊 Résultat final:', filtered.length, 'POIs trouvés');
     setFilteredPOIs(filtered);
   }, [filters, userLocation]);
 
