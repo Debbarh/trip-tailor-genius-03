@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Cog, Database, Shield, Plus, Edit, Trash2, Globe, MapPin } from 'lucide-react';
+import { Cog, Database, Shield, Plus, Edit, Trash2, Globe, MapPin, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { countriesData, Country } from '@/data/countries';
+import { travelSegments } from '@/constants/stepConfigs';
 
 const SystemSettings = () => {
   const [countries, setCountries] = useState<Country[]>(countriesData);
@@ -27,6 +28,26 @@ const SystemSettings = () => {
   const [newCityData, setNewCityData] = useState({
     name: '',
     countryId: ''
+  });
+
+  // Travel segments management state
+  const [segments, setSegments] = useState(travelSegments);
+  const [selectedSegment, setSelectedSegment] = useState<any>(null);
+  const [isAddSegmentDialogOpen, setIsAddSegmentDialogOpen] = useState(false);
+  const [isEditSegmentDialogOpen, setIsEditSegmentDialogOpen] = useState(false);
+  const [segmentSearchTerm, setSegmentSearchTerm] = useState('');
+  const [newSegmentData, setNewSegmentData] = useState({
+    id: '',
+    name: '',
+    desc: '',
+    emoji: '',
+    subSegments: [] as any[]
+  });
+  const [newSubSegment, setNewSubSegment] = useState({
+    id: '',
+    name: '',
+    desc: '',
+    emoji: ''
   });
 
   const [newCountry, setNewCountry] = useState({
@@ -65,6 +86,78 @@ const SystemSettings = () => {
     city.name.toLowerCase().includes(citySearchTerm.toLowerCase()) ||
     city.country.toLowerCase().includes(citySearchTerm.toLowerCase())
   );
+
+  // Travel segments data management
+  const filteredSegments = segments.filter(segment =>
+    segment.name.toLowerCase().includes(segmentSearchTerm.toLowerCase()) ||
+    segment.desc.toLowerCase().includes(segmentSearchTerm.toLowerCase())
+  );
+
+  // Travel segments CRUD functions
+  const handleAddSegment = () => {
+    if (newSegmentData.id && newSegmentData.name && newSegmentData.desc && newSegmentData.emoji) {
+      const segment = {
+        id: newSegmentData.id,
+        name: newSegmentData.name,
+        desc: newSegmentData.desc,
+        emoji: newSegmentData.emoji,
+        subSegments: newSegmentData.subSegments
+      };
+      setSegments([...segments, segment]);
+      setNewSegmentData({ id: '', name: '', desc: '', emoji: '', subSegments: [] });
+      setIsAddSegmentDialogOpen(false);
+    }
+  };
+
+  const handleEditSegment = () => {
+    if (selectedSegment) {
+      setSegments(segments.map(s => 
+        s.id === selectedSegment.id ? selectedSegment : s
+      ));
+      setIsEditSegmentDialogOpen(false);
+      setSelectedSegment(null);
+    }
+  };
+
+  const handleDeleteSegment = (id: string) => {
+    setSegments(segments.filter(s => s.id !== id));
+  };
+
+  const addSubSegmentToNew = () => {
+    if (newSubSegment.id && newSubSegment.name && newSubSegment.desc && newSubSegment.emoji) {
+      setNewSegmentData({
+        ...newSegmentData,
+        subSegments: [...newSegmentData.subSegments, { ...newSubSegment }]
+      });
+      setNewSubSegment({ id: '', name: '', desc: '', emoji: '' });
+    }
+  };
+
+  const removeSubSegmentFromNew = (index: number) => {
+    setNewSegmentData({
+      ...newSegmentData,
+      subSegments: newSegmentData.subSegments.filter((_, i) => i !== index)
+    });
+  };
+
+  const addSubSegmentToSelected = () => {
+    if (newSubSegment.id && newSubSegment.name && newSubSegment.desc && newSubSegment.emoji && selectedSegment) {
+      setSelectedSegment({
+        ...selectedSegment,
+        subSegments: [...(selectedSegment.subSegments || []), { ...newSubSegment }]
+      });
+      setNewSubSegment({ id: '', name: '', desc: '', emoji: '' });
+    }
+  };
+
+  const removeSubSegmentFromSelected = (index: number) => {
+    if (selectedSegment) {
+      setSelectedSegment({
+        ...selectedSegment,
+        subSegments: selectedSegment.subSegments?.filter((_, i) => i !== index) || []
+      });
+    }
+  };
 
   const handleAddCountry = () => {
     if (newCountry.name && newCountry.code && newCountry.flagCode && newCountry.region) {
@@ -279,9 +372,10 @@ const SystemSettings = () => {
       </div>
 
       <Tabs defaultValue="countries" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="countries">Pays</TabsTrigger>
           <TabsTrigger value="cities">Villes</TabsTrigger>
+          <TabsTrigger value="travel-segments">Profils Voyage</TabsTrigger>
           <TabsTrigger value="system">Configuration</TabsTrigger>
           <TabsTrigger value="security">Sécurité</TabsTrigger>
         </TabsList>
@@ -569,6 +663,324 @@ const SystemSettings = () => {
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDeleteCity(city.name, city.countryId)}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="travel-segments">
+          <Card className="bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Profils de Voyage
+                </CardTitle>
+                <Dialog open={isAddSegmentDialogOpen} onOpenChange={setIsAddSegmentDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="gap-2">
+                      <Plus className="h-4 w-4" />
+                      Ajouter un profil
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Ajouter un nouveau profil de voyage</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="segmentId">ID du profil</Label>
+                          <Input
+                            id="segmentId"
+                            value={newSegmentData.id}
+                            onChange={(e) => setNewSegmentData({...newSegmentData, id: e.target.value})}
+                            placeholder="solo"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="segmentEmoji">Emoji</Label>
+                          <Input
+                            id="segmentEmoji"
+                            value={newSegmentData.emoji}
+                            onChange={(e) => setNewSegmentData({...newSegmentData, emoji: e.target.value})}
+                            placeholder="🧳"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="segmentName">Nom du profil</Label>
+                        <Input
+                          id="segmentName"
+                          value={newSegmentData.name}
+                          onChange={(e) => setNewSegmentData({...newSegmentData, name: e.target.value})}
+                          placeholder="En solo"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="segmentDesc">Description</Label>
+                        <Textarea
+                          id="segmentDesc"
+                          value={newSegmentData.desc}
+                          onChange={(e) => setNewSegmentData({...newSegmentData, desc: e.target.value})}
+                          placeholder="Voyage en solitaire pour une expérience personnelle"
+                          rows={2}
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Sous-profils</Label>
+                        <div className="space-y-3">
+                          <div className="border rounded-lg p-4 space-y-3">
+                            <div className="grid grid-cols-2 gap-2">
+                              <Input
+                                value={newSubSegment.id}
+                                onChange={(e) => setNewSubSegment({...newSubSegment, id: e.target.value})}
+                                placeholder="ID sous-profil"
+                              />
+                              <Input
+                                value={newSubSegment.emoji}
+                                onChange={(e) => setNewSubSegment({...newSubSegment, emoji: e.target.value})}
+                                placeholder="Emoji"
+                              />
+                            </div>
+                            <Input
+                              value={newSubSegment.name}
+                              onChange={(e) => setNewSubSegment({...newSubSegment, name: e.target.value})}
+                              placeholder="Nom du sous-profil"
+                            />
+                            <Textarea
+                              value={newSubSegment.desc}
+                              onChange={(e) => setNewSubSegment({...newSubSegment, desc: e.target.value})}
+                              placeholder="Description du sous-profil"
+                              rows={2}
+                            />
+                            <Button type="button" onClick={addSubSegmentToNew} size="sm">
+                              <Plus className="h-4 w-4 mr-2" />
+                              Ajouter le sous-profil
+                            </Button>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                            {newSegmentData.subSegments.map((subSegment, index) => (
+                              <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                                <span>{subSegment.emoji}</span>
+                                {subSegment.name}
+                                <button
+                                  type="button"
+                                  onClick={() => removeSubSegmentFromNew(index)}
+                                  className="ml-1 hover:text-red-600"
+                                >
+                                  ×
+                                </button>
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setIsAddSegmentDialogOpen(false)}>
+                        Annuler
+                      </Button>
+                      <Button onClick={handleAddSegment}>
+                        Ajouter
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <Input
+                  placeholder="Rechercher un profil..."
+                  value={segmentSearchTerm}
+                  onChange={(e) => setSegmentSearchTerm(e.target.value)}
+                  className="max-w-md"
+                />
+                <Badge variant="outline">{filteredSegments.length} profils</Badge>
+              </div>
+            </CardHeader>
+            
+            <CardContent>
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Profil</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Sous-profils</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredSegments.map((segment) => (
+                      <TableRow key={segment.id}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{segment.emoji}</span>
+                            <div>
+                              <div className="font-semibold">{segment.name}</div>
+                              <div className="text-xs text-muted-foreground">ID: {segment.id}</div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-xs">
+                          <div className="text-sm text-gray-600 truncate">
+                            {segment.desc}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {segment.subSegments?.map((sub, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                <span className="mr-1">{sub.emoji}</span>
+                                {sub.name}
+                              </Badge>
+                            ))}
+                            {(!segment.subSegments || segment.subSegments.length === 0) && (
+                              <span className="text-xs text-muted-foreground">Aucun sous-profil</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Dialog open={isEditSegmentDialogOpen && selectedSegment?.id === segment.id} onOpenChange={setIsEditSegmentDialogOpen}>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setSelectedSegment({...segment})}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle>Modifier {selectedSegment?.name}</DialogTitle>
+                                </DialogHeader>
+                                {selectedSegment && (
+                                  <div className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-4">
+                                      <div>
+                                        <Label htmlFor="editSegmentId">ID du profil</Label>
+                                        <Input
+                                          id="editSegmentId"
+                                          value={selectedSegment.id}
+                                          onChange={(e) => setSelectedSegment({...selectedSegment, id: e.target.value})}
+                                        />
+                                      </div>
+                                      <div>
+                                        <Label htmlFor="editSegmentEmoji">Emoji</Label>
+                                        <Input
+                                          id="editSegmentEmoji"
+                                          value={selectedSegment.emoji}
+                                          onChange={(e) => setSelectedSegment({...selectedSegment, emoji: e.target.value})}
+                                        />
+                                      </div>
+                                    </div>
+                                    
+                                    <div>
+                                      <Label htmlFor="editSegmentName">Nom du profil</Label>
+                                      <Input
+                                        id="editSegmentName"
+                                        value={selectedSegment.name}
+                                        onChange={(e) => setSelectedSegment({...selectedSegment, name: e.target.value})}
+                                      />
+                                    </div>
+                                    
+                                    <div>
+                                      <Label htmlFor="editSegmentDesc">Description</Label>
+                                      <Textarea
+                                        id="editSegmentDesc"
+                                        value={selectedSegment.desc}
+                                        onChange={(e) => setSelectedSegment({...selectedSegment, desc: e.target.value})}
+                                        rows={2}
+                                      />
+                                    </div>
+
+                                    <div>
+                                      <Label>Sous-profils</Label>
+                                      <div className="space-y-3">
+                                        <div className="border rounded-lg p-4 space-y-3">
+                                          <div className="grid grid-cols-2 gap-2">
+                                            <Input
+                                              value={newSubSegment.id}
+                                              onChange={(e) => setNewSubSegment({...newSubSegment, id: e.target.value})}
+                                              placeholder="ID sous-profil"
+                                            />
+                                            <Input
+                                              value={newSubSegment.emoji}
+                                              onChange={(e) => setNewSubSegment({...newSubSegment, emoji: e.target.value})}
+                                              placeholder="Emoji"
+                                            />
+                                          </div>
+                                          <Input
+                                            value={newSubSegment.name}
+                                            onChange={(e) => setNewSubSegment({...newSubSegment, name: e.target.value})}
+                                            placeholder="Nom du sous-profil"
+                                          />
+                                          <Textarea
+                                            value={newSubSegment.desc}
+                                            onChange={(e) => setNewSubSegment({...newSubSegment, desc: e.target.value})}
+                                            placeholder="Description du sous-profil"
+                                            rows={2}
+                                          />
+                                          <Button type="button" onClick={addSubSegmentToSelected} size="sm">
+                                            <Plus className="h-4 w-4 mr-2" />
+                                            Ajouter le sous-profil
+                                          </Button>
+                                        </div>
+                                        
+                                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                                          {selectedSegment.subSegments?.map((subSegment, index) => (
+                                            <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                                              <span>{subSegment.emoji}</span>
+                                              {subSegment.name}
+                                              <button
+                                                type="button"
+                                                onClick={() => removeSubSegmentFromSelected(index)}
+                                                className="ml-1 hover:text-red-600"
+                                              >
+                                                ×
+                                              </button>
+                                            </Badge>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="outline" onClick={() => {
+                                    setIsEditSegmentDialogOpen(false);
+                                    setSelectedSegment(null);
+                                  }}>
+                                    Annuler
+                                  </Button>
+                                  <Button onClick={handleEditSegment}>
+                                    Sauvegarder
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                            
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteSegment(segment.id)}
                               className="text-red-600 hover:text-red-700"
                             >
                               <Trash2 className="h-4 w-4" />
