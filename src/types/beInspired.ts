@@ -14,6 +14,7 @@ export interface POI {
   duration: 'hours' | 'day' | 'weekend' | 'week';
   travelerSegment: string[];
   accommodationType?: string[];
+  distance?: number; // Distance calculée dynamiquement
 }
 
 export interface Review {
