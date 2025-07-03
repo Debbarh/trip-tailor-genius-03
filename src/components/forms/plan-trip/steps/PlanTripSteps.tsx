@@ -21,7 +21,7 @@ const PlanTripSteps = ({ onComplete, onBack, onModeSelect }: PlanTripStepsProps)
     travelWith: { segment: '', subSegment: '' },
     cuisine: { cuisine: [] },
     budget: { budget: '' },
-    accommodation: { type: '', preferences: [] },
+    accommodation: { type: '', preferences: [], services: [], criteria: [] },
     activities: []
   });
 
@@ -157,6 +157,26 @@ const PlanTripSteps = ({ onComplete, onBack, onModeSelect }: PlanTripStepsProps)
               setFormData({
                 ...formData,
                 accommodation: { ...formData.accommodation, preferences: newPreferences }
+              });
+            }}
+            selectedServices={formData.accommodation.services}
+            onServiceToggle={(service) => {
+              const newServices = formData.accommodation.services.includes(service)
+                ? formData.accommodation.services.filter(s => s !== service)
+                : [...formData.accommodation.services, service];
+              setFormData({
+                ...formData,
+                accommodation: { ...formData.accommodation, services: newServices }
+              });
+            }}
+            selectedCriteria={formData.accommodation.criteria}
+            onCriteriaToggle={(criteria) => {
+              const newCriteria = formData.accommodation.criteria.includes(criteria)
+                ? formData.accommodation.criteria.filter(c => c !== criteria)
+                : [...formData.accommodation.criteria, criteria];
+              setFormData({
+                ...formData,
+                accommodation: { ...formData.accommodation, criteria: newCriteria }
               });
             }}
           />

@@ -34,6 +34,8 @@ export interface Cuisine {
 export interface Accommodation {
   type: string;
   preferences: string[];
+  services: string[];
+  criteria: string[];
 }
 
 export interface PlanTripFormData {
