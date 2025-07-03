@@ -380,6 +380,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                         </div>
                       </div>
                     </div>
+                    
+                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-3 rounded-xl border border-orange-200/50">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-orange-600" />
+                        <div>
+                          <div className="font-bold text-sm text-foreground">
+                            {(poi as any).distance ? `${(poi as any).distance}km` : 'Proche'}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Distance</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Bouton d'action premium */}

@@ -50,9 +50,31 @@ const BeInspiredMain = ({ onBack }: BeInspiredMainProps) => {
     }
   }, []);
 
-  // Filtrer les POIs en fonction des critères
+  // Fonction pour calculer la distance entre deux points (formule de Haversine)
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371; // Rayon de la Terre en kilomètres
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const distance = R * c;
+    return Math.round(distance * 10) / 10; // Arrondir à 1 décimale
+  };
+
+  // Filtrer les POIs en fonction des critères ET de la proximité
   useEffect(() => {
-    let filtered = samplePOIs;
+    let filtered = samplePOIs.map(poi => ({
+      ...poi,
+      distance: calculateDistance(userLocation[0], userLocation[1], poi.latitude, poi.longitude)
+    }));
+
+    // Filtrer par distance (proximité)
+    if (filters.proximity) {
+      filtered = filtered.filter(poi => poi.distance <= filters.proximity);
+    }
 
     // Filtrer par activités
     if (filters.activities.length > 0) {
@@ -86,8 +108,11 @@ const BeInspiredMain = ({ onBack }: BeInspiredMainProps) => {
       );
     }
 
+    // Trier par distance (les plus proches en premier)
+    filtered.sort((a, b) => a.distance - b.distance);
+
     setFilteredPOIs(filtered);
-  }, [filters]);
+  }, [filters, userLocation]);
 
   const handlePOIClick = (poi: POI) => {
     setSelectedPOI(poi);
