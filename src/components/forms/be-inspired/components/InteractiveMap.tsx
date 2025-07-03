@@ -1,16 +1,7 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { POI } from '@/types/beInspired';
-
-// Fix pour les icônes Leaflet par défaut
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { MapPin, Star } from 'lucide-react';
 
 interface InteractiveMapProps {
   center: [number, number];
@@ -19,78 +10,37 @@ interface InteractiveMapProps {
   userLocation: [number, number];
 }
 
-// Composant pour centrer la carte sur la position utilisateur
-const MapController = ({ center }: { center: [number, number] }) => {
-  const map = useMap();
-  
-  useEffect(() => {
-    map.setView(center, map.getZoom());
-  }, [center, map]);
-
-  return null;
-};
-
 const InteractiveMap = ({ center, pois, onPOIClick, userLocation }: InteractiveMapProps) => {
   return (
-    <div style={{ height: '100%', width: '100%' }}>
-      <MapContainer
-        center={center}
-        zoom={12}
-        style={{ height: '100%', width: '100%' }}
-        className="rounded-lg"
-        scrollWheelZoom={true}
-      >
-        <MapController center={center} />
+    <div className="h-full w-full">
+      {/* Placeholder pour la carte - nécessite configuration react-leaflet */}
+      <div className="h-full bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex flex-col items-center justify-center p-6">
+        <MapPin className="w-16 h-16 text-blue-600 mb-4" />
+        <h3 className="text-xl font-bold text-gray-800 mb-2">Carte Interactive</h3>
+        <p className="text-gray-600 text-center mb-6">
+          La carte OpenStreetMap sera affichée ici avec {pois.length} points d'intérêt
+        </p>
         
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <Marker position={userLocation}>
-          <Popup>
-            <div className="text-center">
-              <strong>📍 Votre position</strong>
-              <br />
-              Vous êtes ici
-            </div>
-          </Popup>
-        </Marker>
-
-        {pois.map((poi) => (
-          <Marker
-            key={poi.id}
-            position={[poi.latitude, poi.longitude]}
-            eventHandlers={{
-              click: () => onPOIClick(poi),
-            }}
-          >
-            <Popup>
-              <div className="min-w-[200px]">
-                <h3 className="font-bold text-lg mb-2">{poi.name}</h3>
-                <p className="text-sm text-gray-600 mb-2">{poi.description}</p>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-yellow-500">⭐</span>
-                  <span className="font-semibold">{poi.rating}</span>
-                  <span className="text-sm text-gray-500">({poi.reviews.length} avis)</span>
+        {/* Liste temporaire des POIs */}
+        <div className="w-full max-w-md space-y-3 max-h-60 overflow-y-auto">
+          {pois.map((poi) => (
+            <Card key={poi.id} className="p-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => onPOIClick(poi)}>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-semibold">{poi.name}</h4>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <Star className="w-3 h-3 text-yellow-500" />
+                    {poi.rating}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-green-600">💰</span>
-                  <span className="text-sm capitalize">{poi.budget}</span>
-                  <span className="text-blue-600">⏱️</span>
-                  <span className="text-sm capitalize">{poi.duration}</span>
-                </div>
-                <button
-                  onClick={() => onPOIClick(poi)}
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  Voir les détails
-                </button>
+                <Button size="sm" variant="outline">
+                  Voir
+                </Button>
               </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
