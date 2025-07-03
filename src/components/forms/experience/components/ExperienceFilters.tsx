@@ -45,15 +45,15 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
   };
 
   return (
-    <Card>
+    <Card className="bg-white/90 backdrop-blur-sm border border-white/30 shadow-lg">
       <CardHeader>
-        <CardTitle className="text-lg">Filtres</CardTitle>
+        <CardTitle className="text-xl text-gray-800">Filtres de recherche</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <CardContent className="space-y-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Type d'expérience */}
           <div className="space-y-3">
-            <Label className="font-medium">Type d'expérience</Label>
+            <Label className="font-semibold text-gray-700">Type d'expérience</Label>
             <Select 
               value={filters.type || ''} 
               onValueChange={(value) => updateFilter('type', value as ExperienceType)}
@@ -74,7 +74,7 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
 
           {/* Budget */}
           <div className="space-y-3">
-            <Label className="font-medium">Budget</Label>
+            <Label className="font-semibold text-gray-700">Budget</Label>
             <Select 
               value={filters.budget || ''} 
               onValueChange={(value) => updateFilter('budget', value)}
@@ -95,7 +95,7 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
 
           {/* Note minimale */}
           <div className="space-y-3">
-            <Label className="font-medium">
+            <Label className="font-semibold text-gray-700">
               Note minimale: {filters.minRating || 0}/5
             </Label>
             <Slider
@@ -110,7 +110,7 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
 
           {/* Localisation */}
           <div className="space-y-3">
-            <Label className="font-medium">Localisation</Label>
+            <Label className="font-semibold text-gray-700">Localisation</Label>
             <Select 
               value={filters.location || ''} 
               onValueChange={(value) => updateFilter('location', value)}
@@ -130,17 +130,17 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
         </div>
 
         {/* Catégories d'activités */}
-        <div className="space-y-3">
-          <Label className="font-medium">Catégories d'activités</Label>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="space-y-4">
+          <Label className="font-semibold text-gray-700 text-lg">Catégories d'activités</Label>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {activityCategories.map((category) => (
-              <div key={category} className="flex items-center space-x-2">
+              <div key={category} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-purple-50 transition-colors">
                 <Checkbox
                   id={`filter-${category}`}
                   checked={(filters.categories || []).includes(category)}
                   onCheckedChange={() => toggleCategory(category)}
                 />
-                <Label htmlFor={`filter-${category}`} className="text-sm">
+                <Label htmlFor={`filter-${category}`} className="font-medium text-gray-700 cursor-pointer">
                   {category}
                 </Label>
               </div>
