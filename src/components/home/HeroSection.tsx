@@ -54,7 +54,7 @@ const HeroSection = ({ destinations, currentDestination, onModeSelect }: HeroSec
           
           <Button 
             onClick={() => onModeSelect('be-inspired')}
-            className="group bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-blue-500/25 border-0"
+            className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-8 text-xl rounded-3xl h-auto transition-all duration-500 hover:scale-110 shadow-2xl hover:shadow-purple-500/25 border-0"
           >
             <Lightbulb className="w-7 h-7 mr-4 group-hover:rotate-12 transition-transform duration-300" />
             Be Inspired
