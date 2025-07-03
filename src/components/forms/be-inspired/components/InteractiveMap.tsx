@@ -284,10 +284,25 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       >
         <MapController center={center} />
         
+        {/* Couche de base avec style sombre */}
         <TileLayer
-          attribution='&copy; OpenStreetMap'
+          attribution='&copy; CartoDB'
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          opacity={0.7}
+        />
+        
+        {/* Couche de couleur charismatique */}
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          opacity={0.6}
+          className="colorful-map-layer"
+        />
+        
+        {/* Couche d'accentuation */}
+        <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          opacity={0.9}
+          opacity={0.3}
+          className="accent-map-layer"
         />
 
         <Marker position={userLocation} icon={createUserIcon()}>
@@ -409,19 +424,48 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         ))}
       </MapContainer>
 
-      {/* Styles CSS avancés */}
+      {/* Styles CSS avancés avec filtres charismatiques */}
       <style>{`
+        /* Filtres charismatiques pour les couches de carte */
+        .colorful-map-layer {
+          filter: hue-rotate(15deg) contrast(1.2) saturate(1.4) brightness(1.1) !important;
+          mix-blend-mode: overlay !important;
+        }
+        
+        .accent-map-layer {
+          filter: sepia(0.3) hue-rotate(200deg) saturate(1.6) brightness(0.9) !important;
+          mix-blend-mode: multiply !important;
+        }
+        
+        /* Animation d'éclat pour la carte */
+        .leaflet-map-pane {
+          animation: map-glow 8s ease-in-out infinite alternate !important;
+        }
+        
+        @keyframes map-glow {
+          0% { 
+            filter: brightness(1) contrast(1) saturate(1.2); 
+          }
+          100% { 
+            filter: brightness(1.05) contrast(1.1) saturate(1.4); 
+          }
+        }
+        
+        /* Effet de profondeur pour les marqueurs */
         .custom-poi-marker-enhanced:hover .poi-marker-content {
           transform: translateY(-4px) scale(1.15) !important;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 30px rgba(59, 130, 246, 0.4) !important;
+          filter: brightness(1.1) saturate(1.2) !important;
         }
         
+        /* Popups avec effet prismatique */
         .leaflet-popup-content-wrapper {
           background: transparent !important;
           padding: 0 !important;
           border-radius: 16px !important;
           box-shadow: none !important;
           border: none !important;
+          filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.25)) !important;
         }
         
         .leaflet-popup-content {
@@ -433,30 +477,48 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           background: hsl(var(--background)) !important;
           border: 1px solid hsl(var(--border)) !important;
           box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
+          filter: brightness(1.05) !important;
         }
         
+        /* Contrôles de zoom avec effet néon */
         .leaflet-control-zoom {
           border: none !important;
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 30px rgba(59, 130, 246, 0.1) !important;
           border-radius: 16px !important;
           overflow: hidden;
+          backdrop-filter: blur(20px) !important;
         }
         
         .leaflet-control-zoom a {
-          background: hsl(var(--background))/95 !important;
+          background: linear-gradient(135deg, hsl(var(--background))/95, hsl(var(--muted))/90) !important;
           backdrop-filter: blur(12px) !important;
           border: 1px solid hsl(var(--border))/50 !important;
           color: hsl(var(--foreground)) !important;
           border-radius: 0 !important;
-          transition: all 0.3s ease !important;
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
           font-weight: bold !important;
+          position: relative !important;
+        }
+        
+        .leaflet-control-zoom a::before {
+          content: '' !important;
+          position: absolute !important;
+          inset: 0 !important;
+          background: linear-gradient(135deg, hsl(var(--primary))/0, hsl(var(--secondary))/0) !important;
+          transition: all 0.3s ease !important;
+          border-radius: inherit !important;
         }
         
         .leaflet-control-zoom a:hover {
-          background: hsl(var(--primary)) !important;
+          background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary))) !important;
           color: white !important;
-          transform: scale(1.05);
-          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3) !important;
+          transform: scale(1.05) translateY(-2px) !important;
+          box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.3) !important;
+          filter: brightness(1.1) saturate(1.2) !important;
+        }
+        
+        .leaflet-control-zoom a:hover::before {
+          background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)) !important;
         }
         
         .leaflet-control-zoom a:first-child {
@@ -473,8 +535,83 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           display: none !important;
         }
         
+        /* Effet holographique pour les popups */
         .leaflet-popup {
           margin-bottom: 20px !important;
+          filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15)) !important;
+        }
+        
+        /* Animation de scintillement pour les marqueurs */
+        .poi-marker-content {
+          position: relative !important;
+        }
+        
+        .poi-marker-content::after {
+          content: '' !important;
+          position: absolute !important;
+          top: -2px !important;
+          left: -2px !important;
+          right: -2px !important;
+          bottom: -2px !important;
+          background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent) !important;
+          border-radius: inherit !important;
+          animation: shimmer 3s ease-in-out infinite !important;
+          pointer-events: none !important;
+        }
+        
+        @keyframes shimmer {
+          0%, 100% { 
+            opacity: 0; 
+            transform: translateX(-100%); 
+          }
+          50% { 
+            opacity: 1; 
+            transform: translateX(100%); 
+          }
+        }
+        
+        /* Effet de vagues pour la position utilisateur */
+        .user-marker-modern::before {
+          content: '' !important;
+          position: absolute !important;
+          top: -4px !important;
+          left: -4px !important;
+          right: -4px !important;
+          bottom: -4px !important;
+          border: 2px solid rgba(239, 68, 68, 0.3) !important;
+          border-radius: 50% !important;
+          animation: ripple 2s ease-out infinite !important;
+        }
+        
+        @keyframes ripple {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(3);
+            opacity: 0;
+          }
+        }
+        
+        /* Amélioration générale de la carte */
+        .leaflet-container {
+          filter: contrast(1.05) saturate(1.15) brightness(1.02) !important;
+          transition: filter 0.3s ease !important;
+        }
+        
+        .leaflet-container:hover {
+          filter: contrast(1.1) saturate(1.2) brightness(1.05) !important;
+        }
+        
+        /* Effet de focus sur les routes importantes */
+        .leaflet-overlay-pane svg path[stroke="#FF6B6B"] {
+          filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.5)) !important;
+        }
+        
+        /* Style des labels de rue plus vibrants */
+        .leaflet-overlay-pane .leaflet-marker-pane .leaflet-marker-icon {
+          transition: all 0.3s ease !important;
         }
       `}</style>
     </div>
