@@ -17,18 +17,18 @@ export const stepConfigs = [
     icon: Users
   },
   {
-    id: 'cuisine',
-    title: 'Cuisine et Expérience Culinaire',
-    subtitle: 'Quelles sont vos préférences culinaires ?',
-    image: '/placeholder.svg',
-    icon: ChefHat
-  },
-  {
     id: 'budget',
     title: 'Budget',
     subtitle: 'Quel est votre budget pour le voyage ?',
     image: '/placeholder.svg',
     icon: DollarSign
+  },
+  {
+    id: 'cuisine',
+    title: 'Cuisine et Expérience Culinaire',
+    subtitle: 'Quelles sont vos préférences culinaires ?',
+    image: '/placeholder.svg',
+    icon: ChefHat
   },
   {
     id: 'accommodation',
