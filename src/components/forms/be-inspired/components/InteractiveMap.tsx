@@ -48,7 +48,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     setIsMapReady(true);
   }, []);
 
-  // Créer des icônes personnalisées modernes pour chaque catégorie
+  // Créer des icônes modernes sans effets de flou
   const createCategoryIcon = (category: string) => {
     const categoryData = activityCategories.find(cat => cat.id === category);
     const emoji = categoryData?.emoji || '📍';
@@ -66,18 +66,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         font-size: 18px;
         box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25), 0 4px 16px rgba(0, 0, 0, 0.1);
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(8px);
-        position: relative;
+        transition: all 0.3s ease;
       ">
-        <div style="
-          position: absolute;
-          inset: 0;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 17px;
-          backdrop-filter: blur(4px);
-        "></div>
-        <span style="position: relative; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">${emoji}</span>
+        <span style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));">${emoji}</span>
       </div>`,
       className: 'custom-poi-icon-modern',
       iconSize: [40, 40],
@@ -86,7 +77,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     });
   };
 
-  // Icône moderne pour la position utilisateur
+  // Icône pour la position utilisateur
   const userIcon = L.divIcon({
     html: `<div style="
       background: linear-gradient(135deg, hsl(0, 84.2%, 60.2%), hsl(0, 62.8%, 50.6%));
@@ -95,17 +86,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       width: 28px;
       height: 28px;
       box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3), 0 4px 16px rgba(0, 0, 0, 0.15);
-      position: relative;
       animation: pulse 2s infinite;
-    ">
-      <div style="
-        position: absolute;
-        inset: 2px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        backdrop-filter: blur(4px);
-      "></div>
-    </div>
+    "></div>
     <style>
       @keyframes pulse {
         0%, 100% { transform: scale(1); opacity: 1; }
@@ -130,34 +112,29 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   }
 
   return (
-    <div className="h-full w-full relative overflow-hidden rounded-xl">
-      {/* Overlay moderne avec bordure glassmorphism */}
-      <div className="absolute inset-0 rounded-xl border border-white/20 bg-gradient-to-br from-white/5 to-transparent backdrop-blur-sm z-10 pointer-events-none" />
-      
+    <div className="h-full w-full relative overflow-hidden rounded-xl border border-border shadow-lg">
       <MapContainer
         center={center}
         zoom={13}
         style={{ height: '100%', width: '100%' }}
-        className="rounded-xl relative z-0"
+        className="rounded-xl"
         scrollWheelZoom={true}
         zoomControl={true}
-        attributionControl={false}
+        attributionControl={true}
       >
         <MapController center={center} />
         
-        {/* Couche de tuiles moderne */}
+        {/* Couche de tuiles claire */}
         <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
 
         {/* Marqueur de position utilisateur */}
         <Marker position={userLocation} icon={userIcon}>
-          <Popup 
-            closeButton={false}
-            className="modern-popup"
-          >
-            <div className="p-4 bg-gradient-to-br from-background to-card border-0 rounded-lg shadow-2xl">
+          <Popup closeButton={false}>
+            <div className="p-3 bg-background border border-border rounded-lg shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-destructive rounded-full animate-pulse"></div>
                 <div>
@@ -169,7 +146,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           </Popup>
         </Marker>
 
-        {/* Marqueurs des POIs avec style moderne */}
+        {/* Marqueurs des POIs */}
         {pois.map((poi) => (
           <Marker
             key={poi.id}
@@ -179,13 +156,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
               click: () => onPOIClick(poi),
             }}
           >
-            <Popup 
-              maxWidth={300} 
-              minWidth={280}
-              closeButton={false}
-              className="modern-popup"
-            >
-              <div className="p-0 bg-gradient-to-br from-card to-background rounded-xl shadow-2xl border border-border/50 overflow-hidden">
+            <Popup maxWidth={300} minWidth={280} closeButton={false}>
+              <div className="bg-card border border-border rounded-xl shadow-xl overflow-hidden">
                 {/* Header avec gradient */}
                 <div className="bg-gradient-to-r from-map-primary to-map-secondary p-4 text-white">
                   <h3 className="font-bold text-lg mb-1">{poi.name}</h3>
@@ -236,25 +208,24 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         ))}
       </MapContainer>
       
-      {/* Style CSS pour les popups modernes */}
+      {/* Style CSS pour les interactions */}
       <style>{`
-        .modern-popup .leaflet-popup-content-wrapper {
+        .custom-poi-icon-modern:hover {
+          transform: translateY(-2px) scale(1.05) !important;
+          box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4), 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+        .leaflet-popup-content-wrapper {
           background: transparent !important;
           box-shadow: none !important;
           border-radius: 0 !important;
           padding: 0 !important;
         }
-        .modern-popup .leaflet-popup-content {
+        .leaflet-popup-content {
           margin: 0 !important;
         }
-        .modern-popup .leaflet-popup-tip {
+        .leaflet-popup-tip {
           background: hsl(var(--card)) !important;
           border: 1px solid hsl(var(--border)) !important;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
-        }
-        .custom-poi-icon-modern:hover {
-          transform: translateY(-2px) scale(1.05) !important;
-          box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4), 0 6px 20px rgba(0, 0, 0, 0.15) !important;
         }
       `}</style>
     </div>
