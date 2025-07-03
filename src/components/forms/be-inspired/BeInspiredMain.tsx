@@ -66,14 +66,23 @@ const BeInspiredMain = ({ onBack }: BeInspiredMainProps) => {
 
   // Filtrer les POIs en fonction des critères ET de la proximité
   useEffect(() => {
+    console.log('🔍 Filtrage en cours...', { filters, userLocation });
+    
     let filtered = samplePOIs.map(poi => ({
       ...poi,
       distance: calculateDistance(userLocation[0], userLocation[1], poi.latitude, poi.longitude)
     }));
 
+    console.log('📍 POIs avec distances calculées:', filtered.map(p => ({ name: p.name, distance: p.distance })));
+
     // Filtrer par distance (proximité)
-    if (filters.proximity) {
-      filtered = filtered.filter(poi => poi.distance <= filters.proximity);
+    if (filters.proximity && filters.proximity > 0) {
+      console.log('🎯 Filtrage par proximité:', filters.proximity, 'km');
+      filtered = filtered.filter(poi => {
+        const isInRange = poi.distance <= filters.proximity;
+        console.log(`${poi.name}: ${poi.distance}km ${isInRange ? '✅' : '❌'}`);
+        return isInRange;
+      });
     }
 
     // Filtrer par activités
