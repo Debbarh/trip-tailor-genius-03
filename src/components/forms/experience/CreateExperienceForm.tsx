@@ -69,38 +69,38 @@ const CreateExperienceForm = ({ onBack }: CreateExperienceFormProps) => {
   const CurrentStepComponent = steps[currentStep - 1].component;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="max-w-4xl mx-auto p-4">
-        <div className="flex items-center gap-4 mb-8 pt-4">
-          <Button variant="ghost" onClick={handleBack} className="gap-2">
+        <div className="flex items-center gap-4 mb-8 pt-8">
+          <Button variant="ghost" onClick={handleBack} className="gap-2 text-gray-600 hover:text-purple-600 transition-colors">
             <ArrowLeft className="h-4 w-4" />
             Retour
           </Button>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold">Recommander une Expérience</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Recommander une Expérience</h1>
+            <p className="text-gray-600 text-lg">
               Étape {currentStep} sur {steps.length}: {steps[currentStep - 1].title}
             </p>
           </div>
         </div>
 
         {/* Progress indicator */}
-        <div className="flex items-center gap-2 mb-8">
+        <div className="flex items-center justify-center gap-3 mb-12">
           {steps.map((step, index) => (
-            <div key={step.id} className="flex items-center gap-2">
+            <div key={step.id} className="flex items-center gap-3">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                   index + 1 <= currentStep
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                    : 'bg-gray-200 text-gray-500'
                 }`}
               >
                 {index + 1}
               </div>
               {index < steps.length - 1 && (
                 <div
-                  className={`h-1 w-12 rounded ${
-                    index + 1 < currentStep ? 'bg-primary' : 'bg-muted'
+                  className={`h-1 w-16 rounded-full transition-all duration-300 ${
+                    index + 1 < currentStep ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-gray-200'
                   }`}
                 />
               )}

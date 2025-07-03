@@ -21,19 +21,19 @@ const ReviewStep = ({ data, onSubmit }: ReviewStepProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center">
-        <h2 className="text-xl font-semibold mb-2">Vérification et Conseils</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Vérification et Conseils</h2>
+        <p className="text-gray-600 text-lg">
           Vérifiez vos informations et ajoutez des conseils pratiques
         </p>
       </div>
 
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-8">
         {/* Review Summary */}
-        <Card>
+        <Card className="bg-white/90 backdrop-blur-sm border border-white/30 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-lg">Résumé de votre recommandation</CardTitle>
+            <CardTitle className="text-xl text-gray-800">Résumé de votre recommandation</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start gap-3">
@@ -78,8 +78,8 @@ const ReviewStep = ({ data, onSubmit }: ReviewStepProps) => {
 
         {/* Practical Tips */}
         <div className="space-y-4">
-          <Label htmlFor="tips" className="text-base font-semibold flex items-center gap-2">
-            <Lightbulb className="h-4 w-4" />
+          <Label htmlFor="tips" className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+            <Lightbulb className="h-5 w-5 text-yellow-500" />
             Conseils pratiques (optionnel)
           </Label>
           <Textarea
@@ -92,11 +92,16 @@ const ReviewStep = ({ data, onSubmit }: ReviewStepProps) => {
             value={practicalTips}
             onChange={(e) => setPracticalTips(e.target.value)}
             rows={6}
+            className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
           />
         </div>
 
-        <div className="flex justify-end">
-          <Button onClick={handleSubmit} size="lg" className="bg-gradient-to-r from-primary to-secondary">
+        <div className="flex justify-center pt-6">
+          <Button 
+            onClick={handleSubmit} 
+            size="lg" 
+            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-12"
+          >
             Publier ma recommandation
           </Button>
         </div>
