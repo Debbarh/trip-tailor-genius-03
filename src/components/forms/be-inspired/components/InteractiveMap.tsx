@@ -257,12 +257,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       >
         <MapController center={center} />
         
-        {/* Style minimaliste beige/gris comme charge-and-fetch-go */}
+        {/* Carte avec plus de contraste pour la visibilité */}
         <TileLayer
-          attribution='&copy; CartoDB'
-          url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+          attribution='&copy; OpenStreetMap'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           opacity={1.0}
-          className="minimal-base-layer"
+          className="contrasted-base-layer"
         />
 
         <Marker position={userLocation} icon={createUserIcon()}>
@@ -384,16 +384,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         ))}
       </MapContainer>
 
-      {/* Styles CSS minimalistes comme charge-and-fetch-go */}
+      {/* Styles CSS avec meilleur contraste */}
       <style>{`
-        /* Style minimaliste beige/gris pour la couche de base */
-        .minimal-base-layer {
-          filter: contrast(1.1) saturate(0.8) brightness(0.98) hue-rotate(20deg) !important;
+        /* Amélioration du contraste pour la couche de base */}
+        .contrasted-base-layer {
+          filter: contrast(1.2) saturate(1.1) brightness(0.95) !important;
         }
         
-        /* Pas d'animation pour un style plus épuré */
+        /* Amélioration générale de la carte pour plus de lisibilité */
         .leaflet-map-pane {
-          filter: brightness(1.02) contrast(1.05) saturate(0.9) !important;
+          filter: brightness(0.98) contrast(1.15) saturate(1.05) !important;
         }
         
         /* Effet de profondeur pour les marqueurs */
