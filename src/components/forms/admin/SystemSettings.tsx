@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Cog, Database, Shield, Plus, Edit, Trash2, Globe, MapPin, Users } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -49,6 +50,38 @@ const SystemSettings = () => {
     desc: '',
     emoji: ''
   });
+
+  // Cuisine management state
+  const [cuisineTypes, setCuisineTypes] = useState([
+    { id: 'french', name: 'Française', emoji: '🇫🇷', desc: 'Gastronomie raffinée' },
+    { id: 'italian', name: 'Italienne', emoji: '🇮🇹', desc: 'Pâtes et pizza authentiques' },
+    { id: 'asian', name: 'Asiatique', emoji: '🥢', desc: 'Saveurs d\'Asie' },
+    { id: 'mediterranean', name: 'Méditerranéenne', emoji: '🫒', desc: 'Cuisine saine et savoureuse' },
+    { id: 'mexican', name: 'Mexicaine', emoji: '🌮', desc: 'Épices et saveurs authentiques' },
+    { id: 'indian', name: 'Indienne', emoji: '🍛', desc: 'Épices et curry' },
+    { id: 'japanese', name: 'Japonaise', emoji: '🍣', desc: 'Sushi et cuisine traditionnelle' },
+    { id: 'thai', name: 'Thaïlandaise', emoji: '🌶️', desc: 'Équilibre sucré-salé-épicé' },
+    { id: 'local', name: 'Cuisine locale', emoji: '🏠', desc: 'Spécialités de la région' },
+    { id: 'vegetarian', name: 'Végétarienne', emoji: '🥗', desc: 'Options sans viande' },
+    { id: 'vegan', name: 'Végane', emoji: '🌱', desc: '100% végétal' },
+    { id: 'street-food', name: 'Street Food', emoji: '🥙', desc: 'Cuisine de rue authentique' }
+  ]);
+  
+  const [experienceTypes, setExperienceTypes] = useState([
+    { id: 'fine-dining', name: 'Gastronomie Fine', emoji: '🍽️', desc: 'Restaurants étoilés et haute cuisine' },
+    { id: 'local-markets', name: 'Marchés Locaux', emoji: '🛒', desc: 'Découverte des produits locaux' },
+    { id: 'cooking-classes', name: 'Cours de Cuisine', emoji: '👨‍🍳', desc: 'Apprendre à cuisiner local' },
+    { id: 'food-tours', name: 'Tours Gastronomiques', emoji: '🚶‍♂️', desc: 'Visites guidées culinaires' },
+    { id: 'wine-tasting', name: 'Dégustation de Vins', emoji: '🍷', desc: 'Œnologie et vignobles' },
+    { id: 'casual-dining', name: 'Restaurants Décontractés', emoji: '🍽️', desc: 'Bonne cuisine sans chichi' }
+  ]);
+  
+  const [cuisineDialogOpen, setCuisineDialogOpen] = useState(false);
+  const [experienceDialogOpen, setExperienceDialogOpen] = useState(false);
+  const [editingCuisine, setEditingCuisine] = useState<any>(null);
+  const [editingExperience, setEditingExperience] = useState<any>(null);
+  const [cuisineForm, setCuisineForm] = useState({ id: '', name: '', emoji: '', desc: '' });
+  const [experienceForm, setExperienceForm] = useState({ id: '', name: '', emoji: '', desc: '' });
 
   const [newCountry, setNewCountry] = useState({
     name: '',
@@ -173,6 +206,56 @@ const SystemSettings = () => {
       setNewCountry({ name: '', code: '', flagCode: '', region: '', cities: [] });
       setIsAddDialogOpen(false);
     }
+  };
+
+  // Fonctions pour les cuisines
+  const handleCuisineSubmit = () => {
+    if (editingCuisine) {
+      setCuisineTypes(cuisineTypes.map(c => c.id === editingCuisine.id ? { ...cuisineForm } : c));
+      toast({ title: "Type de cuisine modifié avec succès" });
+    } else {
+      setCuisineTypes([...cuisineTypes, { ...cuisineForm }]);
+      toast({ title: "Type de cuisine ajouté avec succès" });
+    }
+    setCuisineDialogOpen(false);
+    setEditingCuisine(null);
+    setCuisineForm({ id: '', name: '', emoji: '', desc: '' });
+  };
+
+  const handleCuisineEdit = (cuisine: any) => {
+    setEditingCuisine(cuisine);
+    setCuisineForm({ ...cuisine });
+    setCuisineDialogOpen(true);
+  };
+
+  const handleCuisineDelete = (cuisineId: string) => {
+    setCuisineTypes(cuisineTypes.filter(c => c.id !== cuisineId));
+    toast({ title: "Type de cuisine supprimé avec succès" });
+  };
+
+  // Fonctions pour les expériences
+  const handleExperienceSubmit = () => {
+    if (editingExperience) {
+      setExperienceTypes(experienceTypes.map(e => e.id === editingExperience.id ? { ...experienceForm } : e));
+      toast({ title: "Expérience culinaire modifiée avec succès" });
+    } else {
+      setExperienceTypes([...experienceTypes, { ...experienceForm }]);
+      toast({ title: "Expérience culinaire ajoutée avec succès" });
+    }
+    setExperienceDialogOpen(false);
+    setEditingExperience(null);
+    setExperienceForm({ id: '', name: '', emoji: '', desc: '' });
+  };
+
+  const handleExperienceEdit = (experience: any) => {
+    setEditingExperience(experience);
+    setExperienceForm({ ...experience });
+    setExperienceDialogOpen(true);
+  };
+
+  const handleExperienceDelete = (experienceId: string) => {
+    setExperienceTypes(experienceTypes.filter(e => e.id !== experienceId));
+    toast({ title: "Expérience culinaire supprimée avec succès" });
   };
 
   const handleEditCountry = () => {
@@ -502,7 +585,132 @@ const SystemSettings = () => {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+          </TabsContent>
+
+          {/* Onglet Expériences Culinaires */}
+          <TabsContent value="cuisine" className="space-y-6">
+            {/* Types de Cuisine */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Types de Cuisine</CardTitle>
+                  <CardDescription>Gérer les types de cuisine disponibles</CardDescription>
+                </div>
+                <Button 
+                  onClick={() => {
+                    setEditingCuisine(null);
+                    setCuisineForm({ id: '', name: '', emoji: '', desc: '' });
+                    setCuisineDialogOpen(true);
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Ajouter un type de cuisine
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>Emoji</TableHead>
+                      <TableHead>Nom</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {cuisineTypes.map((cuisine) => (
+                      <TableRow key={cuisine.id}>
+                        <TableCell className="font-mono text-sm">{cuisine.id}</TableCell>
+                        <TableCell className="text-xl">{cuisine.emoji}</TableCell>
+                        <TableCell className="font-medium">{cuisine.name}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{cuisine.desc}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCuisineEdit(cuisine)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCuisineDelete(cuisine.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            {/* Expériences Culinaires */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Expériences Culinaires</CardTitle>
+                  <CardDescription>Gérer les expériences culinaires proposées</CardDescription>
+                </div>
+                <Button 
+                  onClick={() => {
+                    setEditingExperience(null);
+                    setExperienceForm({ id: '', name: '', emoji: '', desc: '' });
+                    setExperienceDialogOpen(true);
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Ajouter une expérience
+                </Button>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>Emoji</TableHead>
+                      <TableHead>Nom</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {experienceTypes.map((experience) => (
+                      <TableRow key={experience.id}>
+                        <TableCell className="font-mono text-sm">{experience.id}</TableCell>
+                        <TableCell className="text-xl">{experience.emoji}</TableCell>
+                        <TableCell className="font-medium">{experience.name}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">{experience.desc}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleExperienceEdit(experience)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleExperienceDelete(experience.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
         <TabsContent value="cities">
           <Card className="bg-white/70 backdrop-blur-sm border border-white/30 shadow-lg">
@@ -657,7 +865,123 @@ const SystemSettings = () => {
                                   </Button>
                                 </div>
                               </DialogContent>
-                            </Dialog>
+        </Dialog>
+
+        {/* Dialog pour Types de Cuisine */}
+        <Dialog open={cuisineDialogOpen} onOpenChange={setCuisineDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {editingCuisine ? 'Modifier le type de cuisine' : 'Ajouter un type de cuisine'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="cuisine-id">ID (unique)</Label>
+                <Input
+                  id="cuisine-id"
+                  value={cuisineForm.id}
+                  onChange={(e) => setCuisineForm({ ...cuisineForm, id: e.target.value })}
+                  placeholder="Ex: french"
+                  disabled={!!editingCuisine}
+                />
+              </div>
+              <div>
+                <Label htmlFor="cuisine-name">Nom</Label>
+                <Input
+                  id="cuisine-name"
+                  value={cuisineForm.name}
+                  onChange={(e) => setCuisineForm({ ...cuisineForm, name: e.target.value })}
+                  placeholder="Ex: Française"
+                />
+              </div>
+              <div>
+                <Label htmlFor="cuisine-emoji">Emoji</Label>
+                <Input
+                  id="cuisine-emoji"
+                  value={cuisineForm.emoji}
+                  onChange={(e) => setCuisineForm({ ...cuisineForm, emoji: e.target.value })}
+                  placeholder="Ex: 🇫🇷"
+                />
+              </div>
+              <div>
+                <Label htmlFor="cuisine-desc">Description</Label>
+                <Input
+                  id="cuisine-desc"
+                  value={cuisineForm.desc}
+                  onChange={(e) => setCuisineForm({ ...cuisineForm, desc: e.target.value })}
+                  placeholder="Ex: Gastronomie raffinée"
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setCuisineDialogOpen(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={handleCuisineSubmit}>
+                  {editingCuisine ? 'Modifier' : 'Ajouter'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Dialog pour Expériences Culinaires */}
+        <Dialog open={experienceDialogOpen} onOpenChange={setExperienceDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                {editingExperience ? 'Modifier l\'expérience culinaire' : 'Ajouter une expérience culinaire'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="experience-id">ID (unique)</Label>
+                <Input
+                  id="experience-id"
+                  value={experienceForm.id}
+                  onChange={(e) => setExperienceForm({ ...experienceForm, id: e.target.value })}
+                  placeholder="Ex: fine-dining"
+                  disabled={!!editingExperience}
+                />
+              </div>
+              <div>
+                <Label htmlFor="experience-name">Nom</Label>
+                <Input
+                  id="experience-name"
+                  value={experienceForm.name}
+                  onChange={(e) => setExperienceForm({ ...experienceForm, name: e.target.value })}
+                  placeholder="Ex: Gastronomie Fine"
+                />
+              </div>
+              <div>
+                <Label htmlFor="experience-emoji">Emoji</Label>
+                <Input
+                  id="experience-emoji"
+                  value={experienceForm.emoji}
+                  onChange={(e) => setExperienceForm({ ...experienceForm, emoji: e.target.value })}
+                  placeholder="Ex: 🍽️"
+                />
+              </div>
+              <div>
+                <Label htmlFor="experience-desc">Description</Label>
+                <Input
+                  id="experience-desc"
+                  value={experienceForm.desc}
+                  onChange={(e) => setExperienceForm({ ...experienceForm, desc: e.target.value })}
+                  placeholder="Ex: Restaurants étoilés et haute cuisine"
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setExperienceDialogOpen(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={handleExperienceSubmit}>
+                  {editingExperience ? 'Modifier' : 'Ajouter'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
                             
                             <Button
                               variant="ghost"
