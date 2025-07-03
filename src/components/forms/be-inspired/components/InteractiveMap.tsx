@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -24,7 +24,7 @@ interface InteractiveMapProps {
 }
 
 // Composant pour contrôler la vue de la carte
-const MapController: React.FC<{ center: [number, number] }> = ({ center }) => {
+const MapController = ({ center }: { center: [number, number] }) => {
   const map = useMap();
   
   useEffect(() => {
@@ -43,7 +43,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   userLocation 
 }) => {
   const [mapReady, setMapReady] = useState(false);
-  const mapRef = useRef<any>(null);
 
   useEffect(() => {
     setupLeafletIcons();
@@ -57,17 +56,28 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
     
     return L.divIcon({
       html: `
-        <div class="modern-poi-marker">
-          <div class="marker-content">
-            <span class="marker-emoji">${emoji}</span>
-          </div>
-          <div class="marker-pulse"></div>
+        <div style="
+          position: relative;
+          width: 40px;
+          height: 40px;
+          background: linear-gradient(135deg, hsl(217.2, 91.2%, 59.8%), hsl(221.2, 83.2%, 53.3%));
+          border: 3px solid white;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3), 0 4px 16px rgba(0, 0, 0, 0.1);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        ">
+          ${emoji}
         </div>
       `,
-      className: 'custom-poi-marker',
-      iconSize: [50, 50],
-      iconAnchor: [25, 45],
-      popupAnchor: [0, -45],
+      className: 'modern-poi-marker',
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      popupAnchor: [0, -20],
     });
   };
 
@@ -75,17 +85,28 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const createUserIcon = () => {
     return L.divIcon({
       html: `
-        <div class="user-location-marker">
-          <div class="user-marker-inner">
-            <div class="user-dot"></div>
-          </div>
-          <div class="user-pulse"></div>
+        <div style="
+          position: relative;
+          width: 24px;
+          height: 24px;
+          background: linear-gradient(135deg, hsl(0, 84.2%, 60.2%), hsl(0, 62.8%, 50.6%));
+          border: 3px solid white;
+          border-radius: 50%;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+          animation: pulse 2s infinite;
+        ">
         </div>
+        <style>
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+          }
+        </style>
       `,
-      className: 'custom-user-marker',
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
-      popupAnchor: [0, -15],
+      className: 'user-location-marker',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+      popupAnchor: [0, -12],
     });
   };
 
@@ -135,35 +156,28 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         zoomControl={true}
         className="h-full w-full rounded-2xl"
         style={{ height: '100%', width: '100%', borderRadius: '16px' }}
-        ref={mapRef}
       >
         <MapController center={center} />
         
-        {/* Tuiles de carte avec style moderne */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          className="map-tiles"
         />
 
-        {/* Marqueur utilisateur */}
         <Marker position={userLocation} icon={createUserIcon()}>
-          <Popup closeButton={false} className="modern-popup">
-            <div className="modern-popup-content">
-              <div className="popup-header user-location">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 bg-destructive rounded-full animate-pulse"></div>
-                  <div>
-                    <h4 className="font-bold text-white">Votre position</h4>
-                    <p className="text-white/80 text-sm">Vous êtes ici</p>
-                  </div>
+          <Popup closeButton={false}>
+            <div className="p-3 bg-background border border-border rounded-lg shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-destructive rounded-full animate-pulse"></div>
+                <div>
+                  <strong className="text-foreground font-semibold">Votre position</strong>
+                  <p className="text-muted-foreground text-sm mt-1">Vous êtes ici</p>
                 </div>
               </div>
             </div>
           </Popup>
         </Marker>
 
-        {/* Marqueurs POI */}
         {pois.map((poi) => (
           <Marker
             key={poi.id}
@@ -173,61 +187,41 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
               click: () => onPOIClick(poi),
             }}
           >
-            <Popup closeButton={false} className="modern-popup" maxWidth={320}>
-              <div className="modern-popup-content">
-                {/* Header avec gradient */}
-                <div className="popup-header">
-                  <h3 className="popup-title">{poi.name}</h3>
-                  <p className="popup-description">{poi.description}</p>
+            <Popup closeButton={false} maxWidth={300}>
+              <div className="bg-card border border-border rounded-xl shadow-xl overflow-hidden">
+                <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white">
+                  <h3 className="font-bold text-lg mb-1">{poi.name}</h3>
+                  <p className="text-white/90 text-sm opacity-90">{poi.description}</p>
                 </div>
                 
-                {/* Corps du contenu */}
-                <div className="popup-body">
-                  {/* Statistiques */}
-                  <div className="stats-grid">
-                    <div className="stat-item rating">
-                      <span className="stat-icon">⭐</span>
-                      <div className="stat-content">
-                        <span className="stat-value">{poi.rating}</span>
-                        <span className="stat-label">({poi.reviews.length})</span>
-                      </div>
+                <div className="p-4 space-y-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-2 bg-yellow-100 px-2 py-1 rounded-md">
+                      <span>⭐</span>
+                      <span className="text-xs font-medium">{poi.rating}</span>
                     </div>
-                    
-                    <div className="stat-item budget">
-                      <span className="stat-icon">💰</span>
-                      <div className="stat-content">
-                        <span className="stat-value">{poi.budget}</span>
-                        <span className="stat-label">Budget</span>
-                      </div>
+                    <div className="flex items-center gap-2 bg-green-100 px-2 py-1 rounded-md">
+                      <span>💰</span>
+                      <span className="text-xs font-medium capitalize">{poi.budget}</span>
                     </div>
-                    
-                    <div className="stat-item duration">
-                      <span className="stat-icon">⏱️</span>
-                      <div className="stat-content">
-                        <span className="stat-value">{poi.duration}</span>
-                        <span className="stat-label">Durée</span>
-                      </div>
+                    <div className="flex items-center gap-2 bg-blue-100 px-2 py-1 rounded-md">
+                      <span>⏱️</span>
+                      <span className="text-xs font-medium capitalize">{poi.duration}</span>
                     </div>
-                    
-                    <div className="stat-item distance">
-                      <span className="stat-icon">📍</span>
-                      <div className="stat-content">
-                        <span className="stat-value">Proche</span>
-                        <span className="stat-label">Distance</span>
-                      </div>
+                    <div className="flex items-center gap-2 bg-purple-100 px-2 py-1 rounded-md">
+                      <span>👥</span>
+                      <span className="text-xs font-medium">{poi.reviews.length} avis</span>
                     </div>
                   </div>
 
-                  {/* Bouton d'action */}
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onPOIClick(poi);
                     }}
-                    className="action-button"
+                    className="w-full bg-gradient-to-r from-primary to-secondary text-white py-2 px-3 rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200"
                   >
-                    <span>Voir les détails</span>
-                    <span className="button-arrow">→</span>
+                    Voir les détails →
                   </button>
                 </div>
               </div>
@@ -236,252 +230,27 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
         ))}
       </MapContainer>
 
-      {/* Styles CSS modernes */}
       <style>{`
-        /* Marqueur POI moderne */
-        .modern-poi-marker {
-          position: relative;
-          width: 50px;
-          height: 50px;
+        .modern-poi-marker:hover {
+          transform: translateY(-2px) scale(1.05) !important;
         }
-        
-        .marker-content {
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 40px;
-          height: 40px;
-          background: linear-gradient(135deg, hsl(var(--map-primary)), hsl(var(--map-secondary)));
-          border: 3px solid white;
-          border-radius: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3), 0 4px 16px rgba(0, 0, 0, 0.1);
-          z-index: 2;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .marker-emoji {
-          font-size: 20px;
-          filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
-        }
-        
-        .marker-pulse {
-          position: absolute;
-          top: 5px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 30px;
-          height: 30px;
-          background: hsl(var(--map-primary));
-          border-radius: 50%;
-          opacity: 0.3;
-          animation: marker-pulse 2s infinite;
-        }
-        
-        @keyframes marker-pulse {
-          0% { transform: translateX(-50%) scale(1); opacity: 0.3; }
-          50% { transform: translateX(-50%) scale(1.5); opacity: 0.1; }
-          100% { transform: translateX(-50%) scale(2); opacity: 0; }
-        }
-        
-        .modern-poi-marker:hover .marker-content {
-          transform: translateX(-50%) translateY(-4px) scale(1.1);
-          box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4), 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Marqueur utilisateur */
-        .user-location-marker {
-          position: relative;
-          width: 30px;
-          height: 30px;
-        }
-        
-        .user-marker-inner {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 20px;
-          height: 20px;
-          background: white;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-          z-index: 2;
-        }
-        
-        .user-dot {
-          width: 12px;
-          height: 12px;
-          background: hsl(var(--destructive));
-          border-radius: 50%;
-        }
-        
-        .user-pulse {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 20px;
-          height: 20px;
-          background: hsl(var(--destructive));
-          border-radius: 50%;
-          opacity: 0.3;
-          animation: user-pulse 2s infinite;
-        }
-        
-        @keyframes user-pulse {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
-          100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
-        }
-        
-        /* Popups modernes */
-        .modern-popup .leaflet-popup-content-wrapper {
+        .leaflet-popup-content-wrapper {
           background: transparent !important;
-          padding: 0 !important;
-          border-radius: 16px !important;
           box-shadow: none !important;
-          border: none !important;
+          border-radius: 0 !important;
+          padding: 0 !important;
         }
-        
-        .modern-popup .leaflet-popup-content {
+        .leaflet-popup-content {
           margin: 0 !important;
-          font-family: inherit !important;
         }
-        
-        .modern-popup .leaflet-popup-tip {
-          background: hsl(var(--background)) !important;
+        .leaflet-popup-tip {
+          background: hsl(var(--card)) !important;
           border: 1px solid hsl(var(--border)) !important;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
         }
-        
-        .modern-popup-content {
-          background: hsl(var(--background));
-          border: 1px solid hsl(var(--border));
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          min-width: 280px;
-        }
-        
-        .popup-header {
-          background: linear-gradient(135deg, hsl(var(--map-primary)), hsl(var(--map-secondary)));
-          color: white;
-          padding: 16px;
-        }
-        
-        .popup-header.user-location {
-          background: linear-gradient(135deg, hsl(var(--destructive)), hsl(var(--destructive)) 80%);
-        }
-        
-        .popup-title {
-          font-size: 18px;
-          font-weight: 700;
-          margin: 0 0 4px 0;
-          line-height: 1.2;
-        }
-        
-        .popup-description {
-          font-size: 14px;
-          margin: 0;
-          opacity: 0.9;
-          line-height: 1.4;
-        }
-        
-        .popup-body {
-          padding: 16px;
-        }
-        
-        .stats-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-          margin-bottom: 16px;
-        }
-        
-        .stat-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 12px;
-          border-radius: 8px;
-          transition: all 0.2s ease;
-        }
-        
-        .stat-item.rating { background: hsl(var(--map-warning) / 0.1); }
-        .stat-item.budget { background: hsl(var(--map-accent) / 0.1); }
-        .stat-item.duration { background: hsl(var(--map-secondary) / 0.1); }
-        .stat-item.distance { background: hsl(var(--map-primary) / 0.1); }
-        
-        .stat-icon {
-          font-size: 16px;
-        }
-        
-        .stat-content {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
-        
-        .stat-value {
-          font-size: 12px;
-          font-weight: 600;
-          color: hsl(var(--foreground));
-          text-transform: capitalize;
-        }
-        
-        .stat-label {
-          font-size: 10px;
-          color: hsl(var(--muted-foreground));
-        }
-        
-        .action-button {
-          width: 100%;
-          background: linear-gradient(135deg, hsl(var(--map-primary)), hsl(var(--map-secondary)));
-          color: white;
-          border: none;
-          padding: 12px 16px;
-          border-radius: 12px;
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
-        }
-        
-        .action-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-          background: linear-gradient(135deg, hsl(var(--map-secondary)), hsl(var(--map-primary)));
-        }
-        
-        .action-button:active {
-          transform: translateY(0);
-        }
-        
-        .button-arrow {
-          transition: transform 0.3s ease;
-        }
-        
-        .action-button:hover .button-arrow {
-          transform: translateX(4px);
-        }
-        
-        /* Contrôles de zoom stylisés */
         .leaflet-control-zoom {
           border: none !important;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
         }
-        
         .leaflet-control-zoom a {
           background: hsl(var(--background)) !important;
           border: 1px solid hsl(var(--border)) !important;
@@ -489,13 +258,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
           border-radius: 8px !important;
           transition: all 0.2s ease !important;
         }
-        
         .leaflet-control-zoom a:hover {
           background: hsl(var(--muted)) !important;
           transform: scale(1.05);
         }
-        
-        /* Attribution cachée */
         .leaflet-control-attribution {
           display: none !important;
         }
