@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import ExperienceCard from './components/ExperienceCard';
 import ExperienceFilters from './components/ExperienceFilters';
 import { Recommendation, RecommendationFilters } from '@/types/recommendations';
 
-// Mock data - à remplacer par des données Supabase
+// Mock data étendue pour démontrer les filtres
 const mockRecommendations: Recommendation[] = [
   {
     id: '1',
@@ -34,6 +34,60 @@ const mockRecommendations: Recommendation[] = [
     likes: 124,
     saves: 67,
     comments: []
+  },
+  {
+    id: '2',
+    title: 'Restaurant vue sur la Seine',
+    description: 'Un restaurant romantique avec une vue imprenable sur la Seine et Notre-Dame.',
+    type: 'restaurant',
+    location: {
+      address: 'Quai de Montebello, Paris, France',
+      coordinates: { latitude: 48.8534, longitude: 2.3488 }
+    },
+    categories: {
+      activities: ['gastronomie', 'romantique'],
+      travelerType: ['couple'],
+      budget: 'premium'
+    },
+    media: {
+      photos: ['/placeholder.svg'],
+      videos: []
+    },
+    rating: 4.5,
+    practicalTips: ['Réservation obligatoire', 'Demandez une table côté Seine'],
+    authorId: '2',
+    authorName: 'Pierre Martin',
+    createdAt: '2024-01-10',
+    likes: 89,
+    saves: 45,
+    comments: []
+  },
+  {
+    id: '3',
+    title: 'Hôtel boutique Montmartre',
+    description: 'Un charmant hôtel boutique au cœur de Montmartre, parfait pour un séjour authentique.',
+    type: 'hotel',
+    location: {
+      address: 'Montmartre, Paris, France',
+      coordinates: { latitude: 48.8867, longitude: 2.3431 }
+    },
+    categories: {
+      activities: ['culture', 'art'],
+      travelerType: ['couple', 'solo'],
+      budget: 'standard'
+    },
+    media: {
+      photos: ['/placeholder.svg'],
+      videos: []
+    },
+    rating: 4.7,
+    practicalTips: ['Proche du Sacré-Cœur', 'Petit-déjeuner inclus'],
+    authorId: '3',
+    authorName: 'Sophie Leroy',
+    createdAt: '2024-01-08',
+    likes: 156,
+    saves: 78,
+    comments: []
   }
 ];
 
@@ -45,7 +99,64 @@ const DiscoverExperiences = ({ onBack }: DiscoverExperiencesProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<RecommendationFilters>({});
-  const [recommendations] = useState<Recommendation[]>(mockRecommendations);
+  const [allRecommendations] = useState<Recommendation[]>(mockRecommendations);
+  const [filteredRecommendations, setFilteredRecommendations] = useState<Recommendation[]>(mockRecommendations);
+
+  // Fonction de filtrage
+  const applyFilters = () => {
+    let filtered = [...allRecommendations];
+
+    // Filtre par mots-clés
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(rec => 
+        rec.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rec.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        rec.location.address.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filtre par type
+    if (filters.type) {
+      filtered = filtered.filter(rec => rec.type === filters.type);
+    }
+
+    // Filtre par budget
+    if (filters.budget) {
+      filtered = filtered.filter(rec => rec.categories.budget === filters.budget);
+    }
+
+    // Filtre par note minimale
+    if (filters.minRating) {
+      filtered = filtered.filter(rec => rec.rating >= filters.minRating);
+    }
+
+    // Filtre par catégories
+    if (filters.categories && filters.categories.length > 0) {
+      filtered = filtered.filter(rec => 
+        filters.categories!.some(category => 
+          rec.categories.activities.includes(category)
+        )
+      );
+    }
+
+    // Filtre par localisation
+    if (filters.location) {
+      filtered = filtered.filter(rec => 
+        rec.location.address.toLowerCase().includes(filters.location!.toLowerCase())
+      );
+    }
+
+    setFilteredRecommendations(filtered);
+  };
+
+  // Appliquer les filtres quand ils changent
+  React.useEffect(() => {
+    applyFilters();
+  }, [searchQuery, filters, allRecommendations]);
+
+  const handleFiltersChange = (newFilters: RecommendationFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
@@ -83,14 +194,34 @@ const DiscoverExperiences = ({ onBack }: DiscoverExperiencesProps) => {
           {showFilters && (
             <ExperienceFilters
               filters={filters}
-              onFiltersChange={setFilters}
+              onFiltersChange={handleFiltersChange}
             />
           )}
         </div>
 
         {/* Results */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-800">
+              {filteredRecommendations.length} expérience{filteredRecommendations.length > 1 ? 's' : ''} trouvée{filteredRecommendations.length > 1 ? 's' : ''}
+            </h2>
+            {(searchQuery || Object.values(filters).some(f => f && (Array.isArray(f) ? f.length > 0 : true))) && (
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setSearchQuery('');
+                  setFilters({});
+                }}
+                className="text-gray-600 hover:text-purple-600"
+              >
+                Effacer les filtres
+              </Button>
+            )}
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {recommendations.map((recommendation) => (
+          {filteredRecommendations.map((recommendation) => (
             <ExperienceCard
               key={recommendation.id}
               recommendation={recommendation}
@@ -98,7 +229,7 @@ const DiscoverExperiences = ({ onBack }: DiscoverExperiencesProps) => {
           ))}
         </div>
 
-        {recommendations.length === 0 && (
+        {filteredRecommendations.length === 0 && (
           <div className="text-center py-16">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
               <Search className="h-12 w-12 text-blue-500" />

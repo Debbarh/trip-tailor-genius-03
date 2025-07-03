@@ -56,9 +56,9 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             <Label className="font-semibold text-gray-700">Type d'expérience</Label>
             <Select 
               value={filters.type || ''} 
-              onValueChange={(value) => updateFilter('type', value as ExperienceType)}
+              onValueChange={(value) => updateFilter('type', value as ExperienceType || undefined)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-300 focus:border-purple-500">
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
               <SelectContent>
@@ -77,9 +77,9 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             <Label className="font-semibold text-gray-700">Budget</Label>
             <Select 
               value={filters.budget || ''} 
-              onValueChange={(value) => updateFilter('budget', value)}
+              onValueChange={(value) => updateFilter('budget', value || undefined)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-300 focus:border-purple-500">
                 <SelectValue placeholder="Tous les budgets" />
               </SelectTrigger>
               <SelectContent>
@@ -100,11 +100,11 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             </Label>
             <Slider
               value={[filters.minRating || 0]}
-              onValueChange={(value) => updateFilter('minRating', value[0])}
+              onValueChange={(value) => updateFilter('minRating', value[0] || undefined)}
               max={5}
               min={0}
               step={0.5}
-              className="w-full"
+              className="w-full [&_[role=slider]]:bg-purple-600 [&_[role=slider]]:border-purple-600"
             />
           </div>
 
@@ -113,9 +113,9 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             <Label className="font-semibold text-gray-700">Localisation</Label>
             <Select 
               value={filters.location || ''} 
-              onValueChange={(value) => updateFilter('location', value)}
+              onValueChange={(value) => updateFilter('location', value || undefined)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-300 focus:border-purple-500">
                 <SelectValue placeholder="Toutes les destinations" />
               </SelectTrigger>
               <SelectContent>
