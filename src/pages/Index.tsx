@@ -4,8 +4,10 @@ import PlanTripSteps from "@/components/forms/plan-trip/steps/PlanTripSteps";
 import ItineraryDisplay from "@/components/ItineraryDisplay";
 import HomeScreen from "@/components/home/HomeScreen";
 import BeInspiredMain from "@/components/forms/be-inspired/BeInspiredMain";
+import ExperienceMain from "@/components/forms/experience/ExperienceMain";
+import ProfileMain from "@/components/forms/profile/ProfileMain";
 
-type Mode = 'home' | 'plan' | 'itinerary' | 'be-inspired';
+type Mode = 'home' | 'plan' | 'itinerary' | 'be-inspired' | 'recommendations' | 'profile';
 
 interface PlanTripFormData {
   mode: 'plan';
@@ -32,7 +34,7 @@ const Index = () => {
     }
   }, [searchParams]);
 
-  const handleModeSelect = (selectedMode: 'plan' | 'be-inspired') => {
+  const handleModeSelect = (selectedMode: 'plan' | 'be-inspired' | 'recommendations' | 'profile') => {
     setMode(selectedMode);
     if (selectedMode === 'plan') {
       setTripData(createInitialTripData());
@@ -68,6 +70,18 @@ const Index = () => {
       case 'be-inspired':
         return (
           <BeInspiredMain 
+            onBack={handleBackToHome} 
+          />
+        );
+      case 'recommendations':
+        return (
+          <ExperienceMain 
+            onBack={handleBackToHome} 
+          />
+        );
+      case 'profile':
+        return (
+          <ProfileMain 
             onBack={handleBackToHome} 
           />
         );
