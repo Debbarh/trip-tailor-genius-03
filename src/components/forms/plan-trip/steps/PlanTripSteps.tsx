@@ -4,6 +4,7 @@ import { stepConfigs } from "@/constants/stepConfigs";
 import DestinationStep from "./DestinationStep";
 import TravelWithStep from "./TravelWithStep";
 import UnifiedBudgetStep from "./UnifiedBudgetStep";
+import CuisineStep from "./CuisineStep";
 import UnifiedAccommodationStep from "./UnifiedAccommodationStep";
 import UnifiedActivitiesStep from "./UnifiedActivitiesStep";
 import DefaultStep from "./DefaultStep";
@@ -18,7 +19,8 @@ const PlanTripSteps = ({ onComplete, onBack, onModeSelect }: PlanTripStepsProps)
   const [formData, setFormData] = useState<PlanTripFormData>({
     destination: { countries: [] },
     travelWith: { segment: '', subSegment: '' },
-    budgetAndFood: { budget: '', cuisine: [] },
+    cuisine: { cuisine: [] },
+    budget: { budget: '' },
     accommodation: { type: '', preferences: [] },
     activities: []
   });
@@ -59,8 +61,18 @@ const PlanTripSteps = ({ onComplete, onBack, onModeSelect }: PlanTripStepsProps)
           return false;
         }
         return true;
-      case 'budgetAndFood':
-        if (!formData.budgetAndFood.budget) {
+      case 'cuisine':
+        if (formData.cuisine.cuisine.length === 0) {
+          toast({
+            title: "Préférences culinaires manquantes",
+            description: "Veuillez sélectionner au moins une préférence culinaire.",
+            variant: "destructive"
+          });
+          return false;
+        }
+        return true;
+      case 'budget':
+        if (!formData.budget.budget) {
           toast({
             title: "Budget manquant",
             description: "Veuillez indiquer votre budget pour le voyage.",
@@ -102,25 +114,30 @@ const PlanTripSteps = ({ onComplete, onBack, onModeSelect }: PlanTripStepsProps)
         return <DestinationStep formData={formData} setFormData={setFormData} onNext={handleNext} />;
       case 'travelWith':
         return <TravelWithStep formData={formData} setFormData={setFormData} />;
-      case 'budgetAndFood':
+      case 'cuisine':
         return (
-          <UnifiedBudgetStep
-            mode="withFood"
-            budget={formData.budgetAndFood.budget}
-            setBudget={(budget) => setFormData({ 
-              ...formData, 
-              budgetAndFood: { ...formData.budgetAndFood, budget } 
-            })}
-            selectedCuisines={formData.budgetAndFood.cuisine}
+          <CuisineStep
+            selectedCuisines={formData.cuisine.cuisine}
             onCuisineToggle={(cuisine) => {
-              const newCuisines = formData.budgetAndFood.cuisine.includes(cuisine)
-                ? formData.budgetAndFood.cuisine.filter(c => c !== cuisine)
-                : [...formData.budgetAndFood.cuisine, cuisine];
+              const newCuisines = formData.cuisine.cuisine.includes(cuisine)
+                ? formData.cuisine.cuisine.filter(c => c !== cuisine)
+                : [...formData.cuisine.cuisine, cuisine];
               setFormData({
                 ...formData,
-                budgetAndFood: { ...formData.budgetAndFood, cuisine: newCuisines }
+                cuisine: { cuisine: newCuisines }
               });
             }}
+          />
+        );
+      case 'budget':
+        return (
+          <UnifiedBudgetStep
+            mode="simple"
+            budget={formData.budget.budget}
+            setBudget={(budget) => setFormData({ 
+              ...formData, 
+              budget: { budget } 
+            })}
           />
         );
       case 'accommodation':

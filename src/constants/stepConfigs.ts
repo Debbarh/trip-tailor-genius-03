@@ -1,5 +1,5 @@
 
-import { MapPin, Users, DollarSign, Bed, Activity } from "lucide-react";
+import { MapPin, Users, DollarSign, Bed, Activity, ChefHat } from "lucide-react";
 
 export const stepConfigs = [
   {
@@ -17,9 +17,16 @@ export const stepConfigs = [
     icon: Users
   },
   {
-    id: 'budgetAndFood',
-    title: 'Budget et Cuisine',
-    subtitle: 'Quel est votre budget et vos préférences culinaires ?',
+    id: 'cuisine',
+    title: 'Cuisine et Expérience Culinaire',
+    subtitle: 'Quelles sont vos préférences culinaires ?',
+    image: '/placeholder.svg',
+    icon: ChefHat
+  },
+  {
+    id: 'budget',
+    title: 'Budget',
+    subtitle: 'Quel est votre budget pour le voyage ?',
     image: '/placeholder.svg',
     icon: DollarSign
   },

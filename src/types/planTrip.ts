@@ -23,8 +23,11 @@ export interface TravelWith {
   };
 }
 
-export interface BudgetAndFood {
+export interface Budget {
   budget: string;
+}
+
+export interface Cuisine {
   cuisine: string[];
 }
 
@@ -36,7 +39,8 @@ export interface Accommodation {
 export interface PlanTripFormData {
   destination: Destination;
   travelWith: TravelWith;
-  budgetAndFood: BudgetAndFood;
+  cuisine: Cuisine;
+  budget: Budget;
   accommodation: Accommodation;
   activities: string[];
 }
