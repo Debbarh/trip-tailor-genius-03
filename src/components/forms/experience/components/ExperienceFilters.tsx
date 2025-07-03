@@ -63,13 +63,13 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             <Label className="font-semibold text-gray-700">Type d'expérience</Label>
             <Select 
               value={filters.type || ''} 
-              onValueChange={(value) => updateFilter('type', value as ExperienceType || undefined)}
+              onValueChange={(value) => updateFilter('type', value === 'all' ? undefined : (value as ExperienceType))}
             >
               <SelectTrigger className="border-gray-300 focus:border-purple-500">
                 <SelectValue placeholder="Tous les types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tous les types</SelectItem>
+                <SelectItem value="all">Tous les types</SelectItem>
                 {experienceTypes.map((type) => (
                   <SelectItem key={type.value} value={type.value}>
                     {type.label}
@@ -84,13 +84,13 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             <Label className="font-semibold text-gray-700">Budget</Label>
             <Select 
               value={filters.budget || ''} 
-              onValueChange={(value) => updateFilter('budget', value || undefined)}
+              onValueChange={(value) => updateFilter('budget', value === 'all' ? undefined : value)}
             >
               <SelectTrigger className="border-gray-300 focus:border-purple-500">
                 <SelectValue placeholder="Tous les budgets" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Tous les budgets</SelectItem>
+                <SelectItem value="all">Tous les budgets</SelectItem>
                 {budgetOptions.map((budget) => (
                   <SelectItem key={budget.value} value={budget.value}>
                     {budget.label}
@@ -120,13 +120,13 @@ const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps)
             <Label className="font-semibold text-gray-700">Localisation</Label>
             <Select 
               value={filters.location || ''} 
-              onValueChange={(value) => updateFilter('location', value || undefined)}
+              onValueChange={(value) => updateFilter('location', value === 'all' ? undefined : value)}
             >
               <SelectTrigger className="border-gray-300 focus:border-purple-500">
                 <SelectValue placeholder="Toutes les destinations" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Toutes les destinations</SelectItem>
+                <SelectItem value="all">Toutes les destinations</SelectItem>
                 <SelectItem value="paris">Paris</SelectItem>
                 <SelectItem value="lyon">Lyon</SelectItem>
                 <SelectItem value="marseille">Marseille</SelectItem>
