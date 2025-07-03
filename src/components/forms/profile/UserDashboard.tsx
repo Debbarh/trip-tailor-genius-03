@@ -15,7 +15,7 @@ interface UserDashboardProps {
 
 const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="max-w-6xl mx-auto p-4">
         <div className="flex items-center justify-between mb-8 pt-4">
           <div className="flex items-center gap-4">
@@ -33,8 +33,8 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
         </div>
 
         {/* Profile Header */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
+        <Card className="mb-8 bg-white/90 backdrop-blur-sm border border-white/30 shadow-xl">
+          <CardContent className="p-8">
             <div className="flex items-center gap-6">
               <Avatar className="h-24 w-24">
                 <AvatarImage src={user.avatar} />
@@ -63,7 +63,7 @@ const UserDashboard = ({ user, onLogout, onBack }: UserDashboardProps) => {
                 </div>
               </div>
 
-              <Button className="gap-2">
+              <Button className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
                 <Settings className="h-4 w-4" />
                 Modifier le profil
               </Button>

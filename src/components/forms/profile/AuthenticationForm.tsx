@@ -85,19 +85,19 @@ const AuthenticationForm = ({ onAuthSuccess, onBack }: AuthenticationFormProps) 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-secondary/20 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {onBack && (
-          <Button variant="ghost" onClick={onBack} className="gap-2 mb-6">
+          <Button variant="ghost" onClick={onBack} className="gap-2 mb-8 text-gray-600 hover:text-purple-600">
             <ArrowLeft className="h-4 w-4" />
             Retour
           </Button>
         )}
 
-        <Card className="w-full">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Mon Profil Voyageur</CardTitle>
-            <CardDescription>
+        <Card className="w-full bg-white/90 backdrop-blur-sm border border-white/30 shadow-2xl">
+          <CardHeader className="text-center pb-6">
+            <CardTitle className="text-3xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Mon Profil Voyageur</CardTitle>
+            <CardDescription className="text-gray-600 text-lg">
               Connectez-vous pour gérer vos recommandations et préférences
             </CardDescription>
           </CardHeader>
@@ -142,7 +142,7 @@ const AuthenticationForm = ({ onAuthSuccess, onBack }: AuthenticationFormProps) 
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300" disabled={isLoading}>
                     {isLoading ? 'Connexion...' : 'Se connecter'}
                   </Button>
                 </form>
@@ -214,7 +214,7 @@ const AuthenticationForm = ({ onAuthSuccess, onBack }: AuthenticationFormProps) 
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300" disabled={isLoading}>
                     {isLoading ? 'Inscription...' : "S'inscrire"}
                   </Button>
                 </form>
