@@ -76,7 +76,8 @@ const Index = () => {
       case 'recommendations':
         return (
           <ExperienceMain 
-            onBack={handleBackToHome} 
+            onBack={handleBackToHome}
+            onModeSelect={handleModeSelect}
           />
         );
       case 'profile':
