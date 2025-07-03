@@ -10,8 +10,9 @@ import DefaultStep from "./DefaultStep";
 import UnifiedStepper from "./components/UnifiedStepper";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
+import HomeNavigation from "@/components/layout/HomeNavigation";
 
-const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
+const PlanTripSteps = ({ onComplete, onBack, onModeSelect }: PlanTripStepsProps) => {
   const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<PlanTripFormData>({
@@ -160,18 +161,22 @@ const PlanTripSteps = ({ onComplete, onBack }: PlanTripStepsProps) => {
   const isLastStep = currentStep === stepConfigs.length - 1;
 
   return (
-    <UnifiedStepper
-      currentStep={currentStep}
-      totalSteps={stepConfigs.length}
-      stepConfig={currentStepData}
-      onBack={handleBack}
-      onNext={handleNext}
-      onBackToHome={onBack}
-      isLastStep={isLastStep}
-      mode="plan"
-    >
-      {renderStepContent()}
-    </UnifiedStepper>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <HomeNavigation onModeSelect={onModeSelect} />
+      
+      <UnifiedStepper
+        currentStep={currentStep}
+        totalSteps={stepConfigs.length}
+        stepConfig={currentStepData}
+        onBack={handleBack}
+        onNext={handleNext}
+        onBackToHome={onBack}
+        isLastStep={isLastStep}
+        mode="plan"
+      >
+        {renderStepContent()}
+      </UnifiedStepper>
+    </div>
   );
 };
 

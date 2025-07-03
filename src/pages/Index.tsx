@@ -64,7 +64,8 @@ const Index = () => {
         return (
           <PlanTripSteps 
             onComplete={handleFormComplete} 
-            onBack={handleBackToHome} 
+            onBack={handleBackToHome}
+            onModeSelect={handleModeSelect}
           />
         );
       case 'be-inspired':

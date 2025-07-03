@@ -44,6 +44,7 @@ export interface PlanTripFormData {
 export interface PlanTripStepsProps {
   onComplete: (data: any) => void;
   onBack: () => void;
+  onModeSelect?: (mode: 'plan' | 'be-inspired' | 'recommendations' | 'profile') => void;
 }
 
 export interface StepProps {
