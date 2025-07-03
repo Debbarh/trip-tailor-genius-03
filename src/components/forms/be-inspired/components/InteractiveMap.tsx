@@ -33,6 +33,18 @@ const MapController = ({ center }: { center: [number, number] }) => {
     }
   }, [center, map]);
 
+  // Exposer la méthode pour centrer sur un POI
+  useEffect(() => {
+    if (map) {
+      (window as any).centerMapOnPOI = (lat: number, lng: number) => {
+        map.setView([lat, lng], 16, {
+          animate: true,
+          duration: 1
+        });
+      };
+    }
+  }, [map]);
+
   return null;
 };
 
@@ -292,7 +304,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
             position={[poi.latitude, poi.longitude]}
             icon={createModernPOIIcon(poi.category)}
             eventHandlers={{
-              click: () => onPOIClick(poi),
+              click: () => {
+                // Centrer la carte sur le POI cliqué
+                if ((window as any).centerMapOnPOI) {
+                  (window as any).centerMapOnPOI(poi.latitude, poi.longitude);
+                }
+                // Appeler aussi la fonction onPOIClick originale
+                onPOIClick(poi);
+              },
             }}
           >
             <Popup closeButton={false} maxWidth={350} offset={[0, -10]}>
@@ -367,6 +386,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      // Centrer la carte sur le POI cliqué
+                      if ((window as any).centerMapOnPOI) {
+                        (window as any).centerMapOnPOI(poi.latitude, poi.longitude);
+                      }
                       onPOIClick(poi);
                     }}
                     className="w-full bg-gradient-to-r from-primary via-primary to-secondary text-white py-4 px-6 rounded-xl font-bold text-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
