@@ -33,6 +33,14 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+    
+    /* Couleurs modernes pour la carte */
+    --map-primary: 217.2 91.2% 59.8%;
+    --map-secondary: 221.2 83.2% 53.3%;
+    --map-accent: 142.1 76.2% 36.3%;
+    --map-warning: 47.9 95.8% 53.1%;
+    --map-muted: 210 40% 96.1%;
+    --map-shadow: 217.2 32.6% 17.5%;
 
     --sidebar-background: 0 0% 98%;
 
@@ -87,6 +95,14 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Dark mode pour les couleurs de carte */
+    --map-primary: 217.2 91.2% 59.8%;
+    --map-secondary: 221.2 83.2% 53.3%;
+    --map-accent: 142.1 70.6% 45.3%;
+    --map-warning: 47.9 95.8% 53.1%;
+    --map-muted: 217.2 32.6% 17.5%;
+    --map-shadow: 222.2 84% 4.9%;
   }
 }
 

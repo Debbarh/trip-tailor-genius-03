@@ -65,6 +65,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				map: {
+					primary: 'hsl(var(--map-primary))',
+					secondary: 'hsl(var(--map-secondary))',
+					accent: 'hsl(var(--map-accent))',
+					warning: 'hsl(var(--map-warning))',
+					muted: 'hsl(var(--map-muted))',
+					shadow: 'hsl(var(--map-shadow))'
 				}
 			},
 			borderRadius: {
