@@ -8,7 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import MobileNavigationMenu from "./MobileNavigationMenu";
 
 interface HomeNavigationProps {
-  onModeSelect?: (mode: 'plan' | 'be-inspired') => void;
+  onModeSelect?: (mode: 'plan' | 'be-inspired' | 'recommendations' | 'profile') => void;
 }
 
 const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
@@ -30,7 +30,7 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
         </Link>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center space-x-6">
           <Button 
             onClick={handlePlanTrip}
             variant="ghost"
@@ -44,6 +44,20 @@ const HomeNavigation = ({ onModeSelect }: HomeNavigationProps) => {
             className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
           >
             Be Inspired
+          </Button>
+          <Button 
+            onClick={() => onModeSelect?.('recommendations')}
+            variant="ghost"
+            className="text-gray-700 hover:text-green-600 transition-colors font-medium"
+          >
+            Recommandations
+          </Button>
+          <Button 
+            onClick={() => onModeSelect?.('profile')}
+            variant="ghost"
+            className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
+          >
+            Mon Profil
           </Button>
           <LanguageSelector />
         </div>
