@@ -32,15 +32,22 @@ interface ExperienceFiltersProps {
 }
 
 const ExperienceFilters = ({ filters, onFiltersChange }: ExperienceFiltersProps) => {
+  console.log('ExperienceFilters rendu avec:', filters);
+
   const updateFilter = (key: keyof RecommendationFilters, value: any) => {
-    onFiltersChange({ ...filters, [key]: value });
+    console.log('updateFilter appelée:', key, value);
+    const newFilters = { ...filters, [key]: value };
+    console.log('Nouveaux filtres:', newFilters);
+    onFiltersChange(newFilters);
   };
 
   const toggleCategory = (category: string) => {
+    console.log('toggleCategory appelée:', category);
     const currentCategories = filters.categories || [];
     const newCategories = currentCategories.includes(category)
       ? currentCategories.filter(c => c !== category)
       : [...currentCategories, category];
+    console.log('Nouvelles catégories:', newCategories);
     updateFilter('categories', newCategories);
   };
 

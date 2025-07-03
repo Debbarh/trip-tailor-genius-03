@@ -102,9 +102,19 @@ const DiscoverExperiences = ({ onBack }: DiscoverExperiencesProps) => {
   const [allRecommendations] = useState<Recommendation[]>(mockRecommendations);
   const [filteredRecommendations, setFilteredRecommendations] = useState<Recommendation[]>(mockRecommendations);
 
+  console.log('🔍 DiscoverExperiences - État actuel:', {
+    searchQuery,
+    showFilters,
+    filters,
+    allRecommendations: allRecommendations.length,
+    filteredRecommendations: filteredRecommendations.length
+  });
+
   // Fonction de filtrage
   const applyFilters = () => {
+    console.log('🔄 applyFilters appelée avec:', { searchQuery, filters });
     let filtered = [...allRecommendations];
+    console.log('📊 Données initiales:', filtered.length);
 
     // Filtre par mots-clés
     if (searchQuery.trim()) {
@@ -155,8 +165,11 @@ const DiscoverExperiences = ({ onBack }: DiscoverExperiencesProps) => {
   }, [searchQuery, filters, allRecommendations]);
 
   const handleFiltersChange = (newFilters: RecommendationFilters) => {
+    console.log('🔧 handleFiltersChange appelée avec:', newFilters);
     setFilters(newFilters);
   };
+
+  console.log('📋 Rendu avec showFilters:', showFilters);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
